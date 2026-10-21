@@ -1,15 +1,14 @@
 import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
+import { Sparkline } from "@/components/ui/charts/Sparkline";
 import { StatTile } from "@/components/ui/StatTile/StatTile";
 import type { DailyRate } from "../../types";
 import styles from "./MetricTiles.module.scss";
 
-function Sparkline({ data }: { data: DailyRate[] }) {
+function SuccessSparkline({ data }: { data: DailyRate[] }) {
   const label = `Daily pipeline success, last 7 days: ${data.map((d) => `${d.day} ${d.rate}%`).join(", ")}`;
   return (
-    <div className={styles.spark} role="img" aria-label={label}>
-      {data.map((d) => (
-        <span key={d.day} title={`${d.day}: ${d.rate}%`} style={{ height: `${Math.max(20, (d.rate - 98) * 50)}%` }} />
-      ))}
+    <div className={styles.spark}>
+      <Sparkline values={data.map((d) => d.rate)} labels={data.map((d) => d.day)} name="Success rate" unit="%" ariaLabel={label} />
     </div>
   );
 }
@@ -30,7 +29,7 @@ export function MetricTiles({ sparkline }: { sparkline: DailyRate[] }) {
       <StatTile
         label="Pipeline Success (7d)"
         value="99.4%"
-        sub={<><span>1,842 runs executed · +0.3% vs avg</span><Sparkline data={sparkline} /></>}
+        sub={<><span>1,842 runs executed · +0.3% vs avg</span><SuccessSparkline data={sparkline} /></>}
       />
       <StatTile
         label="Gate Approvals"

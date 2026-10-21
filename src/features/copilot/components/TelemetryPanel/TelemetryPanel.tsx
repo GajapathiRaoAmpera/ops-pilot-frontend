@@ -1,4 +1,5 @@
 import { Card } from "@/components/ui/Card/Card";
+import { Sparkline } from "@/components/ui/charts/Sparkline";
 import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
 import { telemetry } from "../../mock-data";
 import styles from "./TelemetryPanel.module.scss";
@@ -19,11 +20,11 @@ export function TelemetryPanel() {
               <span className={styles.detail}>{m.detail}</span>
             </div>
             {m.spark && (
-              <svg className={styles.spark} viewBox="0 0 200 40" preserveAspectRatio="none" role="img"
-                aria-label="Static sparkline: latency flat, then rising sharply at the end">
-                <polyline points={m.spark} fill="none" stroke="currentColor" strokeWidth="2" vectorEffect="non-scaling-stroke" />
-                <polygon points={`${m.spark} 200,40 0,40`} fill="currentColor" fillOpacity="0.12" />
-              </svg>
+              <Sparkline
+                values={m.spark.split(" ").map((pt) => 40 - Number(pt.split(",")[1]))}
+                name="Latency (sample, relative)"
+                ariaLabel="Static sparkline: latency flat, then rising sharply at the end"
+              />
             )}
             {m.percent !== undefined && (
               <div className={styles.bar} role="img" aria-label={`${m.percent}% of capacity`}>

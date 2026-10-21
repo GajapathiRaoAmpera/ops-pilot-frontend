@@ -1,3 +1,4 @@
+import { MiniColumns } from "@/components/ui/charts/MiniColumns";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
 import type { CloudEndpoint } from "../../types";
@@ -32,9 +33,7 @@ export function ProviderCard({ cloud }: { cloud: CloudEndpoint }) {
         {cloud.latencyBars && (
           <div>
             <p className={styles.trend}><span>Latency trend</span><span>{cloud.latencyLabel}</span></p>
-            <div className={styles.bars} aria-hidden="true">
-              {cloud.latencyBars.map((h, i) => <span key={i} className={styles.bar} style={{ height: `${h * 4}px` }} />)}
-            </div>
+            <MiniColumns values={cloud.latencyBars} name="Latency (sample, relative)" ariaLabel={`Latency trend, ${cloud.latencyBars.length} samples, latest highlighted`} />
           </div>
         )}
         {cloud.warning && (
