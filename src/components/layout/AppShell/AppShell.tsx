@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { BrandMark, BrandWordmark } from "@/components/brand/BrandMark";
 import styles from "./AppShell.module.scss";
 
 interface Props {
@@ -15,12 +16,13 @@ interface Props {
 export function AppShell({ organizationName, userName, userRole, nav, accountActions, banner, children }: Props) {
   return (
     <>
+      <a href="#main" className={styles.skip}>Skip to main content</a>
       {banner}
       <div className={styles.shell}>
         <aside className={styles.sidebar}>
           <div className={styles.brandRow}>
-            <span className={styles.logo} aria-hidden="true">O</span>
-            OpsPilot
+            <BrandMark size={28} />
+            <BrandWordmark />
           </div>
           <div className={styles.org}>
             <p className={styles.orgLabel}>Organization</p>

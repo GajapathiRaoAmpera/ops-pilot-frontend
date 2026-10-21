@@ -45,6 +45,11 @@ const MESSAGES: Record<string, string> = {
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
 
+/** Technical reference for toasts and support: HTTP status plus the backend's error code. */
+export function referenceFor(r: { status: number; detail: string }): string {
+  return `${r.status || "no response"} ${r.detail}`;
+}
+
 export function messageFor(detail: string): string {
   return MESSAGES[detail] ?? "That did not work. Please check the details and try again.";
 }

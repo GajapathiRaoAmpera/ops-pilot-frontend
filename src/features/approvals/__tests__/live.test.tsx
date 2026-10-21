@@ -1,5 +1,6 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { ToastProvider } from "@/components/ui/Toast/ToastProvider";
 import { SessionProvider } from "@/features/auth/components/SessionProvider";
 import type { Session } from "@/features/auth/types";
 import { LiveApprovals } from "../live/LiveApprovals";
@@ -17,7 +18,7 @@ const req = (over: Partial<LiveRequest> = {}): LiveRequest => ({
 });
 const json = (b: unknown, status = 200) => new Response(JSON.stringify(b), { status });
 const view = (email = "admin@a.test", canDecide = true) =>
-  render(<SessionProvider session={session(email)}><LiveApprovals workspaceId="ws1" canDecide={canDecide} /></SessionProvider>);
+  render(<ToastProvider><SessionProvider session={session(email)}><LiveApprovals workspaceId="ws1" canDecide={canDecide} /></SessionProvider></ToastProvider>);
 
 describe("LiveApprovals", () => {
   beforeEach(() => { vi.spyOn(window, "confirm").mockReturnValue(true); });

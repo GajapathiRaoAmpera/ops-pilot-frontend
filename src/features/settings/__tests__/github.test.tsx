@@ -1,3 +1,4 @@
+import { ToastProvider } from "@/components/ui/Toast/ToastProvider";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GithubConnection } from "../components/GithubConnection";
@@ -14,7 +15,7 @@ describe("GithubConnection", () => {
       .mockResolvedValueOnce(json(status()))
       .mockResolvedValueOnce(json(status()))
       .mockResolvedValue(json(status()));
-    render(<GithubConnection workspaceId="ws1" workspaceName="Default" />);
+    render(<ToastProvider><GithubConnection workspaceId="ws1" workspaceName="Default" /></ToastProvider>);
     const token = await screen.findByLabelText(/Replace token/);
     expect(token).toHaveValue("");
     expect(token).toHaveAttribute("type", "password");
@@ -27,7 +28,7 @@ describe("GithubConnection", () => {
 
   it("shows a coarse reason when the test fails", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValueOnce(json(status())).mockResolvedValueOnce(json({ ok: false, reason: "unauthorized" }));
-    render(<GithubConnection workspaceId="ws1" workspaceName="Default" />);
+    render(<ToastProvider><GithubConnection workspaceId="ws1" workspaceName="Default" /></ToastProvider>);
     await userEvent.click(await screen.findByRole("button", { name: "Test connection" }));
     expect(await screen.findByRole("alert")).toHaveTextContent(/rejected the token/);
   });
@@ -36,7 +37,7 @@ describe("GithubConnection", () => {
     vi.spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(json(status({ connected: false, repo: null, tokenSet: false })))
       .mockResolvedValueOnce(json({ detail: "encryption_not_configured" }, 503));
-    render(<GithubConnection workspaceId="ws1" workspaceName="Default" />);
+    render(<ToastProvider><GithubConnection workspaceId="ws1" workspaceName="Default" /></ToastProvider>);
     expect(await screen.findByRole("button", { name: "Test connection" })).toBeDisabled();
     await userEvent.type(screen.getByLabelText("Repository (owner/name)"), "acme/api");
     await userEvent.click(screen.getByRole("button", { name: "Connect" }));

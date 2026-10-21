@@ -3,39 +3,36 @@
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button/Button";
-import { callBackend, messageFor } from "@/lib/backend-client";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { callBackend, messageFor, referenceFor } from "@/lib/backend-client";
 import styles from "./RunControls.module.scss";
 
 export function SyncButton({ workspaceId }: { workspaceId: string }) {
   const router = useRouter();
+  const { notify } = useToast();
   const [busy, setBusy] = useState(false);
-  const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
 
   async function sync() {
     setBusy(true);
-    setMsg(null);
     const r = await callBackend<{ synced: number }>("POST", `workspaces/${workspaceId}/pipelines/sync`, {});
     setBusy(false);
-    if (!r.ok) return setMsg({ ok: false, text: messageFor(r.detail) });
-    setMsg({ ok: true, text: `Synced ${r.data.synced} runs.` });
+    if (!r.ok) return notify({ tone: "error", title: "Sync failed", message: messageFor(r.detail), reference: referenceFor(r) });
+    notify({ tone: "success", title: "Pipelines synced", message: `${r.data.synced} runs updated from GitHub.` });
     router.refresh();
   }
 
-  return (
-    <span className={styles.inline}>
-      <Button variant="ghost" className={styles.small} loading={busy} disabled={busy} onClick={() => void sync()}>Sync now</Button>
-      {msg && <span role={msg.ok ? "status" : "alert"} className={msg.ok ? styles.ok : styles.err}>{msg.text}</span>}
-    </span>
-  );
+  return <Button variant="ghost" className={styles.small} loading={busy} disabled={busy} onClick={() => void sync()}>Sync now</Button>;
 }
 
 /** Creates an approval request. Nothing runs until a different person approves it. */
 export function RequestRerun({ workspaceId, runId }: { workspaceId: string; runId: string }) {
   const router = useRouter();
+  const { notify } = useToast();
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
+  const [sent, setSent] = useState(false);
 
   async function submit(e: FormEvent) {
     e.preventDefault();
@@ -43,13 +40,14 @@ export function RequestRerun({ workspaceId, runId }: { workspaceId: string; runI
     setBusy(true);
     const r = await callBackend("POST", `workspaces/${workspaceId}/action-requests`, { runId, type: "rerun_failed_jobs", reason });
     setBusy(false);
-    if (!r.ok) return setMsg({ ok: false, text: messageFor(r.detail) });
-    setMsg({ ok: true, text: "Request sent. Waiting for approval; nothing has run yet." });
+    if (!r.ok) return setMsg({ ok: false, text: messageFor(r.detail) }); // inline: tied to this form
+    notify({ tone: "success", title: "Request sent for approval", message: "Nothing runs until someone other than you approves it." });
+    setSent(true);
     setOpen(false);
     router.refresh();
   }
 
-  if (msg?.ok) return <span role="status" className={styles.ok}>{msg.text}</span>;
+  if (sent) return <span className={styles.ok}>Awaiting approval</span>;
   if (!open) {
     return (
       <>

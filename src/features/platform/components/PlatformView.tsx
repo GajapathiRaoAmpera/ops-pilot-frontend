@@ -8,12 +8,14 @@ import { PageHeader } from "@/components/ui/PageHeader/PageHeader";
 import { Table } from "@/components/ui/Table/Table";
 import { TextField } from "@/components/ui/TextField/TextField";
 import styles from "@/features/team/components/Admin.module.scss";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { callBackend, inviteUrl, messageFor } from "@/lib/backend-client";
 
 interface Org { id: string; name: string; workspaces: number; members: number }
 
 /** Platform operators create tenants. They see counts only, never tenant operational data. */
 export function PlatformView() {
+  const { notify } = useToast();
   const [orgs, setOrgs] = useState<Org[]>([]);
   const [name, setName] = useState("");
   const [adminEmail, setAdminEmail] = useState("");
@@ -67,7 +69,7 @@ export function PlatformView() {
           <span className={styles.linkText}>{link.url}</span>
           <span className={styles.hint}>Shown once. Send it securely; it expires in 7 days and works once.</span>
           <div className={styles.inline}>
-            <Button className={styles.small} onClick={() => void navigator.clipboard.writeText(link.url)}>Copy link</Button>
+            <Button className={styles.small} onClick={() => { void navigator.clipboard.writeText(link.url); notify({ tone: "success", title: "Link copied" }); }}>Copy link</Button>
             <Button variant="ghost" className={styles.small} onClick={() => setLink(null)}>Dismiss</Button>
           </div>
         </div>

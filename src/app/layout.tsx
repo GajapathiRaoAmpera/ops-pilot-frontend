@@ -1,5 +1,6 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fira_Code, Fira_Sans } from "next/font/google";
+import { ToastProvider } from "@/components/ui/Toast/ToastProvider";
 import "@/styles/globals.scss";
 
 // Fira Sans for labels and prose, Fira Code for identifiers and figures (data-dense console pairing).
@@ -11,6 +12,8 @@ export const metadata: Metadata = {
   description: "AI-powered enterprise DevOps automation platform",
 };
 
+export const viewport: Viewport = { themeColor: "#0f172a", colorScheme: "dark" };
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable}`}>
@@ -21,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
         />
       </head>
-      <body>{children}</body>
+      <body><ToastProvider>{children}</ToastProvider></body>
     </html>
   );
 }

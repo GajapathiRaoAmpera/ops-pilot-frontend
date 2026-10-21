@@ -8,6 +8,7 @@ import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { cx } from "@/lib/cx";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { callBackend, messageFor } from "@/lib/backend-client";
 import inbox from "../components/ApprovalsInbox/ApprovalsInbox.module.scss";
 import { DecisionTrail } from "./DecisionTrail";
@@ -23,7 +24,7 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
   const me = useSession()?.user.email.toLowerCase();
   const [rows, setRows] = useState<LiveRequest[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const { notify } = useToast();
   const [tab, setTab] = useState<Tab>("pending");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reason, setReason] = useState("");
@@ -47,12 +48,15 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
   async function decide(decision: "approve" | "reject") {
     if (!selected || busy) return;
     if (!window.confirm(decision === "approve" ? "Approve and run this action now?" : "Reject this request?")) return;
-    setBusy(true); setError(null); setNotice(null);
+    setBusy(true); setError(null);
     const r = await callBackend<LiveRequest>("POST", `workspaces/${workspaceId}/approvals/${selected.id}/decision`, { decision, reason });
     setBusy(false);
     if (!r.ok) return setError(messageFor(r.detail));
     setReason("");
-    setNotice(decision === "reject" ? "Request rejected." : r.data.status === "succeeded" ? "Approved. GitHub accepted the re-run request." : r.data.status === "failed" ? `Approved, but the action failed: ${r.data.execution?.error || "unknown error"}.` : `Approved. Status: ${r.data.status}.`);
+    if (decision === "reject") notify({ tone: "info", title: "Request rejected", message: "Nothing was run." });
+    else if (r.data.status === "succeeded") notify({ tone: "success", title: "Approved and executed", message: "GitHub accepted the re-run request." });
+    else if (r.data.status === "failed") notify({ tone: "error", title: "Approved, but the action failed", message: "GitHub did not accept the re-run. Nothing was re-run.", reference: r.data.execution?.error || "unknown" });
+    else notify({ tone: "info", title: "Approved", message: `Status: ${r.data.status}.` });
     setTick((t) => t + 1);
   }
 
@@ -93,7 +97,6 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
 
       <div className={inbox.queue}>
         {error && <Notice variant="error">{error}</Notice>}
-        {notice && <Notice variant="info">{notice}</Notice>}
         {!selected ? <Card><EmptyState title="Select a request">Pick one from the list to see who asked, who decided and what happened.</EmptyState></Card> : (
           <Card flush>
             <div className={styles.detail}>

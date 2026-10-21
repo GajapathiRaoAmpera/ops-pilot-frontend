@@ -9,6 +9,7 @@ import { PageHeader } from "@/components/ui/PageHeader/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
 import { Table } from "@/components/ui/Table/Table";
 import { TextField } from "@/components/ui/TextField/TextField";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { callBackend, inviteUrl, messageFor } from "@/lib/backend-client";
 import { ORG_ROLE_KEYS, ROLE_LABELS, WORKSPACE_ROLE_KEYS, WS_ADMIN_GRANTABLE_KEYS, type MemberRow } from "../roles";
 import styles from "./Admin.module.scss";
@@ -31,6 +32,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
   const [email, setEmail] = useState("");
   const [role, setRole] = useState<string>("viewer");
   const [busy, setBusy] = useState(false);
+  const { notify } = useToast();
 
   const [tick, setTick] = useState(0);
   const reload = useCallback(() => setTick((t) => t + 1), []);
@@ -78,12 +80,13 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
     reload();
   }
 
-  async function act(label: string, fn: () => ReturnType<typeof callBackend>, show?: (d: { token: string }) => void) {
+  async function act(label: string, fn: () => ReturnType<typeof callBackend>, show?: (d: { token: string }) => void, done = "Change saved") {
     if (!window.confirm(label)) return;
     setError(null);
     const r = await fn();
     if (!r.ok) return setError(messageFor(r.detail));
     if (show) show(r.data as { token: string });
+    else notify({ tone: "success", title: done });
     reload();
   }
 
@@ -127,7 +130,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
           <span className={styles.linkText}>{link.url}</span>
           <span className={styles.hint}>Shown once. Send it to them through a secure channel; it expires in 7 days and works once.</span>
           <div className={styles.inline}>
-            <Button className={styles.small} onClick={() => void navigator.clipboard.writeText(link.url)}>Copy link</Button>
+            <Button className={styles.small} onClick={() => { void navigator.clipboard.writeText(link.url); notify({ tone: "success", title: "Link copied" }); }}>Copy link</Button>
             <Button variant="ghost" className={styles.small} onClick={() => setLink(null)}>Dismiss</Button>
           </div>
         </div>

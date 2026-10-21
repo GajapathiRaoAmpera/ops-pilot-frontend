@@ -7,7 +7,8 @@ import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
 import { TextField } from "@/components/ui/TextField/TextField";
 import styles from "@/features/team/components/Admin.module.scss";
-import { callBackend, messageFor } from "@/lib/backend-client";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { callBackend, messageFor, referenceFor } from "@/lib/backend-client";
 
 interface Status { connected: boolean; repo: string | null; tokenSet: boolean; lastSyncedAt: string | null }
 
@@ -27,7 +28,7 @@ export function GithubConnection({ workspaceId, workspaceName }: { workspaceId: 
   const [token, setToken] = useState("");
   const [busy, setBusy] = useState<"save" | "test" | "remove" | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [info, setInfo] = useState<string | null>(null);
+  const { notify } = useToast();
   const [tick, setTick] = useState(0);
 
   useEffect(() => {
@@ -43,31 +44,32 @@ export function GithubConnection({ workspaceId, workspaceName }: { workspaceId: 
   async function save(e: FormEvent) {
     e.preventDefault();
     if (busy) return;
-    setBusy("save"); setError(null); setInfo(null);
+    setBusy("save"); setError(null);
     const r = await callBackend<Status>("PUT", base, { repo, token: token || null });
     setBusy(null);
     if (!r.ok) return setError(messageFor(r.detail));
     setToken("");
-    setInfo(token ? "Saved. The token is stored encrypted and will not be shown again." : "Repository updated.");
+    notify({ tone: "success", title: token ? "GitHub connected" : "Repository updated", message: token ? "The token is stored encrypted and will not be shown again." : undefined });
     setTick((t) => t + 1);
   }
 
   async function test() {
-    setBusy("test"); setError(null); setInfo(null);
+    setBusy("test"); setError(null);
     const r = await callBackend<{ ok: boolean; reason?: string }>("POST", `${base}/test`, {});
     setBusy(null);
-    if (!r.ok) return setError(messageFor(r.detail));
-    if (r.data.ok) setInfo("Connection works: GitHub accepted the token for this repository.");
-    else setError(TEST_REASONS[r.data.reason ?? "error"] ?? TEST_REASONS.error);
+    if (!r.ok) return notify({ tone: "error", title: "Could not run the test", message: messageFor(r.detail), reference: referenceFor(r) });
+    if (r.data.ok) notify({ tone: "success", title: "Connection works", message: "GitHub accepted the token for this repository." });
+    else notify({ tone: "error", title: "GitHub connection failed", message: TEST_REASONS[r.data.reason ?? "error"] ?? TEST_REASONS.error, reference: r.data.reason ?? "error" });
   }
 
   async function remove() {
     if (!window.confirm("Disconnect GitHub for this workspace and delete the stored token?")) return;
-    setBusy("remove"); setError(null); setInfo(null);
+    setBusy("remove"); setError(null);
     const r = await callBackend("DELETE", base);
     setBusy(null);
     if (!r.ok) return setError(messageFor(r.detail));
-    setRepo(""); setInfo("Disconnected. The stored token was deleted.");
+    setRepo("");
+    notify({ tone: "success", title: "GitHub disconnected", message: "The stored token was deleted." });
     setTick((t) => t + 1);
   }
 
@@ -75,8 +77,7 @@ export function GithubConnection({ workspaceId, workspaceName }: { workspaceId: 
     <Card title={`GitHub Actions · ${workspaceName}`} actions={status && <StatusBadge tone={status.connected && status.tokenSet ? "success" : "warning"}>{status.connected ? (status.tokenSet ? "connected" : "no token") : "not connected"}</StatusBadge>}>
       <div className={styles.stack}>
         {error && <Notice variant="error">{error}</Notice>}
-        {info && <Notice variant="info">{info}</Notice>}
-        <form onSubmit={save} className={styles.stack} noValidate>
+                <form onSubmit={save} className={styles.stack} noValidate>
           <TextField id="gh-repo" label="Repository (owner/name)" value={repo} onChange={(e) => setRepo(e.target.value)} maxLength={200} autoComplete="off" />
           <TextField id="gh-token" label={status?.tokenSet ? "Replace token (leave blank to keep the current one)" : "Fine-grained access token"}
             type="password" value={token} onChange={(e) => setToken(e.target.value)} autoComplete="off" maxLength={512} />

@@ -9,6 +9,12 @@
   @include mixins.up(md) { width: 15rem; min-height: 100vh; border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent); }
 }
 
+.skip {
+  position: absolute; left: 0.75rem; top: -3rem; z-index: 60; padding: 0.5rem 0.875rem; border-radius: 0.375rem; font-weight: 600;
+  background: var(--color-primary-container); color: var(--color-on-primary-container);
+  &:focus-visible { top: 0.75rem; outline: 2px solid var(--color-secondary); outline-offset: 2px; }
+}
+
 .brandRow { display: flex; align-items: center; gap: 0.625rem; padding-inline: 0.25rem; font-weight: 600; }
 .logo {
   display: flex; align-items: center; justify-content: center; width: 2rem; height: 2rem;
