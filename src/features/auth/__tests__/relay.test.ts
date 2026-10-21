@@ -8,7 +8,7 @@ const ctx = (p: string) => ({ params: Promise.resolve({ path: p.split("/") }) })
 const req = (method: string, headers: Record<string, string> = {}, body?: string) =>
   new Request("http://app.test/api/backend/x", { method, headers: { host: "app.test", ...headers }, body });
 
-beforeEach(() => backendFetch.mockReset().mockResolvedValue(new Response("{}", { status: 200 })));
+beforeEach(() => backendFetch.mockReset().mockImplementation(async () => new Response("{}", { status: 200 })));
 
 describe("/api/backend relay", () => {
   it("rejects paths outside the allowlist without calling the backend", async () => {
