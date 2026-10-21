@@ -2,7 +2,7 @@ const backendFetch = vi.fn();
 vi.mock("../server/backend", () => ({ backendFetch: (...a: unknown[]) => backendFetch(...a) }));
 vi.mock("next/headers", () => ({ cookies: async () => ({ toString: () => "sid=abc" }) }));
 
-import { DELETE, GET, POST } from "../../../app/api/backend/[...path]/route";
+import { DELETE, GET, POST, PUT } from "../../../app/api/backend/[...path]/route";
 
 const ctx = (p: string) => ({ params: Promise.resolve({ path: p.split("/") }) });
 const req = (method: string, headers: Record<string, string> = {}, body?: string) =>
@@ -28,6 +28,16 @@ describe("/api/backend relay", () => {
   });
   it("blocks writes with no Origin header", async () => {
     expect((await DELETE(req("DELETE"), ctx("org/invitations/" + "0".repeat(8) + "-0000-0000-0000-" + "0".repeat(12)))).status).toBe(403);
+  });
+  it("relays PUT (GitHub connect) to the allowlisted integration path only, same-origin", async () => {
+    const ws = "0".repeat(8) + "-0000-0000-0000-" + "0".repeat(12);
+    const ok = await PUT(req("PUT", { origin: "http://app.test" }, '{"repo":"a/b"}'), ctx(`workspaces/${ws}/integrations/github`));
+    expect(ok.status).toBe(200);
+    expect(backendFetch).toHaveBeenCalledWith(`/workspaces/${ws}/integrations/github`, expect.objectContaining({ method: "PUT" }));
+    backendFetch.mockClear();
+    expect((await PUT(req("PUT", { origin: "https://evil.test" }, "{}"), ctx(`workspaces/${ws}/integrations/github`))).status).toBe(403);
+    expect((await PUT(req("PUT", { origin: "http://app.test" }, "{}"), ctx("org/members"))).status).toBe(200); // allowlisted path, backend decides
+    expect((await PUT(req("PUT", { origin: "http://app.test" }, "{}"), ctx("auth/login"))).status).toBe(404);
   });
   it("forwards allowed same-origin calls with the session cookie and no set-cookie back", async () => {
     backendFetch.mockResolvedValue(new Response('{"ok":true}', { status: 201, headers: { "set-cookie": "x=y" } }));

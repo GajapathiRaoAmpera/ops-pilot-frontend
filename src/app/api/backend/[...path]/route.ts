@@ -28,7 +28,7 @@ const ALLOWED: RegExp[] = [
 ];
 /** Only these query keys are forwarded (filters/pagination); everything else is dropped. */
 const QUERY_KEYS = ["status", "limit", "action", "outcome", "before_id"];
-const METHODS = new Set(["GET", "POST", "PATCH", "DELETE"]);
+const METHODS = new Set(["GET", "POST", "PUT", "PATCH", "DELETE"]);
 
 async function relay(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
   const path = (await ctx.params).path.join("/");
@@ -62,4 +62,4 @@ async function relay(req: Request, ctx: { params: Promise<{ path: string[] }> })
   }
 }
 
-export { relay as GET, relay as POST, relay as PATCH, relay as DELETE };
+export { relay as GET, relay as POST, relay as PUT, relay as PATCH, relay as DELETE };
