@@ -12,10 +12,17 @@ export function parseSession(data: unknown): Session | null {
   if (!isString(user.id) || !isString(user.email) || !isString(user.name)) return null;
   if (!isString(org.id) || !isString(org.name) || !isString(d.role)) return null;
   if (!Array.isArray(d.permissions) || !d.permissions.every((p) => typeof p === "string")) return null;
+  const workspaces: { id: string; name: string; role: string }[] = [];
+  if (Array.isArray(d.workspaces)) {
+    for (const w of d.workspaces as Record<string, unknown>[]) {
+      if (w && isString(w.id) && isString(w.name) && isString(w.role)) workspaces.push({ id: w.id, name: w.name, role: w.role });
+    }
+  }
   return {
     user: { id: user.id, email: user.email, name: user.name },
     role: d.role,
     organization: { id: org.id, name: org.name },
     permissions: d.permissions as string[],
+    workspaces,
   };
 }

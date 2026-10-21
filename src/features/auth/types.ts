@@ -14,6 +14,8 @@ export interface Session {
   role: string;
   organization: { id: string; name: string };
   permissions: readonly string[];
+  /** Workspaces the user can access (backend-provided). */
+  workspaces: readonly { id: string; name: string; role: string }[];
 }
 
 export type SessionResult =

@@ -7,6 +7,7 @@ import type { Session } from "../types";
 vi.mock("next/navigation", () => ({ usePathname: () => "/overview" }));
 
 const session = (permissions: string[]): Session => ({
+  workspaces: [],
   user: { id: "u", email: "a@b.co", name: "A" },
   role: "Viewer",
   organization: { id: "o", name: "Acme" },

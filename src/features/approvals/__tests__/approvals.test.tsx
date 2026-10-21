@@ -5,6 +5,7 @@ import type { Session } from "@/features/auth/types";
 import { ApprovalsInbox } from "../components/ApprovalsInbox/ApprovalsInbox";
 
 const session = (permissions: string[]): Session => ({
+  workspaces: [],
   user: { id: "u", email: "a@b.co", name: "A" },
   role: "Org Admin",
   organization: { id: "o", name: "Acme" },

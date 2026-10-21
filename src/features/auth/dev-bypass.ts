@@ -15,4 +15,5 @@ export const PREVIEW_SESSION: Session = {
   role: "Preview (guards off)",
   organization: { id: "preview", name: "Preview Organization" },
   permissions: Object.values(PERMISSIONS),
+  workspaces: [],
 };
