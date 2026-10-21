@@ -85,3 +85,15 @@ Never display fake production success states.
 - Run the project's actual test, lint, type-check, and build commands when available.
 - Report commands that could not run.
 - Do not claim success without evidence.
+
+
+## Shared Frontend Integration Rules
+
+1. The Stitch design and its design tokens are the approved visual reference.
+2. The frontend orchestrator owns cross-page integration and resolves conflicts between agents.
+3. The UI/UX architect defines shared design changes; other agents must not independently introduce competing styles.
+4. Agents must inspect existing files before editing and must not overwrite another agent's work blindly.
+5. Assign clear file ownership when multiple agents work in parallel.
+6. Backend contracts take precedence over invented API endpoints, role names, and response fields.
+7. Agents must not claim a feature is complete until its implementation and relevant checks have been verified.
+
