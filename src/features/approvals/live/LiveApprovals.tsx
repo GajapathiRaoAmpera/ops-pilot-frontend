@@ -3,12 +3,15 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button/Button";
 import { Card } from "@/components/ui/Card/Card";
+import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { cx } from "@/lib/cx";
 import { callBackend, messageFor } from "@/lib/backend-client";
 import inbox from "../components/ApprovalsInbox/ApprovalsInbox.module.scss";
+import { DecisionTrail } from "./DecisionTrail";
+import styles from "./LiveApprovals.module.scss";
 import type { LiveRequest } from "./types";
 
 const STATUS_TONE: Record<string, Tone> = { pending: "warning", approved: "info", executing: "accent", succeeded: "success", failed: "error", rejected: "neutral" };
@@ -65,12 +68,14 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
             ))}
           </div>
           {rows === null && !error ? <p className={inbox.empty}>Loading…</p>
-            : shown.length === 0 ? <p className={inbox.empty}>{tab === "pending" ? "Nothing is waiting for approval." : "No requests to show."}</p>
+            : shown.length === 0 ? (tab === "pending"
+              ? <EmptyState title="Nothing is waiting for approval">Requests appear here when someone asks to re-run a failed pipeline. Open Pipelines to request one.</EmptyState>
+              : <EmptyState title="No requests yet">Approved, rejected and executed requests are kept here as a record.</EmptyState>)
             : (
               <ul className={inbox.list} aria-label="Approval requests">
                 {shown.map((r) => (
                   <li key={r.id}>
-                    <button type="button" aria-pressed={r.id === selected?.id} className={cx(inbox.item, r.id === selected?.id && inbox.active)} onClick={() => setSelectedId(r.id)}>
+                    <button type="button" aria-pressed={r.id === selected?.id} className={cx(inbox.item, styles.bar, r.id === selected?.id && inbox.active)} data-status={r.status} onClick={() => setSelectedId(r.id)}>
                       <span className={inbox.row}>
                         <span className={inbox.id}>Re-run failed jobs</span>
                         <StatusBadge tone={RISK_TONE[r.risk] ?? "neutral"}>{`${r.risk} risk`}</StatusBadge>
@@ -89,49 +94,44 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
       <div className={inbox.queue}>
         {error && <Notice variant="error">{error}</Notice>}
         {notice && <Notice variant="info">{notice}</Notice>}
-        {!selected ? <Card><p className={inbox.empty}>Select a request to inspect it.</p></Card> : (
-          <>
-            <Card title="Request">
-              <p className={inbox.itemTitle}>Re-run failed jobs</p>
-              {selected.run && <p className={inbox.meta}>{selected.run.repo} · workflow “{selected.run.workflow}” · branch {selected.run.branch} · commit {selected.run.commit} · run {selected.run.conclusion ?? selected.run.status}</p>}
-              <p className={inbox.meta}>Requested by {selected.requester?.name ?? "unknown"} ({selected.requester?.email ?? "-"}) on {new Date(selected.createdAt).toLocaleString()}</p>
-              <p className={inbox.meta}>Reason: {selected.reason || "none given"}</p>
-              <p className={inbox.meta}><StatusBadge tone={STATUS_TONE[selected.status] ?? "neutral"}>{selected.status}</StatusBadge></p>
-            </Card>
-
-            {selected.decision && (
-              <Card title="Decision">
-                <p className={inbox.meta}>{selected.decision.decision === "approve" ? "Approved" : "Rejected"} by {selected.decision.decidedByName ?? "unknown"} on {new Date(selected.decision.decidedAt).toLocaleString()}</p>
-                <p className={inbox.meta}>Reason: {selected.decision.reason || "none given"}</p>
-              </Card>
-            )}
-
-            {selected.execution && (
-              <Card title="Execution">
-                <p className={inbox.meta}><StatusBadge tone={STATUS_TONE[selected.execution.status] ?? "neutral"}>{selected.execution.status}</StatusBadge></p>
-                {selected.execution.error && <p className={inbox.meta}>Error: {selected.execution.error}</p>}
-                {typeof selected.execution.result.observedStatus === "string" && <p className={inbox.meta}>Run status reported by GitHub afterwards: {selected.execution.result.observedStatus}</p>}
-                {selected.execution.endedAt && <p className={inbox.meta}>Finished {new Date(selected.execution.endedAt).toLocaleString()}</p>}
-              </Card>
-            )}
-
-            {selected.status === "pending" && (
-              <Card title="Your decision">
-                {!canDecide ? <p className={inbox.meta}>You can view this request but do not have permission to decide it.</p>
-                  : own ? <p className={inbox.meta}>You made this request, so someone else must approve it.</p>
+        {!selected ? <Card><EmptyState title="Select a request">Pick one from the list to see who asked, who decided and what happened.</EmptyState></Card> : (
+          <Card flush>
+            <div className={styles.detail}>
+              <div className={styles.head}>
+                <h2 className={styles.headTitle}>Re-run failed jobs</h2>
+                {selected.run && (
+                  <p className={styles.facts}>
+                    <span>{selected.run.repo}</span>
+                    <span>workflow “{selected.run.workflow}”</span>
+                    <span>branch {selected.run.branch} · commit <span className={styles.mono}>{selected.run.commit}</span></span>
+                    <span>run {selected.run.conclusion ?? selected.run.status}</span>
+                  </p>
+                )}
+                <div className={styles.badges}>
+                  <StatusBadge tone={STATUS_TONE[selected.status] ?? "neutral"}>{selected.status}</StatusBadge>
+                  <StatusBadge tone={RISK_TONE[selected.risk] ?? "neutral"}>{`${selected.risk} risk`}</StatusBadge>
+                </div>
+              </div>
+              <DecisionTrail
+                request={selected}
+                decision={
+                  !canDecide ? <>You can view this request but do not have permission to decide it.</>
+                  : own ? <>You made this request, so someone else must approve it.</>
                   : (
-                    <>
-                      <label className={inbox.meta} htmlFor="decision-reason">Reason (optional)</label>
-                      <input id="decision-reason" value={reason} maxLength={1000} onChange={(e) => setReason(e.target.value)} style={{ width: "100%", margin: "0.5rem 0" }} />
-                      <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <div className={styles.decide}>
+                      <p>Waiting for you. Nothing runs until you approve.</p>
+                      <label className={styles.label} htmlFor="decision-reason">Reason (optional)</label>
+                      <input id="decision-reason" className={styles.input} value={reason} maxLength={1000} onChange={(e) => setReason(e.target.value)} />
+                      <div className={styles.actions}>
                         <Button loading={busy} disabled={busy} onClick={() => void decide("approve")}>Approve &amp; run</Button>
                         <Button variant="ghost" disabled={busy} onClick={() => void decide("reject")}>Reject</Button>
                       </div>
-                    </>
-                  )}
-              </Card>
-            )}
-          </>
+                    </div>
+                  )
+                }
+              />
+            </div>
+          </Card>
         )}
       </div>
     </div>

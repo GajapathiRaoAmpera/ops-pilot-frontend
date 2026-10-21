@@ -22,7 +22,7 @@ describe("LiveAudit", () => {
     expect(spy.mock.calls[1][0]).toContain("before_id=2");
     await userEvent.selectOptions(screen.getByLabelText("Outcome"), "failure");
     await userEvent.click(screen.getByRole("button", { name: "Apply" }));
-    await screen.findByText("No events match.");
+    await screen.findByText("No events match");
     expect(String(spy.mock.calls[2][0])).toContain("outcome=failure");
   });
   it("shows a denied state", async () => {

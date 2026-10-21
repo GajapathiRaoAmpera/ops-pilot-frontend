@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button/Button";
 import { Card } from "@/components/ui/Card/Card";
+import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
 import { Table } from "@/components/ui/Table/Table";
@@ -70,7 +71,7 @@ export function LiveAudit() {
       {error && <Notice variant="error">{error}</Notice>}
       <Card title={`Audit events${events ? ` (${events.length}${next !== null ? "+" : ""})` : ""}`} flush>
         {events === null && !error ? <p className={styles.pad}>Loading…</p>
-          : events && events.length === 0 ? <p className={styles.pad}>No events match.</p>
+          : events && events.length === 0 ? <EmptyState title="No events match">Clear the action or outcome filter to see everything recorded for your organization.</EmptyState>
           : events && (
             <Table caption="Audit events">
               <thead><tr><th scope="col">Time</th><th scope="col">Actor</th><th scope="col">Action</th><th scope="col">Resource</th><th scope="col">Outcome</th><th scope="col">Detail</th></tr></thead>

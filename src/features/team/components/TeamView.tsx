@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/Button/Button";
 import { Card } from "@/components/ui/Card/Card";
+import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { PageHeader } from "@/components/ui/PageHeader/PageHeader";
 import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
@@ -134,7 +135,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
 
       <Card title={`Members${loading ? " (loading…)" : ` (${members.length})`}`} flush>
         {members.length === 0 && !loading ? (
-          <p className={styles.pad}>No members to show.</p>
+          <EmptyState title="No members yet">Create an invitation above. The person sets their own password from the link you send.</EmptyState>
         ) : (
           <Table caption="Members and roles">
             <thead><tr><th scope="col">Person</th><th scope="col">Role</th><th scope="col">Scope</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead>

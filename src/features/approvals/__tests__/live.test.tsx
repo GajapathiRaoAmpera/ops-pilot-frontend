@@ -28,7 +28,8 @@ describe("LiveApprovals", () => {
     view();
     const list = await screen.findByRole("list", { name: "Approval requests" });
     expect(within(list).getAllByRole("listitem")).toHaveLength(1);
-    expect(screen.getByText(/branch main · commit abc1234/)).toBeInTheDocument();
+    expect(screen.getByText(/branch main/)).toBeInTheDocument();
+    expect(screen.getByText("abc1234")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "History" }));
     expect(within(screen.getByRole("list", { name: "Approval requests" })).getAllByRole("listitem")).toHaveLength(1);
   });
@@ -72,5 +73,36 @@ describe("LiveApprovals", () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ detail: "forbidden" }, 403));
     view();
     await waitFor(() => expect(screen.getByRole("alert")).toHaveTextContent(/do not have permission/));
+  });
+
+  it("shows the decision trail with the current step waiting and later steps upcoming", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ requests: [req()] }));
+    view();
+    const trail = await screen.findByRole("list", { name: "Decision trail" });
+    const steps = within(trail).getAllByRole("listitem");
+    expect(steps.map((s) => s.getAttribute("data-state"))).toEqual(["done", "current", "todo", "todo"]);
+    expect(within(steps[1]).getByRole("button", { name: /Approve & run/ })).toBeInTheDocument();
+  });
+
+  it("records a failed execution honestly and marks verification as not run", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ requests: [req({
+      status: "failed",
+      decision: { decision: "approve", decidedBy: "u3", decidedByName: "Boss", reason: "", decidedAt: "2026-01-01T00:01:00Z" },
+      execution: { id: "e", status: "failed", error: "github_403", result: {}, endedAt: "2026-01-01T00:01:02Z" } })] }));
+    view();
+    await userEvent.click(await screen.findByRole("button", { name: "History" }));
+    const steps = within(await screen.findByRole("list", { name: "Decision trail" })).getAllByRole("listitem");
+    expect(steps.map((s) => s.getAttribute("data-state"))).toEqual(["done", "done", "failed", "skipped"]);
+    expect(steps[2]).toHaveTextContent(/github_403.*Nothing was re-run/);
+  });
+
+  it("shows a rejected request as not run", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ requests: [req({
+      status: "rejected", decision: { decision: "reject", decidedBy: "u3", decidedByName: "Boss", reason: "no", decidedAt: "2026-01-01T00:01:00Z" } })] }));
+    view();
+    await userEvent.click(await screen.findByRole("button", { name: "History" }));
+    const steps = within(await screen.findByRole("list", { name: "Decision trail" })).getAllByRole("listitem");
+    expect(steps.map((s) => s.getAttribute("data-state"))).toEqual(["done", "skipped", "skipped", "skipped"]);
+    expect(steps[1]).toHaveTextContent(/Rejected/);
   });
 });

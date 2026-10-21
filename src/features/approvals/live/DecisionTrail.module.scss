@@ -1,0 +1,21 @@
+.trail { list-style: none; margin: 0; padding: 0; }
+.step { position: relative; display: grid; grid-template-columns: 1.25rem minmax(0, 1fr); gap: 0.875rem; padding-bottom: 1.5rem;
+  &:last-child { padding-bottom: 0; }
+  // the rail between nodes
+  &:not(:last-child)::before { content: ""; position: absolute; left: 0.5625rem; top: 1.25rem; bottom: 0; width: 2px; background: var(--color-outline-variant); }
+}
+.node { position: relative; z-index: 1; width: 1.125rem; height: 1.125rem; margin-top: 0.125rem; border-radius: 50%; box-sizing: border-box;
+  border: 2px solid var(--color-outline-variant); background: var(--color-background); }
+.title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.5rem; font-size: 0.9375rem; font-weight: 600; }
+.state { font-size: 0.75rem; font-weight: 400; color: var(--color-outline); }
+.body { margin-top: 0.25rem; max-width: 62ch; font-size: 0.8125rem; line-height: 1.6; color: var(--color-on-surface-variant); }
+
+.step[data-state="done"] .node { border-color: var(--color-success); background: var(--color-success); }
+.step[data-state="done"]:not(:last-child)::before { background: color-mix(in srgb, var(--color-success) 55%, transparent); }
+.step[data-state="current"] .node { border-color: var(--color-primary); box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary-container) 40%, transparent); }
+.step[data-state="current"] .title { color: var(--color-primary); }
+.step[data-state="current"] .body { color: var(--color-on-surface); }
+.step[data-state="failed"] .node { border-color: var(--color-error); background: var(--color-error); }
+.step[data-state="failed"] .title { color: var(--color-error); }
+.step[data-state="skipped"] .node { border-style: dashed; }
+.step[data-state="todo"], .step[data-state="skipped"] { .title, .body { opacity: 0.7; } }
