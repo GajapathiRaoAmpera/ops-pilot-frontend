@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"tertiary-container":"#5d5b8e","on-surface-variant":"#c7c4d8","inverse-on-surface":"#283044","primary":"#c3c0ff","tertiary-fixed-dim":"#c4c1fb","on-error":"#690005","surface-tint":"#c3c0ff","primary-container":"#4f46e5","on-secondary-fixed-variant":"#003ea8","background":"#0b1326","secondary-container":"#0053db","on-tertiary-fixed-variant":"#444173","on-background":"#dae2fd","tertiary-fixed":"#e3dfff","surface-bright":"#31394d","surface-variant":"#2d3449","surface":"#0b1326","on-tertiary-container":"#dcd8ff","primary-fixed":"#e2dfff","surface-container-high":"#222a3d","on-error-container":"#ffdad6","on-secondary":"#002a78","surface-container-lowest":"#060e20","secondary-fixed-dim":"#b4c5ff","on-primary-fixed-variant":"#3323cc","on-primary-container":"#dad7ff","inverse-primary":"#4d44e3","secondary":"#b4c5ff","surface-container-low":"#131b2e","surface-container-highest":"#2d3449","on-primary-fixed":"#0f0069","surface-container":"#171f33","primary-fixed-dim":"#c3c0ff","outline-variant":"#464555","surface-dim":"#0b1326","outline":"#918fa1","tertiary":"#c4c1fb","on-tertiary-fixed":"#181445","on-primary":"#1d00a5","secondary-fixed":"#dbe1ff","on-secondary-container":"#cdd7ff","on-tertiary":"#2d2a5b","error-container":"#93000a","on-surface":"#dae2fd","error":"#ffb4ab","inverse-surface":"#dae2fd","on-secondary-fixed":"#00174b"},borderRadius:{DEFAULT:"0.125rem",lg:"0.25rem",xl:"0.5rem",full:"0.75rem"},spacing:{"space-xl":"1.5rem","gutter-mobile":"0.75rem","space-lg":"1rem","space-md":"0.75rem","margin-mobile":"1rem","space-xs":"0.25rem",margin:"1.5rem",gutter:"1rem","space-sm":"0.5rem"},fontFamily:{"body-sm":["Inter"],"label-lg":["JetBrains Mono"],"headline-xl-mobile":["Inter"],"body-lg":["Inter"],"body-md":["Inter"],"headline-md":["Inter"],"headline-sm":["Inter"],"headline-lg-mobile":["Inter"],"headline-lg":["Inter"],"label-md":["JetBrains Mono"],"label-sm":["JetBrains Mono"],"headline-xl":["Inter"]},fontSize:{"body-sm":["12px",{lineHeight:"16px",fontWeight:"400"}],"label-lg":["13px",{lineHeight:"16px",letterSpacing:"-0.005em",fontWeight:"500"}],"headline-xl-mobile":["24px",{lineHeight:"32px",letterSpacing:"-0.01em",fontWeight:"600"}],"body-lg":["15px",{lineHeight:"22px",fontWeight:"400"}],"body-md":["13px",{lineHeight:"18px",fontWeight:"400"}],"headline-md":["18px",{lineHeight:"24px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-sm":["15px",{lineHeight:"20px",fontWeight:"600"}],"headline-lg-mobile":["20px",{lineHeight:"28px",letterSpacing:"-0.01em",fontWeight:"600"}],"headline-lg":["24px",{lineHeight:"32px",letterSpacing:"-0.015em",fontWeight:"600"}],"label-md":["11px",{lineHeight:"14px",letterSpacing:"0.01em",fontWeight:"500"}],"label-sm":["10px",{lineHeight:"12px",letterSpacing:"0.02em",fontWeight:"500"}],"headline-xl":["32px",{lineHeight:"40px",letterSpacing:"-0.02em",fontWeight:"600"}]}}}};</script><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style></head><body class="bg-surface font-body-md text-body-md text-on-surface flex flex-col min-h-screen selection:bg-primary-container selection:text-on-primary-container"><header class="fixed top-0 w-full z-50 bg-surface/85 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.4)]"><div class="h-20 px-space-md flex flex-col justify-center gap-space-xs"><div class="flex items-center justify-between gap-space-sm"><div class="flex items-center gap-space-sm min-w-0"><img alt="OpsPilot Logo" class="h-8 w-auto object-contain shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA583T6K55SmWeTiTcUEKxIb1rjhQ-AHJk0qaP_WoL7MUrqHH-JMuk_XCsUDPr_mImTIrBmn8HYpil7ASVfD6b_j3Q2DLOuQWwrb_m5UcuVeNLaMDa7i1du_ilAVFeHQizwkHm5DOX7TgdlUZF8cc1ENl4QoWLWhuBnJoNqOoz_xArbA3oh08kAfAsRSIxHHA2XewQpy_Dm7AAtdbbH_vrjQ1Kvt2eLl6Cb3ttvNT75P_aOob2p_QSs"/><div class="flex flex-col min-w-0"><div class="flex items-center gap-space-xs"><span class="font-headline-sm text-headline-sm text-on-surface truncate">OpsPilot</span><span class="font-label-sm text-label-sm text-on-surface-variant font-medium">/</span><span class="font-headline-sm text-headline-sm text-primary truncate">Automation Jobs</span></div></div></div><div class="flex items-center gap-space-xs shrink-0"><button aria-label="Notifications" class="relative min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface-variant hover:text-on-surface transition-colors rounded-xl"><span class="material-symbols-outlined text-[20px]">notifications</span><span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-error ring-2 ring-surface"></span></button><div class="min-w-[44px] min-h-[44px] flex items-center justify-center"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-1 ring-outline-variant/60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1RhfomBMOI2Ui_r7peh_ryo-zTWSMXjB4wElxde22yDNCXxL1YBAehIgfvOaqOTTh2-CjKN5QG6leQe7GMua_33_GvJdEtArqaYnD8kI7z0QU7pGGlvDlWqEdEP4wFoK4-50RCEAjhMqYVpXtcr4fKSB31YqSV10ErlYB-aNwRAI7MxVj0TbZEKiKBU4oR612W_jeC_GVE5qgF5xO3bQ9tiK5JnsGbG1X_LLeU1Gzxn9RK7sQnR1p"/></div></div></div><div class="flex items-center gap-space-xs overflow-x-auto no-scrollbar py-0.5"><button class="h-6 px-space-sm bg-surface-container-high/90 hover:bg-surface-bright text-on-surface rounded-lg flex items-center gap-1 font-label-md text-label-md shrink-0 transition-colors"><span class="material-symbols-outlined text-[13px] text-secondary">domain</span><span class="truncate max-w-[110px]">Acme Corp Global</span><span class="material-symbols-outlined text-[13px] text-outline">expand_more</span></button><button class="h-6 px-space-sm bg-surface-container/90 hover:bg-surface-container-high text-on-surface-variant rounded-lg flex items-center gap-1 font-label-sm text-label-sm shrink-0 transition-colors"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0"></span><span class="font-label-sm text-label-sm text-on-surface truncate max-w-[125px]">production-us-east</span><span class="material-symbols-outlined text-[13px] text-outline">unfold_more</span></button><span class="h-6 px-space-sm bg-primary-container/20 text-primary-fixed-dim rounded-lg flex items-center gap-1 font-label-sm text-label-sm shrink-0"><span class="material-symbols-outlined text-[12px]">shield_person</span><span>DevOps Engineer</span></span></div></div></header><main class="flex flex-col relative w-full pt-20 pb-20 bg-surface min-h-screen"><div class="flex flex-col w-full pb-8">
+<!-- Dynamic Pulse Hero / Metrics Status Strip -->
+<section class="px-space-md pt-2 pb-3">
+<div class="bg-surface-container rounded-xl p-space-md shadow-md relative overflow-hidden">
+<div class="flex items-center justify-between gap-2 mb-3">
+<div class="flex items-center gap-2">
+<div class="relative flex items-center justify-center w-7 h-7 rounded-lg bg-primary-container text-on-primary-container shadow-sm">
+<span class="material-symbols-outlined text-[17px]">bolt</span>
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping opacity-75"></span>
+<span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Automation Engine</h2>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Cluster Autopilot Active</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 bg-surface-container-high px-2 py-1 rounded-lg">
+<span class="material-symbols-outlined text-[14px] text-emerald-400">speed</span>
+<span class="font-label-md text-label-md text-on-surface font-semibold">99.98%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">SLA</span>
+</div>
+</div>
+<!-- Compact 3-metric KPI grid -->
+<div class="grid grid-cols-3 gap-2 pt-1">
+<div class="bg-surface-container-lowest p-2 rounded-lg flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Active Jobs</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-primary font-semibold">3</span>
+<span class="font-label-sm text-label-sm text-emerald-400">▲ 1</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-lg flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Queued</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-on-surface font-semibold">1</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">est 12s</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-2 rounded-lg flex flex-col justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Success 24h</span>
+<div class="flex items-baseline gap-1 mt-1">
+<span class="font-headline-md text-headline-md text-emerald-400 font-semibold">98.2%</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">142</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Top Action Bar & Primary Trigger -->
+<section class="px-space-md py-1 flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<!-- Create New Automation Button -->
+<button class="flex-1 h-9 bg-primary-container hover:bg-secondary-container active:scale-[0.98] text-on-primary-container rounded-lg font-body-sm text-body-sm font-semibold flex items-center justify-center gap-1.5 shadow-sm transition-all duration-150" id="btn-create-task">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>+ New Automation Task</span>
+</button>
+<!-- Global Filter Modal / Drawer Toggle -->
+<button aria-label="Task Parameters" class="w-9 h-9 bg-surface-container-high hover:bg-surface-bright active:scale-95 text-on-surface rounded-lg flex items-center justify-center shadow-sm transition-all duration-150" id="btn-filter-settings">
+<span class="material-symbols-outlined text-[18px] text-secondary">tune</span>
+</button>
+</div>
+<!-- Search Input & Status Pill Scroller -->
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-2.5 top-2.5 text-[18px] text-outline pointer-events-none">search</span>
+<input class="w-full h-9 pl-8 pr-3 rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline font-body-sm text-body-sm focus:outline-none focus:bg-surface-container focus:ring-1 focus:ring-primary transition-all" id="job-search-input" placeholder="Search tasks by ID, label, namespace..." type="text"/>
+</div>
+<!-- Status Filters -->
+<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 text-nowrap">
+<button class="status-filter-chip px-2.5 h-6 rounded-lg bg-primary-container text-on-primary-container font-label-sm text-label-sm font-medium transition-all" data-filter="all">All (4)</button>
+<button class="status-filter-chip px-2.5 h-6 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all" data-filter="running">Running (1)</button>
+<button class="status-filter-chip px-2.5 h-6 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all" data-filter="queued">Queued (0)</button>
+<button class="status-filter-chip px-2.5 h-6 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all" data-filter="succeeded">Succeeded (2)</button>
+<button class="status-filter-chip px-2.5 h-6 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all" data-filter="failed">Failed (1)</button>
+<button class="status-filter-chip px-2.5 h-6 rounded-lg bg-surface-container-high text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all" data-filter="pending">Pending Approval (0)</button>
+</div>
+</section>
+<!-- Quick Launcher: Curated Automation Playbooks -->
+<section class="px-space-md pt-3 pb-2">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px] text-secondary">rocket_launch</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Quick Launcher</h3>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant font-mono">4 Runbooks Ready</span>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<!-- Launcher Card 1 -->
+<div class="bg-surface-container p-2.5 rounded-xl hover:bg-surface-container-high active:scale-[0.98] transition-all cursor-pointer group flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="material-symbols-outlined text-[20px] text-primary">autorenew</span>
+<span class="font-label-sm text-label-sm bg-primary-container/20 text-primary-fixed-dim px-1.5 py-0.5 rounded">K8s Pods</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-primary transition-colors line-clamp-1">Rolling Restart</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-0.5">Zero-downtime surge restart with health checks</p>
+</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between bg-surface-container-lowest/60 -mx-2.5 -mb-2.5 px-2.5 py-1.5 rounded-b-xl">
+<span class="font-label-sm text-label-sm text-outline font-mono">~2m run</span>
+<span class="material-symbols-outlined text-[16px] text-primary group-hover:translate-x-0.5 transition-transform">play_arrow</span>
+</div>
+</div>
+<!-- Launcher Card 2 -->
+<div class="bg-surface-container p-2.5 rounded-xl hover:bg-surface-container-high active:scale-[0.98] transition-all cursor-pointer group flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="material-symbols-outlined text-[20px] text-secondary">database</span>
+<span class="font-label-sm text-label-sm bg-secondary-container/20 text-secondary-fixed-dim px-1.5 py-0.5 rounded">Aurora / SQL</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-secondary transition-colors line-clamp-1">Scale-Out Replica</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-0.5">DB read replica provision &amp; load balancer sync</p>
+</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between bg-surface-container-lowest/60 -mx-2.5 -mb-2.5 px-2.5 py-1.5 rounded-b-xl">
+<span class="font-label-sm text-label-sm text-outline font-mono">~4m run</span>
+<span class="material-symbols-outlined text-[16px] text-secondary group-hover:translate-x-0.5 transition-transform">play_arrow</span>
+</div>
+</div>
+<!-- Launcher Card 3 -->
+<div class="bg-surface-container p-2.5 rounded-xl hover:bg-surface-container-high active:scale-[0.98] transition-all cursor-pointer group flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="material-symbols-outlined text-[20px] text-tertiary">lock_reset</span>
+<span class="font-label-sm text-label-sm bg-tertiary-container/20 text-tertiary-fixed-dim px-1.5 py-0.5 rounded">Ingress</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-tertiary transition-colors line-clamp-1">SSL Cert Rotation</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-0.5">Let's Encrypt / ACM renewal and Envoy reload</p>
+</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between bg-surface-container-lowest/60 -mx-2.5 -mb-2.5 px-2.5 py-1.5 rounded-b-xl">
+<span class="font-label-sm text-label-sm text-outline font-mono">~45s run</span>
+<span class="material-symbols-outlined text-[16px] text-tertiary group-hover:translate-x-0.5 transition-transform">play_arrow</span>
+</div>
+</div>
+<!-- Launcher Card 4 -->
+<div class="bg-surface-container p-2.5 rounded-xl hover:bg-surface-container-high active:scale-[0.98] transition-all cursor-pointer group flex flex-col justify-between shadow-sm">
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<span class="material-symbols-outlined text-[20px] text-error">traffic</span>
+<span class="font-label-sm text-label-sm bg-error-container/30 text-error px-1.5 py-0.5 rounded">Emergency</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface group-hover:text-error transition-colors line-clamp-1">Traffic Drain &amp; Failover</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-0.5">Shed ingress connections &amp; shift CDN origin</p>
+</div>
+<div class="mt-2.5 pt-2 flex items-center justify-between bg-surface-container-lowest/60 -mx-2.5 -mb-2.5 px-2.5 py-1.5 rounded-b-xl">
+<span class="font-label-sm text-label-sm text-outline font-mono">Immediate</span>
+<span class="material-symbols-outlined text-[16px] text-error group-hover:translate-x-0.5 transition-transform">bolt</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Live Job Execution History Feed -->
+<section class="px-space-md pt-3 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[18px] text-primary">dynamic_feed</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Execution Stream</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="flex items-center gap-1 font-label-sm text-label-sm text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          WebSocket Live
+        </span>
+</div>
+</div>
+<!-- Active Job Stream Container -->
+<div class="flex flex-col gap-3" id="job-card-list">
+<!-- Job 1: RUNNING (Featured Interactive Console Card) -->
+<article class="job-item bg-surface-container rounded-xl p-3 shadow-md relative overflow-hidden" data-search="JOB-8812 K8s Ingress Failover us-east-1 us-east-2 prod-vpc-01 David Vance" data-status="running">
+<!-- Running ambient indicator stripe -->
+<div class="absolute top-0 left-0 bottom-0 w-1.5 bg-primary"></div>
+<div class="pl-1.5 flex flex-col gap-2.5">
+<!-- Card Header & Status -->
+<div class="flex items-start justify-between gap-2">
+<div>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-md text-label-md text-primary font-semibold">#JOB-8812</span>
+<span class="font-label-sm text-label-sm bg-primary-container/20 text-primary-fixed-dim px-1.5 py-0.5 rounded font-mono">prod-vpc-01</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface mt-0.5">K8s Ingress Failover (us-east-1 → us-east-2)</h4>
+</div>
+<!-- Running Pill with Pulsing Dot -->
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-primary-container/20 text-primary shrink-0">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-sm text-label-sm font-semibold">Running</span>
+</div>
+</div>
+<!-- Step Progression Bar -->
+<div class="flex flex-col gap-1 bg-surface-container-low p-2 rounded-lg">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Step 3 of 5: Route53 DNS Latency Weights</span>
+<span class="font-label-sm text-label-sm text-primary font-mono font-medium">60%</span>
+</div>
+<!-- Progress Track -->
+<div class="w-full h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all duration-500" style="width: 60%"></div>
+</div>
+<div class="flex items-center justify-between text-outline mt-0.5">
+<span class="font-label-sm text-label-sm">Elapsed: <strong class="text-on-surface font-mono">1m 45s</strong></span>
+<span class="font-label-sm text-label-sm">By: <strong class="text-on-surface">David Vance</strong> (DevOps Lead)</span>
+</div>
+</div>
+<!-- Live Log Terminal-Style Snippet -->
+<div class="bg-surface-container-lowest rounded-lg p-2.5 font-label-sm text-label-sm flex flex-col gap-1 text-on-surface-variant font-mono">
+<div class="flex items-center justify-between pb-1 border-b border-surface-container-high/40 text-outline">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px] text-emerald-400">terminal</span>
+<span>stdout: stream-tail-0</span>
+</span>
+<span class="font-label-sm text-label-sm text-primary">auto-scrolling</span>
+</div>
+<div class="flex flex-col gap-0.5 text-body-sm leading-relaxed text-on-surface-variant overflow-x-auto no-scrollbar pt-1">
+<p class="truncate"><span class="text-outline">14:02:11</span> <span class="text-emerald-400">INFO</span> [mesh-sync] Checking upstream target health check in us-east-2...</p>
+<p class="truncate"><span class="text-outline">14:02:18</span> <span class="text-emerald-400">INFO</span> [route53] Modifying resource record 'api.acme.corp' with weight 80:20</p>
+<p class="truncate text-primary"><span class="text-outline">14:02:24</span> <span class="text-primary animate-pulse">EXEC</span> [ingress-edge] Propagating latency probes to CloudFront distribution...</p>
+</div>
+</div>
+<!-- Quick Actions Bar for Job -->
+<div class="flex items-center justify-between pt-1 gap-1.5">
+<div class="flex items-center gap-1.5">
+<button class="h-7 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[14px]">view_timeline</span>
+<span>View Logs</span>
+</button>
+<button class="h-7 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[14px]">history_edu</span>
+<span>Audit Trace</span>
+</button>
+</div>
+<button class="h-7 px-2.5 bg-error-container/30 hover:bg-error-container text-error rounded-lg font-label-sm text-label-sm font-medium flex items-center gap-1 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[14px]">cancel</span>
+<span>Cancel Job</span>
+</button>
+</div>
+</div>
+</article>
+<!-- Job 2: SUCCEEDED (Redis Cache Flush) -->
+<article class="job-item bg-surface-container rounded-xl p-3 shadow-sm relative overflow-hidden" data-search="JOB-8809 Redis Cache Cluster Flush Warmup cache-cluster-01 Succeeded" data-status="succeeded">
+<div class="absolute top-0 left-0 bottom-0 w-1.5 bg-emerald-500"></div>
+<div class="pl-1.5 flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-md text-label-md text-on-surface font-semibold">#JOB-8809</span>
+<span class="font-label-sm text-label-sm bg-surface-container-high text-on-surface-variant px-1.5 py-0.5 rounded font-mono">cache-cluster-01</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface mt-0.5">Redis Cache Cluster Flush &amp; Warmup</h4>
+</div>
+<!-- Success Pill -->
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 shrink-0">
+<span class="material-symbols-outlined text-[13px]">check_circle</span>
+<span class="font-label-sm text-label-sm font-semibold">Succeeded</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-outline bg-surface-container-low px-2 py-1.5 rounded-lg">
+<span class="font-label-sm text-label-sm">Total Duration: <strong class="text-on-surface font-mono">42s</strong></span>
+<span class="font-label-sm text-label-sm">Memory Cleared: <strong class="text-emerald-400 font-mono">14.8 GB</strong></span>
+<span class="font-label-sm text-label-sm">Automated Bot</span>
+</div>
+<div class="flex items-center justify-between pt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Completed at 13:58 UTC</span>
+<div class="flex items-center gap-1.5">
+<button class="h-6 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">assignment</span>
+<span>View Logs</span>
+</button>
+<button class="h-6 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">replay</span>
+<span>Re-run</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Job 3: SUCCEEDED with Approval Attribution -->
+<article class="job-item bg-surface-container rounded-xl p-3 shadow-sm relative overflow-hidden" data-search="JOB-8804 Production Schema Migration v44 Sarah Chen Org Admin Succeeded" data-status="succeeded">
+<div class="absolute top-0 left-0 bottom-0 w-1.5 bg-emerald-500"></div>
+<div class="pl-1.5 flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-md text-label-md text-on-surface font-semibold">#JOB-8804</span>
+<span class="font-label-sm text-label-sm bg-surface-container-high text-on-surface-variant px-1.5 py-0.5 rounded font-mono">aurora-prod-main</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface mt-0.5">Production Schema Migration v44</h4>
+</div>
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 shrink-0">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+<span class="font-label-sm text-label-sm font-semibold">Succeeded</span>
+</div>
+</div>
+<!-- Sign-off & Audit verification tile -->
+<div class="flex items-center gap-2 bg-surface-container-low p-2 rounded-lg">
+<div class="w-6 h-6 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold font-label-sm text-label-sm shrink-0">
+              SC
+            </div>
+<div class="flex-1 min-w-0">
+<p class="font-body-sm text-body-sm text-on-surface truncate">Approved by <span class="font-semibold text-primary">Sarah Chen</span> (Org Admin)</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Signature: <span class="font-mono text-outline">sec-gpg-4f99a1...</span></p>
+</div>
+<span class="font-label-sm text-label-sm text-outline font-mono">11m 12s</span>
+</div>
+<div class="flex items-center justify-between pt-0.5">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Executed with 0 table locks</span>
+<div class="flex items-center gap-1.5">
+<button class="h-6 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[13px]">policy</span>
+<span>View Audit Trace</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+<!-- Job 4: FAILED (Vulnerability Patch Dependency Conflict) -->
+<article class="job-item bg-surface-container rounded-xl p-3 shadow-sm relative overflow-hidden" data-search="JOB-8798 Container Vulnerability Patch Batch libc6 Failed Quick Retry" data-status="failed">
+<div class="absolute top-0 left-0 bottom-0 w-1.5 bg-error"></div>
+<div class="pl-1.5 flex flex-col gap-2">
+<div class="flex items-start justify-between gap-2">
+<div>
+<div class="flex items-center gap-1.5 flex-wrap">
+<span class="font-label-md text-label-md text-error font-semibold">#JOB-8798</span>
+<span class="font-label-sm text-label-sm bg-error-container/30 text-error px-1.5 py-0.5 rounded font-mono">fleet-node-pool-west</span>
+</div>
+<h4 class="font-body-md text-body-md font-semibold text-on-surface mt-0.5">Container Vulnerability Patch Batch</h4>
+</div>
+<!-- Error Pill -->
+<div class="flex items-center gap-1 px-2 py-0.5 rounded-full bg-error-container/30 text-error shrink-0">
+<span class="material-symbols-outlined text-[13px]">error</span>
+<span class="font-label-sm text-label-sm font-semibold">Failed</span>
+</div>
+</div>
+<!-- Error Monospaced Callout -->
+<div class="bg-surface-container-lowest p-2 rounded-lg font-mono text-body-sm text-error flex flex-col gap-1">
+<div class="flex items-center gap-1 font-semibold text-label-sm">
+<span class="material-symbols-outlined text-[14px]">crisis_alert</span>
+<span>Dependency conflict on libc6 &gt;= 2.36</span>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">
+              dpkg: error processing package libcrypt1:amd64 (--configure): breaks libc6
+            </p>
+</div>
+<div class="flex items-center justify-between text-outline">
+<span class="font-label-sm text-label-sm">Halted at Step 2 of 4</span>
+<span class="font-label-sm text-label-sm font-mono text-outline">35m ago</span>
+</div>
+<!-- Action Buttons for Failure Recovery -->
+<div class="flex items-center justify-between pt-1 gap-1.5">
+<button class="h-7 px-2.5 bg-surface-container-high hover:bg-surface-bright text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[14px]">terminal</span>
+<span>Inspect Logs</span>
+</button>
+<div class="flex items-center gap-1.5">
+<button class="h-7 px-2 bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-on-surface rounded-lg font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">history_edu</span>
+<span>Trace</span>
+</button>
+<button class="h-7 px-3 bg-primary hover:bg-primary/90 text-on-primary rounded-lg font-label-sm text-label-sm font-semibold flex items-center gap-1 shadow-sm active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[14px]">refresh</span>
+<span>Quick Retry</span>
+</button>
+</div>
+</div>
+</div>
+</article>
+</div>
+<!-- Empty State Container (Hidden by default, shown when filters return 0) -->
+<div class="hidden flex-col items-center justify-center p-6 bg-surface-container rounded-xl text-center mt-2" id="no-jobs-empty-state">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center text-outline mb-2">
+<span class="material-symbols-outlined text-[26px]">manage_search</span>
+</div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface">No Automation Tasks Found</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1 max-w-[260px]">
+        No runbook jobs match the selected filter query. Try clearing search keywords or selecting "All".
+      </p>
+<button class="mt-3 px-3 py-1.5 rounded-lg bg-surface-container-high text-primary hover:bg-surface-bright font-label-sm text-label-sm font-medium" id="btn-reset-filters">
+        Reset Filters
+      </button>
+</div>
+</section>
+<!-- Interactive Slide-Up Modal: Quick New Automation Task Drawer -->
+<div class="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex flex-col justify-end opacity-0 pointer-events-none transition-opacity duration-200" id="new-task-modal">
+<div class="bg-surface-container w-full max-h-[85vh] rounded-t-2xl p-space-md shadow-2xl flex flex-col gap-3 transform translate-y-full transition-transform duration-200 overflow-y-auto" id="new-task-sheet">
+<div class="w-12 h-1 rounded-full bg-outline/40 self-center mb-1"></div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">play_circle</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Dispatch Automation Runbook</h3>
+</div>
+<button class="w-8 h-8 rounded-lg flex items-center justify-center text-on-surface-variant hover:text-on-surface bg-surface-container-high" id="btn-close-modal">
+<span class="material-symbols-outlined text-[18px]">close</span>
+</button>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Select an audited orchestration template and assign target cluster bounds.</p>
+<form class="flex flex-col gap-3 mt-1" id="create-task-form" onsubmit="event.preventDefault();">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Runbook Template</label>
+<select class="w-full h-9 px-2.5 rounded-lg bg-surface-container-low text-on-surface font-body-sm text-body-sm focus:outline-none focus:ring-1 focus:ring-primary">
+<option>Zero-Downtime Rolling Restart (K8s Pods)</option>
+<option>Database Read Replica Scale-Out (AWS Aurora / GCP Cloud SQL)</option>
+<option>SSL Certificate Rotation &amp; Ingress Sync</option>
+<option>Emergency Traffic Drain &amp; Failover</option>
+<option>Custom Ansible / Terraform Orchestration Pipeline</option>
+</select>
+</div>
+<div class="grid grid-cols-2 gap-2">
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Target Namespace</label>
+<input class="w-full h-9 px-2.5 rounded-lg bg-surface-container-low text-on-surface font-mono text-label-sm focus:outline-none focus:ring-1 focus:ring-primary" type="text" value="production-us-east"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Concurrency Guard</label>
+<select class="w-full h-9 px-2.5 rounded-lg bg-surface-container-low text-on-surface font-label-sm text-label-sm focus:outline-none focus:ring-1 focus:ring-primary">
+<option>Strict (1 at a time)</option>
+<option>Surge (+25% capacity)</option>
+<option>Force Immediate</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="font-label-sm text-label-sm text-on-surface-variant">Change Request Reference</label>
+<input class="w-full h-9 px-2.5 rounded-lg bg-surface-container-low text-on-surface placeholder:text-outline font-label-sm text-label-sm focus:outline-none focus:ring-1 focus:ring-primary" placeholder="CR-90412 or Jira Ticket Key" type="text"/>
+</div>
+<div class="p-2.5 bg-surface-container-low rounded-lg flex items-center justify-between text-on-surface-variant">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-emerald-400">shield</span>
+<span class="font-label-sm text-label-sm">Requires Org Admin Sign-off</span>
+</div>
+<input checked="" class="w-4 h-4 accent-primary rounded" type="checkbox"/>
+</div>
+<div class="flex items-center gap-2 mt-2 pt-2 border-t border-surface-container-high">
+<button class="flex-1 h-9 rounded-lg bg-surface-container-high hover:bg-surface-bright text-on-surface font-body-sm text-body-sm" id="btn-cancel-modal" type="button">
+            Cancel
+          </button>
+<button class="flex-1 h-9 rounded-lg bg-primary-container hover:bg-secondary-container text-on-primary-container font-body-sm text-body-sm font-semibold flex items-center justify-center gap-1" id="btn-submit-task" type="submit">
+<span class="material-symbols-outlined text-[16px]">bolt</span>
+<span>Execute Task</span>
+</button>
+</div>
+</form>
+</div>
+</div>
+</div>
+<script>
+  (function () {
+    const searchInput = document.getElementById('job-search-input');
+    const filterChips = document.querySelectorAll('.status-filter-chip');
+    const jobItems = document.querySelectorAll('.job-item');
+    const emptyState = document.getElementById('no-jobs-empty-state');
+    const resetFiltersBtn = document.getElementById('btn-reset-filters');
+
+    let currentFilter = 'all';
+
+    function filterJobs() {
+      const query = (searchInput.value || '').toLowerCase().trim();
+      let visibleCount = 0;
+
+      jobItems.forEach(item => {
+        const itemStatus = item.getAttribute('data-status') || '';
+        const itemSearchText = (item.getAttribute('data-search') || '').toLowerCase();
+
+        const matchesStatus = (currentFilter === 'all') || (itemStatus === currentFilter);
+        const matchesQuery = query === '' || itemSearchText.includes(query);
+
+        if (matchesStatus && matchesQuery) {
+          item.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+
+      if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+        emptyState.classList.add('flex');
+      } else {
+        emptyState.classList.add('hidden');
+        emptyState.classList.remove('flex');
+      }
+    }
+
+    filterChips.forEach(chip => {
+      chip.addEventListener('click', function () {
+        filterChips.forEach(c => {
+          c.classList.remove('bg-primary-container', 'text-on-primary-container', 'font-medium');
+          c.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+        });
+        this.classList.add('bg-primary-container', 'text-on-primary-container', 'font-medium');
+        this.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+
+        currentFilter = this.getAttribute('data-filter');
+        filterJobs();
+      });
+    });
+
+    searchInput.addEventListener('input', filterJobs);
+
+    if (resetFiltersBtn) {
+      resetFiltersBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        currentFilter = 'all';
+        filterChips.forEach((c, idx) => {
+          if (idx === 0) {
+            c.classList.add('bg-primary-container', 'text-on-primary-container', 'font-medium');
+            c.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+          } else {
+            c.classList.remove('bg-primary-container', 'text-on-primary-container', 'font-medium');
+            c.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+          }
+        });
+        filterJobs();
+      });
+    }
+
+    // Modal Interaction
+    const modal = document.getElementById('new-task-modal');
+    const sheet = document.getElementById('new-task-sheet');
+    const openBtn = document.getElementById('btn-create-task');
+    const closeBtn = document.getElementById('btn-close-modal');
+    const cancelBtn = document.getElementById('btn-cancel-modal');
+    const submitBtn = document.getElementById('btn-submit-task');
+
+    function openModal() {
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      sheet.classList.remove('translate-y-full');
+    }
+
+    function closeModal() {
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      sheet.classList.add('translate-y-full');
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    if (submitBtn) {
+      submitBtn.addEventListener('click', () => {
+        submitBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span> <span>Queueing...</span>';
+        setTimeout(() => {
+          closeModal();
+          submitBtn.innerHTML = '<span class="material-symbols-outlined text-[16px]">bolt</span> <span>Execute Task</span>';
+        }, 700);
+      });
+    }
+
+    // Allow background click to close
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface/90 backdrop-blur-xl shadow-[0_-1px_12px_rgba(0,0,0,0.5)]" data-active-classes="text-primary [&amp;&gt;div]:bg-primary-container/30 [&amp;&gt;span.material-symbols-outlined]:text-primary"><div class="flex justify-around items-center h-16 px-space-xs"><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-on-surface transition-all group" data-path="overview-dashboard" href="#"><div class="w-10 h-7 flex items-center justify-center rounded-full transition-colors group-hover:bg-surface-container-high/60"><span class="material-symbols-outlined text-[20px]">dashboard</span></div><span class="font-label-sm text-label-sm font-medium tracking-tight">Overview</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-on-surface transition-all group" data-path="cloud-pipelines" href="#"><div class="w-10 h-7 flex items-center justify-center rounded-full transition-colors group-hover:bg-surface-container-high/60"><span class="material-symbols-outlined text-[20px]">account_tree</span></div><span class="font-label-sm text-label-sm font-medium tracking-tight">Pipelines</span></a><a aria-current="page" class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] py-1 transition-all group text-primary [&amp;&gt;div]:bg-primary-container/30 [&amp;&gt;span.material-symbols-outlined]:text-primary" data-path="automation-jobs" href="#"><div class="w-10 h-7 flex items-center justify-center rounded-full transition-colors group-hover:bg-surface-container-high/60"><span class="material-symbols-outlined text-[20px]">terminal</span></div><span class="font-label-sm text-label-sm font-medium tracking-tight">Jobs</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-on-surface transition-all group" data-path="ai-copilot" href="#"><div class="w-10 h-7 flex items-center justify-center rounded-full transition-colors group-hover:bg-surface-container-high/60"><span class="material-symbols-outlined text-[20px]">smart_toy</span></div><span class="font-label-sm text-label-sm font-medium tracking-tight">Copilot</span></a><a class="flex flex-col items-center justify-center gap-0.5 min-w-[56px] min-h-[44px] py-1 text-on-surface-variant hover:text-on-surface transition-all group" data-path="approvals-audit" href="#"><div class="w-10 h-7 flex items-center justify-center rounded-full transition-colors group-hover:bg-surface-container-high/60"><span class="material-symbols-outlined text-[20px]">verified_user</span></div><span class="font-label-sm text-label-sm font-medium tracking-tight">Approvals</span></a></div></nav></body></html>
