@@ -11,7 +11,7 @@ import { Table } from "@/components/ui/Table/Table";
 import { TextField } from "@/components/ui/TextField/TextField";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { callBackend, inviteUrl, messageFor } from "@/lib/backend-client";
-import { ORG_ROLE_KEYS, ROLE_LABELS, WORKSPACE_ROLE_KEYS, WS_ADMIN_GRANTABLE_KEYS, type MemberRow } from "../roles";
+import type { MemberRow, RoleCatalog } from "../roles";
 import styles from "./Admin.module.scss";
 
 interface Workspace { id: string; name: string }
@@ -24,6 +24,7 @@ interface PendingInvite { id: string; email: string; kind: string; expiresAt: st
 export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspaces: Workspace[] }) {
   const [allWorkspaces, setAllWorkspaces] = useState<Workspace[]>(workspaces);
   const [scope, setScope] = useState<string>(orgAdmin ? "" : (workspaces[0]?.id ?? ""));
+  const [catalog, setCatalog] = useState<RoleCatalog | null>(null);
   const [members, setMembers] = useState<MemberRow[]>([]);
   const [pending, setPending] = useState<PendingInvite[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +41,9 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
   useEffect(() => {
     let cancelled = false;
     (async () => {
+      const cat = await callBackend<RoleCatalog>("GET", "meta/roles");
+      if (!cancelled && cat.ok) setCatalog(cat.data);
+      if (cancelled) return;
       if (orgAdmin) {
         const [m, w, i] = await Promise.all([
           callBackend<{ members: MemberRow[] }>("GET", "org/members"),
@@ -62,8 +66,10 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
     return () => { cancelled = true; };
   }, [orgAdmin, scope, tick]);
 
-  const roleOptions = orgAdmin ? (scope ? WORKSPACE_ROLE_KEYS : ORG_ROLE_KEYS) : WS_ADMIN_GRANTABLE_KEYS;
-  const effectiveRole = (roleOptions as readonly string[]).includes(role) ? role : "viewer";
+  const labels = Object.fromEntries((catalog?.roles ?? []).map((r) => [r.key, r.label]));
+  const orgKeys = (catalog?.roles ?? []).map((r) => r.key);
+  const roleOptions: string[] = orgAdmin ? (scope ? (catalog?.workspaceRoles ?? []) : orgKeys) : (catalog?.wsAdminGrantable ?? []);
+  const effectiveRole = roleOptions.includes(role) ? role : (roleOptions.includes("viewer") ? "viewer" : (roleOptions[0] ?? ""));
 
   async function invite(e: FormEvent) {
     e.preventDefault();
@@ -110,7 +116,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
           <label className={styles.selectField}>
             Role
             <select className={styles.select} value={effectiveRole} onChange={(e) => setRole(e.target.value)}>
-              {roleOptions.map((k) => <option key={k} value={k}>{ROLE_LABELS[k]}</option>)}
+              {roleOptions.map((k) => <option key={k} value={k}>{labels[k] ?? k}</option>)}
             </select>
           </label>
           <label className={styles.selectField}>
@@ -120,7 +126,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
               {allWorkspaces.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}
             </select>
           </label>
-          <Button type="submit" loading={busy} disabled={busy || (!orgAdmin && !scope)}>Create invitation</Button>
+          <Button type="submit" loading={busy} disabled={busy || !effectiveRole || (!orgAdmin && !scope)}>Create invitation</Button>
         </form>
       </Card>
 
@@ -152,8 +158,8 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
                   <td>
                     <div className={styles.rowActions}>
                       <select aria-label={`Change role for ${m.email}`} className={styles.select} value={m.role}
-                        onChange={(e) => void act(`Change ${m.email} to ${ROLE_LABELS[e.target.value]}?`, () => callBackend("PATCH", memberPath(m), { role: e.target.value }))}>
-                        {(m.workspaceId ? WORKSPACE_ROLE_KEYS : ORG_ROLE_KEYS).map((k) => <option key={k} value={k}>{ROLE_LABELS[k]}</option>)}
+                        onChange={(e) => void act(`Change ${m.email} to ${labels[e.target.value] ?? e.target.value}?`, () => callBackend("PATCH", memberPath(m), { role: e.target.value }))}>
+                        {(m.workspaceId ? (catalog?.workspaceRoles ?? []) : orgKeys).map((k) => <option key={k} value={k}>{labels[k] ?? k}</option>)}
                       </select>
                       <Button variant="ghost" className={styles.small}
                         onClick={() => void act(`Remove ${m.email} from this ${m.workspaceId ? "workspace" : "organization"}?`, () => callBackend("DELETE", memberPath(m)))}>Remove</Button>

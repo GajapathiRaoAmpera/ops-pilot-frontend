@@ -26,6 +26,7 @@ const ALLOWED: RegExp[] = [
   /^workspaces\/[0-9a-f-]{36}\/executions$/,
   /^audit-events$/,
   /^rbac\/matrix$/,
+  /^meta\/roles$/,
 ];
 /** Only these query keys are forwarded (filters/pagination); everything else is dropped. */
 const QUERY_KEYS = ["status", "limit", "action", "outcome", "before_id"];
