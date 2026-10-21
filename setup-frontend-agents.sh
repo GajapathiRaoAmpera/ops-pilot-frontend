@@ -14,10 +14,7 @@ if [[ ! -d "$ROOT" ]]; then
   exit 1
 fi
 
-mkdir -p 
-  .claude/agents 
-  .claude/rules 
-  docs
+mkdir -p .claude/agents .claude/rules docs
 
 create_if_missing() {
   local file="$1"
