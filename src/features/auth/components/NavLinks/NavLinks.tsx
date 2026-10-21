@@ -22,15 +22,15 @@ export function NavLinks() {
     <nav aria-label="Primary" className={styles.nav}>
       {sections.map((section) => (
         <div key={section}>
-          <h2 className={styles.section}>{section}</h2>
+          <h2 className={styles.section} title={section}>{section}</h2>
           <ul className={styles.list}>
             {items.filter((i) => i.section === section).map((item) => {
               const active = pathname === item.href || pathname.startsWith(`${item.href}/`);
               return (
                 <li key={item.href}>
-                  <Link href={item.href} aria-current={active ? "page" : undefined} className={cx(styles.link, active && styles.active)}>
+                  <Link href={item.href} title={item.label} aria-current={active ? "page" : undefined} className={cx(styles.link, active && styles.active)}>
                     <Icon name={item.icon} />
-                    {item.label}
+                    <span className={styles.label}>{item.label}</span>
                   </Link>
                 </li>
               );
