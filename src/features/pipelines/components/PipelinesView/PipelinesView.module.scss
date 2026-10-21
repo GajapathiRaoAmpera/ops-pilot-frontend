@@ -1,0 +1,8 @@
+@use "mixins";
+
+.page { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.select { display: inline-flex; align-items: center; gap: 0.375rem; padding: 0.25rem 0.5rem; border-radius: 0.5rem; background: var(--color-surface-container); color: var(--color-on-surface); font-size: 0.75rem;
+  select { border: 0; background: var(--color-surface-container); color: var(--color-on-surface); font-size: 0.75rem; }
+  &:focus-within { outline: 2px solid var(--color-secondary); outline-offset: 2px; } }
+.bottom { display: grid; gap: 0.75rem; grid-template-columns: 1fr; @include mixins.up(lg) { grid-template-columns: 2fr 1fr; } }

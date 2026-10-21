@@ -1,0 +1,20 @@
+@use "mixins";
+
+.layout { display: grid; gap: 1.5rem; @include mixins.up(lg) { grid-template-columns: 1fr 1fr; } }
+.panel { @include mixins.glass-card; padding: 1.5rem; @include mixins.up(sm) { padding: 2rem; } }
+
+.eyebrow { @include mixins.eyebrow; display: inline-flex; align-items: center; gap: 0.375rem; margin-bottom: 0.75rem; color: var(--color-primary); }
+.title { font-size: 1.875rem; font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+.summary { margin-top: 0.75rem; color: var(--color-on-surface-variant); }
+
+.areasTitle { @include mixins.eyebrow; margin: 2rem 0 0.5rem; color: var(--color-outline); font-weight: 400; }
+.areas { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.area {
+  padding: 0.25rem 0.625rem; border-radius: 0.375rem; font-size: 0.875rem;
+  border: 1px solid var(--color-outline-variant); background: var(--color-surface-container); color: var(--color-on-surface-variant);
+}
+.disclaimer { margin-top: 2rem; padding-top: 1rem; font-size: 0.75rem; color: var(--color-outline); border-top: 1px solid color-mix(in srgb, var(--color-outline-variant) 50%, transparent); }
+
+.formTitle { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.015em; }
+.formLead { margin: 0.25rem 0 1.5rem; font-size: 0.875rem; color: var(--color-on-surface-variant); }
+.back { margin-top: 1.5rem; text-align: center; font-size: 0.875rem; a { color: var(--color-secondary); text-underline-offset: 4px; &:hover { text-decoration: underline; } } }

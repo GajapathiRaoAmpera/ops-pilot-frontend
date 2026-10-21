@@ -1,0 +1,22 @@
+@use "mixins";
+
+.mono { font-family: var(--font-jetbrains), monospace; font-size: 0.75rem; color: var(--color-outline); }
+.count { @include mixins.eyebrow; color: var(--color-outline); }
+.chips { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.75rem; }
+.chip {
+  padding: 0.25rem 0.625rem; border-radius: 0.375rem; font-size: 0.75rem; cursor: pointer;
+  border: 1px solid var(--color-outline-variant); background: transparent; color: var(--color-on-surface-variant);
+  @include mixins.focus-ring;
+  &[aria-pressed="true"] { background: var(--color-primary-container); color: var(--color-on-primary-container); border-color: transparent; }
+}
+.empty { color: var(--color-outline); font-size: 0.875rem; }
+.runbooks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.runbook {
+  padding: 0.875rem; border-radius: 0.625rem; background: var(--color-surface-container);
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
+  &[data-impact="high"] { border-left: 3px solid var(--color-error); }
+}
+.tags { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.rbTitle { margin: 0.5rem 0 0.25rem; font-size: 1rem; font-weight: 600; }
+.rbDesc { margin: 0 0 0.75rem; font-size: 0.8125rem; color: var(--color-on-surface-variant); }
+.rbFoot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }

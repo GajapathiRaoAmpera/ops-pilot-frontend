@@ -1,0 +1,30 @@
+@use "mixins";
+
+.backdrop { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(64px);
+  animation: drift 18s ease-in-out infinite;
+}
+.orbA { left: -8rem; top: -8rem; width: 28rem; height: 28rem; background: color-mix(in srgb, var(--color-primary-container) 30%, transparent); }
+.orbB { right: -6rem; bottom: -10rem; width: 32rem; height: 32rem; background: color-mix(in srgb, var(--color-secondary) 10%, transparent); animation-duration: 24s; animation-direction: reverse; }
+
+.grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  background-image:
+    linear-gradient(var(--color-outline) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-outline) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(3%, -4%, 0) scale(1.08); }
+}
+
+@include mixins.reduced-motion { .orb { animation: none; } }

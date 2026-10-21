@@ -1,0 +1,40 @@
+import "server-only";
+import { cache } from "react";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { backendFetch } from "./backend";
+import { isGuardBypassed, PREVIEW_SESSION } from "../dev-bypass";
+import { hasPermission } from "../permissions";
+import { parseSession } from "../session-parser";
+import type { Session, SessionResult } from "../types";
+
+/** Validates the session cookie with the backend (`GET /auth/me`, unverified contract). */
+export async function fetchSession(cookieHeader: string): Promise<SessionResult> {
+  if (!cookieHeader) return { status: "unauthenticated" };
+  try {
+    const res = await backendFetch("/auth/me", { headers: { cookie: cookieHeader } });
+    if (res.status === 401) return { status: "unauthenticated" };
+    if (!res.ok) return { status: "error" };
+    const session = parseSession(await res.json());
+    return session ? { status: "authenticated", session } : { status: "error" };
+  } catch {
+    return { status: "error" };
+  }
+}
+
+export const getSession = cache(async (): Promise<SessionResult> => {
+  const store = await cookies();
+  return fetchSession(store.toString());
+});
+
+/** Page-level guard. Unauthenticated -> /login, missing permission -> /unauthorized. */
+export async function requireSession(permission?: string): Promise<Session> {
+  if (isGuardBypassed()) return PREVIEW_SESSION;
+  const result = await getSession();
+  if (result.status === "unauthenticated") redirect("/login?reason=expired");
+  if (result.status === "error") redirect("/login?reason=unavailable");
+  if (permission && !hasPermission(result.session.permissions, permission)) {
+    redirect("/unauthorized");
+  }
+  return result.session;
+}

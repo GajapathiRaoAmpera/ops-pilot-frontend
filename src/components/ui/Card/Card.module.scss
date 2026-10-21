@@ -1,0 +1,13 @@
+.card {
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
+  border-radius: 0.75rem;
+  background: var(--color-surface-low);
+  min-width: 0;
+}
+.header {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem;
+  padding: 0.875rem 1rem; border-bottom: 1px solid color-mix(in srgb, var(--color-outline-variant) 50%, transparent);
+}
+.title { font-size: 0.9375rem; font-weight: 600; }
+.body { padding: 1rem; }
+.flush { padding: 0; }

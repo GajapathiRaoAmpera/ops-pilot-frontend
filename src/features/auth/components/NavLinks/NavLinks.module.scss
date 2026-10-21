@@ -1,0 +1,23 @@
+@use "mixins";
+
+.nav { display: flex; flex-direction: column; gap: 1.25rem; }
+.empty { padding-inline: 0.75rem; font-size: 0.875rem; color: var(--color-outline); }
+
+.section {
+  margin-bottom: 0.25rem; padding-inline: 0.75rem; font-size: 0.6875rem; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-outline);
+}
+.list { display: flex; flex-direction: column; gap: 0.125rem; }
+
+.link {
+  display: flex; align-items: center; gap: 0.625rem; padding: 0.5rem 0.75rem; border-radius: 0.5rem;
+  font-size: 0.875rem; text-decoration: none; color: var(--color-on-surface-variant);
+  transition: background-color 0.15s, color 0.15s;
+  @include mixins.focus-ring;
+  &:hover { background: var(--color-surface-high); color: var(--color-on-surface); }
+}
+.active {
+  background: color-mix(in srgb, var(--color-primary-container) 25%, transparent);
+  color: var(--color-primary);
+  &:hover { background: color-mix(in srgb, var(--color-primary-container) 25%, transparent); color: var(--color-primary); }
+}

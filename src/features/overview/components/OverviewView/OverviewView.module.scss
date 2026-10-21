@@ -1,0 +1,4 @@
+@use "mixins";
+.view { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }
+.split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1rem; @include mixins.up(lg) { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); } }
+.main, .side { display: flex; flex-direction: column; gap: 1rem; min-width: 0; }

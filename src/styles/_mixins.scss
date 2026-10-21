@@ -1,0 +1,35 @@
+@use "sass:map";
+@use "tokens";
+
+@mixin up($bp) {
+  @media (min-width: map.get(tokens.$breakpoints, $bp)) {
+    @content;
+  }
+}
+
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+}
+
+@mixin glass-card {
+  border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
+  border-radius: tokens.$radius-lg;
+  background: color-mix(in srgb, var(--color-surface-low) 80%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+@mixin eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}

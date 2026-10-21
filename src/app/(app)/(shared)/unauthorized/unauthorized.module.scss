@@ -1,0 +1,11 @@
+@use "mixins";
+
+.box { max-width: 32rem; }
+.title { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.015em; }
+.text { margin-top: 0.75rem; font-size: 0.875rem; color: var(--color-on-surface-variant); }
+.cta {
+  display: inline-block; margin-top: 1.25rem; padding: 0.5rem 1rem; border-radius: 0.5rem;
+  font-size: 0.875rem; font-weight: 600; text-decoration: none;
+  background: var(--color-primary-container); color: var(--color-on-primary-container);
+  @include mixins.focus-ring;
+}

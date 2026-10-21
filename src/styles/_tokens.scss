@@ -1,0 +1,34 @@
+// Design tokens from Stitch opspilot_core/DESIGN.md. Emitted as CSS custom properties
+// (see globals.scss) so every *.module.scss consumes var(--color-*).
+$colors: (
+  "background": #0b1326,
+  "surface-lowest": #060e20,
+  "surface-low": #131b2e,
+  "surface-container": #171f33,
+  "surface-high": #222a3d,
+  "on-surface": #dae2fd,
+  "on-surface-variant": #c7c4d8,
+  "outline": #918fa1,
+  "outline-variant": #464555,
+  "primary": #c3c0ff,
+  "on-primary-container": #dad7ff,
+  "primary-container": #4f46e5,
+  "secondary": #b4c5ff,
+  "error": #ffb4ab,
+  "error-container": #93000a,
+  "on-error-container": #ffdad6,
+  "warning": #f59e0b,
+  "success": #4ade80,
+  "tertiary": #c4c1fb,
+  "surface-highest": #2d3449,
+);
+
+$breakpoints: (
+  "sm": 40rem,
+  "md": 48rem,
+  "lg": 64rem,
+);
+
+$radius-sm: 0.5rem;
+$radius-md: 0.75rem;
+$radius-lg: 1rem;
