@@ -1,6 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 import { backendFetch } from "@/features/auth/server/backend";
+import { parseOverview } from "../parse";
 
 export interface PendingItem { id: string; risk: string; createdAt: string; requester: string | null; workflow: string; repo: string; branch: string }
 export interface RecentExecution { id: string; status: string; type: string; workflow: string; repo: string; createdAt: string }
@@ -27,9 +28,8 @@ export async function fetchOverview(workspaceId: string | undefined): Promise<Su
     const res = await backendFetch(`/workspaces/${encodeURIComponent(workspaceId)}/overview`, { headers: { cookie: (await cookies()).toString() } });
     if (res.status === 403 || res.status === 404) return { state: "forbidden" };
     if (!res.ok) return { state: "error" };
-    const d = await res.json();
-    if (!d?.pipelines || !d?.approvals) return { state: "error" };
-    return { state: "ok", data: d as OverviewSummary };
+    const data = parseOverview(await res.json());
+    return data ? { state: "ok", data } : { state: "error" };
   } catch {
     return { state: "error" };
   }
