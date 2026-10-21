@@ -17,9 +17,9 @@
 }
 .active { background: var(--color-surface-high); border-left-color: var(--color-primary); }
 .row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem; }
-.id { font-family: var(--font-jetbrains), monospace; font-size: 0.75rem; color: var(--color-on-surface-variant); }
+.id { font-family: var(--font-mono), monospace; font-size: 0.75rem; color: var(--color-on-surface-variant); }
 .itemTitle { font-weight: 600; }
 .meta { font-size: 0.75rem; color: var(--color-on-surface-variant); overflow-wrap: anywhere; }
 .empty { padding: 1rem; font-size: 0.8125rem; color: var(--color-on-surface-variant); }
 .bar { height: 6px; margin: 0.75rem 0 0.5rem; border-radius: 999px; background: var(--color-surface-lowest); overflow: hidden; span { display: block; height: 100%; background: var(--color-primary); } }
-.sla { display: flex; justify-content: space-between; font-family: var(--font-jetbrains), monospace; }
+.sla { display: flex; justify-content: space-between; font-family: var(--font-mono), monospace; }

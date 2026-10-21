@@ -1,8 +1,9 @@
 .tile {
-  display: flex; flex-direction: column; gap: 0.25rem; padding: 1rem; min-width: 0;
+  display: flex; flex-direction: column; gap: 0.125rem; padding: 0.75rem 0.875rem; min-width: 0;
   border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
-  border-radius: 0.75rem; background: var(--color-surface-low);
+  border-radius: 0.5rem; background: var(--color-surface-low);
 }
-.label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.04em; text-transform: uppercase; color: var(--color-outline); }
-.value { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
-.sub { font-size: 0.8125rem; color: var(--color-on-surface-variant); }
+.label { font-size: 0.75rem; font-weight: 500; color: var(--color-outline); }
+// Figures are data: monospace with tabular numerals so columns of numbers line up.
+.value { font-family: var(--font-mono), ui-monospace, monospace; font-variant-numeric: tabular-nums; font-size: 1.5rem; font-weight: 600; line-height: 1.25; }
+.sub { font-size: 0.75rem; color: var(--color-on-surface-variant); }

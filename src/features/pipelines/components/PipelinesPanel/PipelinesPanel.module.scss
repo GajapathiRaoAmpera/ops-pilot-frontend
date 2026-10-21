@@ -4,10 +4,10 @@
 .head { display: flex; flex-direction: column; gap: 0.5rem; @include mixins.up(lg) { flex-direction: row; align-items: center; justify-content: space-between; } }
 .titleBlock { display: flex; align-items: center; gap: 0.5rem; color: var(--color-primary); }
 .title { margin: 0; font-size: 0.9375rem; font-weight: 600; color: var(--color-on-surface); }
-.caption { margin: 0; font-family: var(--font-jetbrains), monospace; font-size: 0.625rem; color: var(--color-on-surface-variant); }
+.caption { margin: 0; font-family: var(--font-mono), monospace; font-size: 0.625rem; color: var(--color-on-surface-variant); }
 .controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
 .tabs { display: flex; flex-wrap: wrap; padding: 2px; border-radius: 0.5rem; background: var(--color-surface-lowest); }
-.tab { padding: 0.25rem 0.5rem; border: 0; border-radius: 0.25rem; background: transparent; color: var(--color-on-surface-variant); font-family: var(--font-jetbrains), monospace; font-size: 0.6875rem; cursor: pointer;
+.tab { padding: 0.25rem 0.5rem; border: 0; border-radius: 0.25rem; background: transparent; color: var(--color-on-surface-variant); font-family: var(--font-mono), monospace; font-size: 0.6875rem; cursor: pointer;
   &:hover { color: var(--color-on-surface); }
   @include mixins.focus-ring; }
 .tabOn { background: var(--color-surface-high); color: var(--color-on-surface); font-weight: 600; }
@@ -18,13 +18,13 @@
 .empty { margin: 0; padding: 1.5rem; text-align: center; color: var(--color-on-surface-variant); font-size: 0.8125rem; }
 .rowHead { text-align: left; font-weight: normal; }
 .name { display: block; font-size: 0.9375rem; font-weight: 500; color: var(--color-on-surface); }
-.sub { display: block; margin: 0; font-family: var(--font-jetbrains), monospace; font-size: 0.625rem; color: var(--color-outline); overflow-wrap: anywhere; }
-.ref { display: block; font-family: var(--font-jetbrains), monospace; font-size: 0.6875rem; color: var(--color-on-surface); font-weight: 500; }
-.commit { display: block; font-family: var(--font-jetbrains), monospace; font-size: 0.6875rem; color: var(--color-secondary); }
-.target { display: inline-flex; align-items: center; gap: 0.25rem; font-family: var(--font-jetbrains), monospace; font-size: 0.6875rem; color: var(--color-on-surface); }
-.mono { font-family: var(--font-jetbrains), monospace; font-size: 0.75rem; color: var(--color-on-surface); white-space: nowrap; }
+.sub { display: block; margin: 0; font-family: var(--font-mono), monospace; font-size: 0.625rem; color: var(--color-outline); overflow-wrap: anywhere; }
+.ref { display: block; font-family: var(--font-mono), monospace; font-size: 0.6875rem; color: var(--color-on-surface); font-weight: 500; }
+.commit { display: block; font-family: var(--font-mono), monospace; font-size: 0.6875rem; color: var(--color-secondary); }
+.target { display: inline-flex; align-items: center; gap: 0.25rem; font-family: var(--font-mono), monospace; font-size: 0.6875rem; color: var(--color-on-surface); }
+.mono { font-family: var(--font-mono), monospace; font-size: 0.75rem; color: var(--color-on-surface); white-space: nowrap; }
 .stage { display: flex; flex-direction: column; gap: 0.25rem; min-width: 14rem; }
-.stageTop { display: flex; justify-content: space-between; gap: 0.5rem; margin: 0; font-family: var(--font-jetbrains), monospace; font-size: 0.6875rem; color: var(--color-on-surface); }
+.stageTop { display: flex; justify-content: space-between; gap: 0.5rem; margin: 0; font-family: var(--font-mono), monospace; font-size: 0.6875rem; color: var(--color-on-surface); }
 .track { height: 0.5rem; border-radius: 999px; background: var(--color-surface-lowest); overflow: hidden; }
 .fill, .fillError { display: block; height: 100%; border-radius: 999px; }
 .fill { background: var(--color-primary-container); }

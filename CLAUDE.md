@@ -142,3 +142,11 @@ Summarize changed files, tests actually executed, results, failures, and remaini
 - The QA/security agent tests access restrictions, session handling, and cross-tenant isolation.
 - All agents must agree on shared types, permissions, design tokens, and component interfaces before parallel changes.
 
+
+
+## Design update (ui-ux-pro-max redesign)
+The user approved a redesign of the visual system. `src/styles/_tokens.scss` and `design-system/opspilot/MASTER.md`
+now define the palette (dark slate, indigo actions, status-only green/amber/red), Fira Sans + Fira Code, and a
+data-dense scale. Where this section conflicts with the older "Design" and "Stitch-Generated Frontend" token lists
+above, this section wins. Keep layouts and information hierarchy of the Stitch screens; change look through tokens
+and shared components, not per-screen overrides.

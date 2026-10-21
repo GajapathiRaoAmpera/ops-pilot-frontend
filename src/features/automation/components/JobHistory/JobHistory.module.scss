@@ -1,6 +1,6 @@
 @use "mixins";
 
-.mono { font-family: var(--font-jetbrains), monospace; font-size: 0.75rem; color: var(--color-outline); }
+.mono { font-family: var(--font-mono), monospace; font-size: 0.75rem; color: var(--color-outline); }
 .filter { display: inline-flex; align-items: center; gap: 0.375rem; font-size: 0.8125rem; color: var(--color-on-surface-variant);
   select { padding: 0.375rem 0.5rem; border-radius: 0.5rem; background: var(--color-surface-lowest); color: var(--color-on-surface); border: 1px solid var(--color-outline-variant); } }
 .emptyBox { padding: 1rem; }

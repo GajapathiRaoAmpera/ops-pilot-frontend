@@ -24,7 +24,7 @@ body {
   min-height: 100vh;
   background: var(--color-background);
   color: var(--color-on-surface);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -33,7 +33,7 @@ h1, h2, h3, p, ul { margin: 0; }
 ul { padding: 0; list-style: none; }
 a { color: inherit; }
 button, input { font: inherit; color: inherit; }
-code { font-family: var(--font-jetbrains), ui-monospace, monospace; }
+code { font-family: var(--font-mono), ui-monospace, monospace; }
 
 @include mixins.reduced-motion {
   *, *::before, *::after {

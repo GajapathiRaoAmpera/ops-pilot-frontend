@@ -1,6 +1,6 @@
 @use "mixins";
 
-.mono { font-family: var(--font-jetbrains), monospace; font-size: 0.75rem; color: var(--color-outline); }
+.mono { font-family: var(--font-mono), monospace; font-size: 0.75rem; color: var(--color-outline); }
 .count { @include mixins.eyebrow; color: var(--color-outline); }
 .chips { display: flex; flex-wrap: wrap; gap: 0.375rem; margin-bottom: 0.75rem; }
 .chip {
