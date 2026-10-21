@@ -15,3 +15,8 @@ at runtime: without a backend, sign-in fails with "temporarily unavailable".
 - `permissions` are `domain:resource:action` strings (see `permissions.ts`); `role` is a display label. One role per user.
 - Backend must enforce authorization and org/workspace isolation on every endpoint; the UI guards are UX only.
 - Not supported until the backend defines it: forgot-password, MFA, multiple roles, workspace switching.
+
+## Backend draft (Phase 1)
+The backend repo now holds a draft of the wider API, data model and threat model in
+`../ops-pilot-backend/docs/` (`api-contract.md`, `data-model.md`, `threat-model.md`).
+Proposed change: `GET /auth/me` also returns `workspaces:[{id,name,role}]`. Still PROPOSED and unimplemented.
