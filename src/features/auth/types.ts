@@ -16,6 +16,8 @@ export interface Session {
   permissions: readonly string[];
   /** Workspaces the user can access (backend-provided). */
   workspaces: readonly { id: string; name: string; role: string }[];
+  /** True after an operator bootstrap: the backend blocks everything until the password is changed. */
+  mustChangePassword: boolean;
 }
 
 export type SessionResult =

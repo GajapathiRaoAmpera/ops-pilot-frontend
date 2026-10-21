@@ -33,6 +33,7 @@ export async function requireSession(permission?: string): Promise<Session> {
   const result = await getSession();
   if (result.status === "unauthenticated") redirect("/login?reason=expired");
   if (result.status === "error") redirect("/login?reason=unavailable");
+  if (result.session.mustChangePassword) redirect("/change-password");
   if (permission && !hasPermission(result.session.permissions, permission)) {
     redirect("/unauthorized");
   }
@@ -45,6 +46,7 @@ export async function requireAnySession(permissions: readonly string[]): Promise
   const result = await getSession();
   if (result.status === "unauthenticated") redirect("/login?reason=expired");
   if (result.status === "error") redirect("/login?reason=unavailable");
+  if (result.session.mustChangePassword) redirect("/change-password");
   if (!hasAnyPermission(result.session.permissions, permissions)) redirect("/unauthorized");
   return result.session;
 }

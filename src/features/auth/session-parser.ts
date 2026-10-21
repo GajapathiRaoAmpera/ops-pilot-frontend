@@ -24,5 +24,6 @@ export function parseSession(data: unknown): Session | null {
     organization: { id: org.id, name: org.name },
     permissions: d.permissions as string[],
     workspaces,
+    mustChangePassword: d.mustChangePassword === true,
   };
 }

@@ -17,4 +17,5 @@ export const PREVIEW_SESSION: Session = {
   // The platform operator role is exclusive of tenant roles, so the preview omits it.
   permissions: Object.values(PERMISSIONS).filter((p) => p !== PERMISSIONS.platformOrgs),
   workspaces: [],
+  mustChangePassword: false,
 };
