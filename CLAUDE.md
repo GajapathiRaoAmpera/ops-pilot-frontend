@@ -102,3 +102,43 @@ Summarize changed files, tests actually executed, results, failures, and remaini
 - Run available tests and build checks after integration.
 - Report visual deviations, missing APIs, placeholders, and unresolved issues explicitly.
 
+
+## Next.js Architecture, RBAC and Refactoring
+
+### Framework decision
+- Evaluate the existing frontend before choosing or migrating frameworks.
+- If adopting Next.js, use the App Router and TypeScript unless the existing project or a documented constraint justifies another approach.
+- Preserve the Google Stitch screens and design tokens when converting them into Next.js components.
+- Do not perform a framework migration without first documenting its impact, dependencies, risks, and migration plan.
+- Never discard working functionality merely to conform to a proposed directory structure.
+
+### Authentication and role-based access
+- Every authenticated user must receive navigation and page access based on verified identity, organization membership, workspace membership, roles, and permissions.
+- Define a centralized permission model. Avoid scattered hardcoded role checks throughout components.
+- Protect server-rendered pages, server actions, route handlers, and API operations using the appropriate authorization checks.
+- Use middleware or proxy logic only as an additional routing layer, not as the sole authorization mechanism.
+- Enforce authorization and tenant isolation on the backend for every protected resource and action.
+- Distinguish authentication (who the user is) from authorization (what the user can do).
+- Deny access by default when permissions are missing or cannot be verified.
+- Do not trust roles, tenant IDs, or permissions supplied by client-side state.
+- Prevent users from accessing another user's or organization's resources by manipulating URLs or request parameters.
+- Do not expose secrets, session tokens, or privileged credentials to client-side code.
+
+### Refactorability
+- Organize code by feature and responsibility.
+- Keep shared UI components independent of business-specific authorization logic where practical.
+- Centralize API communication, error handling, authentication utilities, and permission checks.
+- Prefer typed interfaces, small components, explicit contracts, and testable services.
+- Avoid oversized page components, duplicate business logic, circular imports, and unnecessary abstractions.
+- Introduce changes incrementally and preserve existing behavior.
+- Add tests for role-based navigation, direct URL access, unauthorized API requests, tenant isolation, and critical workflows.
+
+### Agent responsibilities
+- The frontend orchestrator coordinates framework migration, module boundaries, and integration.
+- The UI/UX architect preserves the Stitch design system.
+- The authentication/RBAC agent defines role-aware navigation and protected-page behavior.
+- The component engineer builds reusable UI components.
+- The API integration agent verifies frontend/backend contracts.
+- The QA/security agent tests access restrictions, session handling, and cross-tenant isolation.
+- All agents must agree on shared types, permissions, design tokens, and component interfaces before parallel changes.
+
