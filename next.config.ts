@@ -4,6 +4,10 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   sassOptions: { loadPaths: [path.join(process.cwd(), "src/styles")] },
+  // Retired per-role gateway URLs now land on the single sign-in page.
+  async redirects() {
+    return [{ source: "/login/:path+", destination: "/login", permanent: false }];
+  },
   async headers() {
     return [
       {
