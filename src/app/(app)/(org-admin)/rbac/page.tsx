@@ -1,14 +1,16 @@
-import { MockDataNotice } from "@/components/layout/MockDataNotice/MockDataNotice";
+import { PageHeader } from "@/components/ui/PageHeader/PageHeader";
 import { PERMISSIONS } from "@/features/auth/permissions";
 import { requireSession } from "@/features/auth/server/session";
-import { RbacScreen } from "@/features/rbac/components/RbacScreen/RbacScreen";
+import { LiveRbac } from "@/features/rbac/live/LiveRbac";
+
+export const metadata = { title: "RBAC & Permission Matrix · OpsPilot" };
 
 export default async function Page() {
   await requireSession(PERMISSIONS.rbacRead);
   return (
     <>
-      <MockDataNotice />
-      <RbacScreen />
+      <PageHeader eyebrow="Governance" title="RBAC & Permission Matrix" description="What each role can do. Enforced by the server on every request; change membership under Team & Access." />
+      <LiveRbac />
     </>
   );
 }

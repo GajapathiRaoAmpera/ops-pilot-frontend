@@ -1,0 +1,4 @@
+@use "mixins";
+
+.tiles { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); @include mixins.up(lg) { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.note { margin-top: 1rem; font-size: 0.75rem; color: var(--color-outline); }

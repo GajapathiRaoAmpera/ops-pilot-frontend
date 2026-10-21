@@ -12,10 +12,14 @@ beforeEach(() => backendFetch.mockReset().mockResolvedValue(new Response("{}", {
 
 describe("/api/backend relay", () => {
   it("rejects paths outside the allowlist without calling the backend", async () => {
-    for (const p of ["auth/login", "audit-events", "workspaces/x/pipelines/runs", "org/../platform/organizations/x"]) {
+    for (const p of ["auth/login", "auth/me", "workspaces/x/pipelines/runs", "org/../platform/organizations/x", "workspaces/" + "0".repeat(8) + "-0000-0000-0000-" + "0".repeat(12) + "/pipelines/runs/extra", "platform/organizations/x"]) {
       expect((await GET(req("GET"), ctx(p))).status).toBe(404);
     }
     expect(backendFetch).not.toHaveBeenCalled();
+  });
+  it("forwards only whitelisted query keys", async () => {
+    await GET(new Request("http://app.test/api/backend/audit-events?outcome=failure&evil=1&limit=5", { headers: { host: "app.test" } }), ctx("audit-events"));
+    expect(backendFetch.mock.calls[0][0]).toBe("/audit-events?limit=5&outcome=failure");
   });
   it("blocks cross-origin writes", async () => {
     const r = await POST(req("POST", { origin: "https://evil.test" }, "{}"), ctx("org/invitations"));

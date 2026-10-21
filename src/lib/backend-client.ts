@@ -31,6 +31,17 @@ const MESSAGES: Record<string, string> = {
   invalid_or_expired: "This link is invalid, expired, or already used.",
   account_exists: "An account with this email already exists. Sign in to join.",
   forbidden: "You do not have permission to do that.",
+  invalid_repo: "Enter the repository as owner/name, for example acme/api.",
+  invalid_token: "That token does not look valid.",
+  encryption_not_configured: "The server is not configured to store credentials yet. Ask the platform operator to set OPSPILOT_SECRET_KEY.",
+  integration_not_connected: "Connect GitHub for this workspace first.",
+  github_not_configured: "No GitHub token is set for this workspace.",
+  sync_too_frequent: "Synced a moment ago. Try again in a few seconds.",
+  upstream_error: "GitHub did not accept the request. Check the repository and token permissions.",
+  run_not_failed: "Only failed runs can be re-run.",
+  request_already_open: "A request for this run is already open.",
+  separation_of_duties: "You cannot approve a request you made yourself.",
+  not_pending: "This request was already decided.",
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
 

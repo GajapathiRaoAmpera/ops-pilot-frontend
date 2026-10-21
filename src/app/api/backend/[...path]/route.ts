@@ -17,7 +17,17 @@ const ALLOWED: RegExp[] = [
   /^workspaces\/[0-9a-f-]{36}\/(members|invitations)$/,
   /^workspaces\/[0-9a-f-]{36}\/memberships\/[0-9a-f-]{36}$/,
   /^auth\/change-password$/,
+  /^workspaces\/[0-9a-f-]{36}\/integrations\/github(\/test)?$/,
+  /^workspaces\/[0-9a-f-]{36}\/pipelines\/(sync|runs)$/,
+  /^workspaces\/[0-9a-f-]{36}\/action-requests$/,
+  /^workspaces\/[0-9a-f-]{36}\/approvals$/,
+  /^workspaces\/[0-9a-f-]{36}\/approvals\/[0-9a-f-]{36}\/decision$/,
+  /^workspaces\/[0-9a-f-]{36}\/overview$/,
+  /^audit-events$/,
+  /^rbac\/matrix$/,
 ];
+/** Only these query keys are forwarded (filters/pagination); everything else is dropped. */
+const QUERY_KEYS = ["status", "limit", "action", "outcome", "before_id"];
 const METHODS = new Set(["GET", "POST", "PATCH", "DELETE"]);
 
 async function relay(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
@@ -28,6 +38,12 @@ async function relay(req: Request, ctx: { params: Promise<{ path: string[] }> })
   if (req.method !== "GET" && !isSameOrigin(req)) {
     return NextResponse.json({ detail: "forbidden_origin" }, { status: 403 });
   }
+  const search = new URLSearchParams();
+  for (const k of QUERY_KEYS) {
+    const v = new URL(req.url).searchParams.get(k);
+    if (v !== null && v.length <= 100) search.set(k, v);
+  }
+  const qs = search.size ? `?${search}` : "";
   const headers: Record<string, string> = { cookie: (await cookies()).toString() };
   let body: string | undefined;
   if (req.method !== "GET") {
@@ -35,7 +51,7 @@ async function relay(req: Request, ctx: { params: Promise<{ path: string[] }> })
     body = await req.text();
   }
   try {
-    const upstream = await backendFetch(`/${path}`, { method: req.method, headers, body });
+    const upstream = await backendFetch(`/${path}${qs}`, { method: req.method, headers, body });
     const text = await upstream.text();
     return new NextResponse(text || null, {
       status: upstream.status,

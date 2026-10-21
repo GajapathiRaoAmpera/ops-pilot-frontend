@@ -16,6 +16,7 @@ export const PERMISSIONS = {
   settingsRead: "sys:settings:read",
   membersManage: "sys:members:manage",
   wsMembersManage: "ws:members:manage",
+  integrationsManage: "ws:integrations:manage",
   platformOrgs: "platform:orgs:manage",
 } as const;
 

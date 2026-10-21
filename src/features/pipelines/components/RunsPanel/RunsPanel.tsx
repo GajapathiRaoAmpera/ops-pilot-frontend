@@ -3,6 +3,7 @@ import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
 import { Table } from "@/components/ui/Table/Table";
 import type { PipelineRun, RunsResult } from "../../server/runs";
+import { RequestRerun, SyncButton } from "./RunControls";
 
 function outcome(r: PipelineRun): { tone: Tone; label: string } {
   if (r.status !== "completed") return { tone: "accent", label: r.status.replace("_", " ") || "unknown" };
@@ -12,7 +13,8 @@ function outcome(r: PipelineRun): { tone: Tone; label: string } {
 }
 
 /** Real GitHub Actions data. Every value is rendered as plain text (React-escaped). */
-export function RunsPanel({ result }: { result: RunsResult }) {
+export function RunsPanel({ result, workspaceId, canExecute = false }: { result: RunsResult; workspaceId?: string; canExecute?: boolean }) {
+  const controls = Boolean(workspaceId && canExecute);
   let body;
   if (result.state === "no-workspace") body = <Notice variant="info">No workspace is assigned to your account.</Notice>;
   else if (result.state === "forbidden") body = <Notice variant="error">You do not have access to this workspace&apos;s pipelines.</Notice>;
@@ -23,7 +25,7 @@ export function RunsPanel({ result }: { result: RunsResult }) {
     body = (
       <Table caption="GitHub Actions runs">
         <thead>
-          <tr><th scope="col">Workflow</th><th scope="col">Repository</th><th scope="col">Branch</th><th scope="col">Commit</th><th scope="col">Result</th></tr>
+          <tr><th scope="col">Workflow</th><th scope="col">Repository</th><th scope="col">Branch</th><th scope="col">Commit</th><th scope="col">Result</th>{controls && <th scope="col">Actions</th>}</tr>
         </thead>
         <tbody>
           {result.runs.map((r) => {
@@ -32,6 +34,7 @@ export function RunsPanel({ result }: { result: RunsResult }) {
               <tr key={r.id}>
                 <td>{r.workflow}</td><td>{r.repo}</td><td>{r.branch}</td><td>{r.commit}</td>
                 <td><StatusBadge tone={o.tone}>{o.label}</StatusBadge></td>
+                {controls && <td>{o.label === "failed" && workspaceId ? <RequestRerun workspaceId={workspaceId} runId={r.id} /> : null}</td>}
               </tr>
             );
           })}
@@ -41,7 +44,7 @@ export function RunsPanel({ result }: { result: RunsResult }) {
   }
   const synced = result.state === "ok" && result.lastSyncedAt ? `Last synced ${result.lastSyncedAt}` : undefined;
   return (
-    <Card title="GitHub Actions runs (live)" flush actions={synced ? <span>{synced}</span> : undefined}>
+    <Card title="GitHub Actions runs (live)" flush actions={<>{synced ? <span>{synced}</span> : null}{controls && workspaceId ? <SyncButton workspaceId={workspaceId} /> : null}</>}>
       {body}
     </Card>
   );
