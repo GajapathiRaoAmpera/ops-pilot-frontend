@@ -2,10 +2,20 @@ import "server-only";
 import { cookies } from "next/headers";
 import { backendFetch } from "@/features/auth/server/backend";
 
+export interface PendingItem { id: string; risk: string; createdAt: string; requester: string | null; workflow: string; repo: string; branch: string }
+export interface RecentExecution { id: string; status: string; type: string; workflow: string; repo: string; createdAt: string }
+export interface ActivityItem { id: number; ts: string; actor: string | null; action: string; resource: string; outcome: string }
+
 export interface OverviewSummary {
-  pipelines: { connected: boolean; counts: Record<string, number>; total: number; lastSyncedAt: string | null };
-  approvals: { pending: number };
+  pipelines: {
+    connected: boolean; counts: Record<string, number>; total: number; lastSyncedAt: string | null;
+    recent: { id: string; repo: string; workflow: string; branch: string; commit: string; status: string; conclusion: string | null; url: string; startedAt: string | null }[];
+  };
+  approvals: { pending: number; items: PendingItem[] };
   lastExecution: { status: string; type: string } | null;
+  recentExecutions: RecentExecution[];
+  activity: ActivityItem[];
+  visible: { approvals: boolean; executions: boolean; activity: boolean };
   notConnected: string[];
 }
 

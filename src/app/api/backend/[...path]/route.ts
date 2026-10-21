@@ -23,6 +23,7 @@ const ALLOWED: RegExp[] = [
   /^workspaces\/[0-9a-f-]{36}\/approvals$/,
   /^workspaces\/[0-9a-f-]{36}\/approvals\/[0-9a-f-]{36}\/decision$/,
   /^workspaces\/[0-9a-f-]{36}\/overview$/,
+  /^workspaces\/[0-9a-f-]{36}\/executions$/,
   /^audit-events$/,
   /^rbac\/matrix$/,
 ];

@@ -10,7 +10,7 @@ import { useSession } from "@/features/auth/components/SessionProvider";
 import { cx } from "@/lib/cx";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { callBackend, messageFor } from "@/lib/backend-client";
-import inbox from "../components/ApprovalsInbox/ApprovalsInbox.module.scss";
+import inbox from "./Inbox.module.scss";
 import { DecisionTrail } from "./DecisionTrail";
 import styles from "./LiveApprovals.module.scss";
 import type { LiveRequest } from "./types";

@@ -6,7 +6,6 @@ import { Icon } from "@/components/ui/Icon/Icon";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { Table } from "@/components/ui/Table/Table";
 import styles from "@/features/team/components/Admin.module.scss";
-import matrix from "../components/PermissionMatrix/PermissionMatrix.module.scss";
 import { callBackend, messageFor } from "@/lib/backend-client";
 
 interface Matrix { roles: { key: string; label: string; permissions: string[] }[] }
@@ -41,7 +40,7 @@ export function LiveRbac() {
               <th scope="row">{p}</th>
               {data.roles.map((r) => {
                 const yes = r.permissions.includes(p);
-                return <td key={r.key}><Icon name={yes ? "check" : "block"} size={16} /><span className={matrix.sr}>{yes ? "allowed" : "denied"}</span></td>;
+                return <td key={r.key}><Icon name={yes ? "check" : "block"} size={16} /><span className={styles.sr}>{yes ? "allowed" : "denied"}</span></td>;
               })}
             </tr>
           ))}

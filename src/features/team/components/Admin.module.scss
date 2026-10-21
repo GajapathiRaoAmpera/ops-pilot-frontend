@@ -15,3 +15,6 @@
 .small { padding: 0.25rem 0.625rem; font-size: 0.8125rem; }
 .inline { display: flex; gap: 0.5rem; align-items: center; }
 .pad { padding: 1.25rem; }
+
+// Visually hidden, still read by screen readers.
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }

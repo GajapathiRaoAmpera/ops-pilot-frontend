@@ -1,0 +1,14 @@
+@use "mixins";
+
+.stack { display: grid; gap: 1rem; margin-top: 1rem; min-width: 0; }
+.grid { display: grid; gap: 1rem; min-width: 0; @include mixins.up(lg) { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.list { list-style: none; margin: 0; padding: 0; }
+.item {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.125rem 0.75rem; align-items: center; padding: 0.625rem 0.875rem;
+  border-top: 1px solid color-mix(in srgb, var(--color-outline-variant) 40%, transparent);
+  &:first-child { border-top: 0; }
+}
+.title { grid-column: 1; font-size: 0.875rem; font-weight: 500; overflow-wrap: anywhere; }
+.meta { grid-column: 1; font-size: 0.75rem; color: var(--color-on-surface-variant); overflow-wrap: anywhere; }
+.item > :last-child { grid-column: 2; grid-row: 1 / span 2; }
+.link { font-size: 0.8125rem; color: var(--color-primary); text-underline-offset: 3px; &:hover { text-decoration: underline; } &:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 2px; } }

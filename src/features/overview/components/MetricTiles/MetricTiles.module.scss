@@ -1,4 +1,0 @@
-@use "mixins";
-.grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; @include mixins.up(md) { grid-template-columns: 1fr 1fr; } @include mixins.up(lg) { grid-template-columns: repeat(4, 1fr); } }
-.unit { font-size: 0.8125rem; font-weight: 400; color: var(--color-outline); margin-left: 0.25rem; }
-.spark { margin-top: 0.5rem; }
