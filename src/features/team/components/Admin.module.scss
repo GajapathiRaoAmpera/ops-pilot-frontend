@@ -1,0 +1,17 @@
+@use "mixins";
+
+.stack { display: grid; gap: 1.5rem; }
+.form { display: grid; gap: 1rem; padding: 1.25rem; @include mixins.up(md) { grid-template-columns: 2fr 1.2fr 1.2fr auto; align-items: end; } }
+.selectField { display: grid; gap: 0.375rem; font-size: 0.875rem; color: var(--color-on-surface-variant); }
+.select {
+  width: 100%; padding: 0.625rem 0.75rem; border-radius: 0.5rem; font: inherit;
+  color: var(--color-on-surface); background: var(--color-surface-container); border: 1px solid var(--color-outline-variant);
+  &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
+}
+.linkBox { display: grid; gap: 0.5rem; padding: 1rem 1.25rem; border-radius: 0.5rem; border: 1px solid var(--color-outline-variant); background: var(--color-surface-container); }
+.linkText { word-break: break-all; font-family: ui-monospace, monospace; font-size: 0.8125rem; }
+.hint { font-size: 0.75rem; color: var(--color-outline); }
+.rowActions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.small { padding: 0.25rem 0.625rem; font-size: 0.8125rem; }
+.inline { display: flex; gap: 0.5rem; align-items: center; }
+.pad { padding: 1.25rem; }

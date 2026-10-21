@@ -1,0 +1,36 @@
+const backendFetch = vi.fn();
+vi.mock("../server/backend", () => ({ backendFetch: (...a: unknown[]) => backendFetch(...a) }));
+vi.mock("next/headers", () => ({ cookies: async () => ({ toString: () => "sid=abc" }) }));
+
+import { DELETE, GET, POST } from "../../../app/api/backend/[...path]/route";
+
+const ctx = (p: string) => ({ params: Promise.resolve({ path: p.split("/") }) });
+const req = (method: string, headers: Record<string, string> = {}, body?: string) =>
+  new Request("http://app.test/api/backend/x", { method, headers: { host: "app.test", ...headers }, body });
+
+beforeEach(() => backendFetch.mockReset().mockResolvedValue(new Response("{}", { status: 200 })));
+
+describe("/api/backend relay", () => {
+  it("rejects paths outside the allowlist without calling the backend", async () => {
+    for (const p of ["auth/login", "audit-events", "workspaces/x/pipelines/runs", "org/../platform/organizations/x"]) {
+      expect((await GET(req("GET"), ctx(p))).status).toBe(404);
+    }
+    expect(backendFetch).not.toHaveBeenCalled();
+  });
+  it("blocks cross-origin writes", async () => {
+    const r = await POST(req("POST", { origin: "https://evil.test" }, "{}"), ctx("org/invitations"));
+    expect(r.status).toBe(403);
+    expect(backendFetch).not.toHaveBeenCalled();
+  });
+  it("blocks writes with no Origin header", async () => {
+    expect((await DELETE(req("DELETE"), ctx("org/invitations/" + "0".repeat(8) + "-0000-0000-0000-" + "0".repeat(12)))).status).toBe(403);
+  });
+  it("forwards allowed same-origin calls with the session cookie and no set-cookie back", async () => {
+    backendFetch.mockResolvedValue(new Response('{"ok":true}', { status: 201, headers: { "set-cookie": "x=y" } }));
+    const r = await POST(req("POST", { origin: "http://app.test" }, '{"email":"a@b.co"}'), ctx("org/invitations"));
+    expect(r.status).toBe(201);
+    expect(r.headers.get("set-cookie")).toBeNull();
+    expect(backendFetch).toHaveBeenCalledWith("/org/invitations", expect.objectContaining({
+      method: "POST", headers: expect.objectContaining({ cookie: "sid=abc" }) }));
+  });
+});

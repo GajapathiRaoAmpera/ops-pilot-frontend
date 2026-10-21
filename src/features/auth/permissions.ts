@@ -14,6 +14,9 @@ export const PERMISSIONS = {
   rbacRead: "sys:rbac:read",
   auditRead: "sec:telemetry:audit",
   settingsRead: "sys:settings:read",
+  membersManage: "sys:members:manage",
+  wsMembersManage: "ws:members:manage",
+  platformOrgs: "platform:orgs:manage",
 } as const;
 
 export type Permission = (typeof PERMISSIONS)[keyof typeof PERMISSIONS];
@@ -24,4 +27,8 @@ export function hasPermission(
   required: string,
 ): boolean {
   return Array.isArray(granted) && granted.includes(required);
+}
+
+export function hasAnyPermission(granted: readonly string[] | undefined | null, required: readonly string[]): boolean {
+  return required.some((r) => hasPermission(granted, r));
 }

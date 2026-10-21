@@ -14,6 +14,7 @@ export const PREVIEW_SESSION: Session = {
   user: { id: "preview", email: "preview@localhost", name: "UI Preview" },
   role: "Preview (guards off)",
   organization: { id: "preview", name: "Preview Organization" },
-  permissions: Object.values(PERMISSIONS),
+  // The platform operator role is exclusive of tenant roles, so the preview omits it.
+  permissions: Object.values(PERMISSIONS).filter((p) => p !== PERMISSIONS.platformOrgs),
   workspaces: [],
 };

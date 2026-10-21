@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { backendFetch } from "./backend";
 import { isGuardBypassed, PREVIEW_SESSION } from "../dev-bypass";
-import { hasPermission } from "../permissions";
+import { hasAnyPermission, hasPermission } from "../permissions";
 import { parseSession } from "../session-parser";
 import type { Session, SessionResult } from "../types";
 
@@ -36,5 +36,15 @@ export async function requireSession(permission?: string): Promise<Session> {
   if (permission && !hasPermission(result.session.permissions, permission)) {
     redirect("/unauthorized");
   }
+  return result.session;
+}
+
+/** Like requireSession, but any one of several permissions suffices (e.g. org or workspace admin). */
+export async function requireAnySession(permissions: readonly string[]): Promise<Session> {
+  if (isGuardBypassed()) return PREVIEW_SESSION;
+  const result = await getSession();
+  if (result.status === "unauthenticated") redirect("/login?reason=expired");
+  if (result.status === "error") redirect("/login?reason=unavailable");
+  if (!hasAnyPermission(result.session.permissions, permissions)) redirect("/unauthorized");
   return result.session;
 }
