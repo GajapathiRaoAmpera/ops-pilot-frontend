@@ -3,6 +3,7 @@
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { cx } from "@/lib/cx";
+import { emitInfoFocus } from "@/lib/pilot-attention";
 import { Icon } from "../Icon/Icon";
 import styles from "./InfoTip.module.scss";
 
@@ -55,6 +56,14 @@ export function InfoTip({ title, children, placement = "bottom", className }: {
       window.removeEventListener("scroll", close, true);
     };
   }, [open]);
+
+  // Pilot listens for these to look at the card and react (decorative only).
+  useEffect(() => {
+    if (!open || !button.current) return;
+    const r = button.current.getBoundingClientRect();
+    emitInfoFocus({ title, x: r.left + r.width / 2, y: r.top + r.height / 2 });
+    return () => emitInfoFocus(null);
+  }, [open, title]);
 
   const show = () => { setPos(null); setOpen(true); };
   const hide = () => setOpen(false);

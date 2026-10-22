@@ -1,6 +1,7 @@
 import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { emitActivity } from "@/lib/activity";
+import { emitInfoFocus } from "@/lib/pilot-attention";
 import { PilotDock } from "../PilotDock";
 import { helpFor, tipsFor } from "../page-help";
 
@@ -17,6 +18,20 @@ beforeEach(() => {
 });
 
 describe("PilotDock", () => {
+  it("looks at an open info card, says something, and lets go after it closes", () => {
+    vi.useFakeTimers();
+    render(<PilotDock />);
+    const launcher = screen.getByRole("button", { name: "Open Pilot help" });
+    act(() => emitInfoFocus({ title: "Pipelines", x: 10, y: 10 }));
+    expect(launcher).toHaveAttribute("data-attention", "true");
+    expect(screen.getByText(/Pipelines/)).toBeInTheDocument();
+    act(() => emitInfoFocus(null));
+    expect(launcher).toHaveAttribute("data-attention", "false");
+    act(() => { vi.advanceTimersByTime(1600); });
+    expect(screen.queryByText(/Pipelines/)).not.toBeInTheDocument();
+    vi.useRealTimers();
+  });
+
   it("opens help for the current page and closes with Escape, returning focus", async () => {
     const user = userEvent.setup();
     render(<PilotDock />);

@@ -1,0 +1,45 @@
+@use "mixins";
+@use "tokens";
+
+.pilot { z-index: 30; }
+.robot.robot { width: 100%; height: 100%; margin: 0; }
+
+// Beside the pipeline: the right end of the hero scene.
+.inHero {
+  position: absolute; top: 0; right: max(1rem, calc((100% - 72rem) / 2 - 6rem)); width: 13rem; height: clamp(15rem, 28vw, 22rem);
+  animation: arrive 0.35s ease-out;
+}
+
+// Following along: flies beside the section being read. Its position is set by script (transform), so the
+// entrance animates opacity only; the robot itself bobs gently while it hovers.
+.docked {
+  position: fixed; left: 0; top: 0; width: 7rem; height: 8.5rem; will-change: transform;
+  animation: appear 0.3s ease-out;
+  @include mixins.up(md) { width: 8rem; height: 10rem; }
+  &[data-hidden="true"] { visibility: hidden; }
+  .robot { animation: bob 3.2s ease-in-out infinite; }
+}
+@keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes appear { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+
+.bubble.bubble { top: 0; right: 70%; width: max-content; max-width: 13rem; }
+.docked .bubble.bubble { top: 0.5rem; right: 85%; max-width: min(15rem, calc(100vw - 9rem)); background: var(--color-surface-high); }
+// Flying on the left: the bubble opens to the right.
+.docked[data-side="left"] .bubble.bubble { right: auto; left: 85%; border-radius: 0.75rem 0.75rem 0.75rem 0.25rem; }
+
+.hide, .show {
+  display: grid; place-items: center; cursor: pointer; border: 1px solid var(--color-outline-variant);
+  background: var(--color-surface-high); color: var(--color-on-surface-variant);
+  @include mixins.focus-ring;
+  &:hover { color: var(--color-on-surface); border-color: var(--color-control-border); }
+}
+// Shows on hover or keyboard focus of the docked Pilot (always on touch screens).
+.hide {
+  position: absolute; top: 0; right: 0; width: 1.5rem; height: 1.5rem; border-radius: 50%; opacity: 0; transition: opacity 0.15s;
+  .docked:hover &, &:focus-visible { opacity: 1; }
+  @media (hover: none) { opacity: 1; }
+}
+.show { position: fixed; z-index: 30; right: 0; bottom: 1.5rem; padding: 0.5rem 0.375rem; border-right: 0; border-radius: tokens.$radius-md 0 0 tokens.$radius-md; }
+
+@include mixins.reduced-motion { .inHero, .docked, .docked .robot { animation: none; } .hide { transition: none; } }
