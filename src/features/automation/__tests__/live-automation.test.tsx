@@ -18,7 +18,8 @@ describe("LiveAutomation", () => {
   it("lists the allowlisted action and the real history with who asked and who approved", async () => {
     const spy = vi.spyOn(globalThis, "fetch").mockResolvedValue(json({ executions: [row()] }));
     render(<LiveAutomation workspaceId="ws1" />);
-    expect(screen.getByRole("table", { name: "Available actions" })).toHaveTextContent("Re-run failed jobs");
+    expect(screen.getByText("Restarts only the failed jobs of a failed GitHub Actions run. Nothing in the code changes.")).toBeInTheDocument();
+    expect(screen.getAllByText("Re-run failed jobs").length).toBeGreaterThan(0);
     const history = await screen.findByRole("table", { name: "Automation history" });
     expect(history).toHaveTextContent("CodeQL");
     expect(history).toHaveTextContent("Sam");
@@ -33,7 +34,8 @@ describe("LiveAutomation", () => {
       .mockResolvedValueOnce(json({ executions: [row({ execution: { id: "e", status: "failed", error: "github_403", result: {}, endedAt: null } })] }));
     render(<LiveAutomation workspaceId="ws1" />);
     await screen.findByText("Nothing has run yet");
-    await userEvent.selectOptions(screen.getByLabelText("Result"), "failed");
+    await userEvent.click(screen.getByRole("button", { name: "Failed" }));
+    expect(screen.getByRole("button", { name: "Failed" })).toHaveAttribute("aria-pressed", "true");
     const table = await screen.findByRole("table", { name: "Automation history" });
     expect(within(table).getByText("failed")).toBeInTheDocument();
     expect(table).toHaveTextContent("GitHub did not accept it (github_403)");

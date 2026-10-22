@@ -9,3 +9,5 @@
 .table td { padding: 0.5rem 0.75rem; vertical-align: middle; border-bottom: 1px solid color-mix(in srgb, var(--color-outline-variant) 40%, transparent); }
 .table tbody tr:hover { background: color-mix(in srgb, var(--color-surface-high) 50%, transparent); }
 .table tbody tr:last-child td { border-bottom: 0; }
+// Inside a fill-height card (clip): the table is the scroller and takes the remaining height.
+.scrollTall { overflow: auto; flex: 1; min-height: 0; }
