@@ -7,6 +7,7 @@ import { Icon } from "@/components/ui/Icon/Icon";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { TextField } from "@/components/ui/TextField/TextField";
 import { LOGIN_ERROR_MESSAGES, submitLogin, validateLogin } from "../../login-client";
+import { emitLoginMood } from "../../login-mood";
 import styles from "./LoginForm.module.scss";
 
 type Status = "idle" | "submitting" | "success";
@@ -41,9 +42,11 @@ export function LoginForm({ next, notice, submitLabel = "Sign in" }: {
 
     inFlight.current = true;
     setStatus("submitting");
+    emitLoginMood({ mood: "thinking" });
     const outcome = await submitLogin({ email: email.trim(), password }, next);
     if (outcome.ok) {
       setStatus("success");
+      emitLoginMood({ mood: "success" });
       router.replace(outcome.redirectTo);
       router.refresh();
       return; // keep the lock until navigation completes
@@ -51,13 +54,19 @@ export function LoginForm({ next, notice, submitLabel = "Sign in" }: {
     inFlight.current = false;
     setStatus("idle");
     setFormError(LOGIN_ERROR_MESSAGES[outcome.error]);
+    emitLoginMood({ mood: "error" });
     passwordRef.current?.select();
   }
 
   const busy = status !== "idle";
+  // The robot only learns where focus is and how long the email is, never what was typed.
+  const lookAlong = (el: HTMLInputElement) => Math.min(1, (el.selectionStart ?? el.value.length) / 32);
+  const leave = (e: React.FocusEvent<HTMLFormElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) emitLoginMood({ mood: "idle" });
+  };
 
   return (
-    <form onSubmit={onSubmit} noValidate aria-busy={busy} className={styles.form}>
+    <form onSubmit={onSubmit} noValidate aria-busy={busy} className={styles.form} onBlur={leave}>
       {notice && <Notice variant="info">{notice}</Notice>}
       <div aria-live="assertive">{formError && <Notice variant="error">{formError}</Notice>}</div>
 
@@ -72,6 +81,8 @@ export function LoginForm({ next, notice, submitLabel = "Sign in" }: {
         placeholder="you@company.com"
         disabled={busy}
         error={fieldErrors.email}
+        onFocus={(e) => emitLoginMood({ mood: "email", look: lookAlong(e.currentTarget) })}
+        onInput={(e) => emitLoginMood({ mood: "email", look: lookAlong(e.currentTarget) })}
       />
 
       <TextField
@@ -83,11 +94,12 @@ export function LoginForm({ next, notice, submitLabel = "Sign in" }: {
         autoComplete="current-password"
         disabled={busy}
         error={fieldErrors.password}
+        onFocus={() => emitLoginMood({ mood: showPassword ? "peek" : "password" })}
         trailing={
           <button
             type="button"
             className={styles.toggle}
-            onClick={() => setShowPassword((v) => !v)}
+            onClick={() => { emitLoginMood({ mood: showPassword ? "password" : "peek" }); setShowPassword((v) => !v); }}
             aria-label={showPassword ? "Hide password" : "Show password"}
             aria-pressed={showPassword}
             disabled={busy}

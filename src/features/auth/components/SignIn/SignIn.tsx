@@ -1,6 +1,7 @@
 import { Sparkle } from "@/components/brand/Sparkle";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { LoginForm } from "../LoginForm/LoginForm";
+import { RobotAgent } from "../RobotAgent/RobotAgent";
 import styles from "./SignIn.module.scss";
 
 /** One sign-in for everyone. Role and landing page come only from the backend session. */
@@ -17,6 +18,7 @@ export function SignIn({ next, notice }: { next: string | null; notice?: string 
           One portal for pipelines, automation, approvals and audit. What you see and can do depends on
           your organization&apos;s role assignment.
         </p>
+        <RobotAgent />
         <p className={styles.disclaimer}>
           Your role and permissions are verified by OpsPilot after sign-in; they are never chosen on this page.
         </p>
