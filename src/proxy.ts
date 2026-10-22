@@ -18,5 +18,6 @@ export function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!login|accept-invite|api|_next|favicon.ico).*)"],
+  // Public files must stay reachable when signed out (the browser asks for the favicon on the sign-in page).
+  matcher: ["/((?!login|accept-invite|api|_next|favicon.ico|icon|apple-icon|robots.txt).*)"],
 };

@@ -1,2 +1,39 @@
+@use "mixins";
+
 .mark { display: block; flex-shrink: 0; }
 .word { font-size: 1.125rem; font-weight: 600; letter-spacing: -0.01em; }
+
+// ---- Live mark
+.live { position: relative; display: inline-grid; place-items: center; flex-shrink: 0; cursor: default;
+  .mark { transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1.4), filter 0.25s ease; }
+  &:hover .mark { transform: translateY(-1px) scale(1.06); filter: drop-shadow(0 4px 10px color-mix(in srgb, #0ea5e9 45%, transparent)); }
+}
+// Eyes: follow the pointer (--ex/--ey), blink every ~5s, squint happily on hover.
+.eyes { transform: translate(var(--ex, 0), var(--ey, 0)); transition: transform 0.18s ease-out;
+  :global(.eye) { transform-box: fill-box; transform-origin: center; animation: blink 5.2s infinite; }
+}
+.live:hover .eyes :global(.eye) { animation: none; transform: scaleY(0.55); transition: transform 0.15s ease; }
+// A click winks the right eye. Alternating two identical keyframes makes every click replay it.
+.live[data-wink="a"] .eyes :global(.eye:last-child) { animation: winkA 0.45s ease, blink 5.2s 0.45s infinite; }
+.live[data-wink="b"] .eyes :global(.eye:last-child) { animation: winkB 0.45s ease, blink 5.2s 0.45s infinite; }
+@keyframes blink { 0%, 94%, 100% { transform: scaleY(1); } 96.5% { transform: scaleY(0.12); } }
+@keyframes winkA { 0%, 100% { transform: scaleY(1); } 45% { transform: scaleY(0.1); } }
+@keyframes winkB { 0%, 100% { transform: scaleY(1); } 45% { transform: scaleY(0.1); } }
+
+// Featured (sign-in): a soft halo and a node orbiting like work moving through a pipeline.
+.featured { padding: 0; isolation: isolate;
+  &::before { content: ""; position: absolute; inset: -18%; z-index: -1; border-radius: 30%;
+    background: radial-gradient(closest-side, color-mix(in srgb, #0ea5e9 35%, transparent), transparent); animation: breathe 4s ease-in-out infinite; }
+}
+.orbit { position: absolute; inset: -22%; border-radius: 50%; border: 1px dashed color-mix(in srgb, var(--color-primary) 35%, transparent);
+  animation: spin 9s linear infinite; pointer-events: none; }
+.node { position: absolute; top: -4px; left: calc(50% - 4px); width: 8px; height: 8px; border-radius: 50%;
+  background: #7dd3fc; box-shadow: 0 0 10px #38bdf8, 0 0 2px #e0f2fe; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes breathe { 0%, 100% { opacity: 0.55; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1.04); } }
+
+@include mixins.reduced-motion {
+  .eyes { transform: none; transition: none; :global(.eye) { animation: none; } }
+  .live .mark { transition: none; }
+  .orbit, .featured::before { animation: none; }
+}

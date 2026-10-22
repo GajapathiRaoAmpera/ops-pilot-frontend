@@ -58,3 +58,4 @@
   &::before { opacity: 1; }
 }
 @include mixins.reduced-motion { .tilt { transform: none; transition: none; } .tilt::before { display: none; } }
+.featuredMark { display: flex; margin: 0.75rem 0 1.75rem 0.75rem; }

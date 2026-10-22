@@ -1,3 +1,4 @@
+import { LiveMark } from "@/components/brand/LiveMark";
 import { Sparkle } from "@/components/brand/Sparkle";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { LoginForm } from "../LoginForm/LoginForm";
@@ -9,6 +10,7 @@ export function SignIn({ next, notice }: { next: string | null; notice?: string 
   return (
     <div className={styles.layout}>
       <section aria-labelledby="intro-heading" className={`${styles.panel} ${styles.tilt}`} data-tilt="5">
+        <div className={styles.featuredMark}><LiveMark size={64} featured /></div>
         <p className={styles.eyebrow}><Icon name="shield" size={16} />Role-governed access</p>
         <h1 id="intro-heading" className={styles.title}>
           Sign in to OpsPilot

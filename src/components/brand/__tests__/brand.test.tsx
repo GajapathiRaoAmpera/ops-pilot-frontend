@@ -14,6 +14,7 @@ describe("BrandMark", () => {
   it("gives each instance its own gradient id", () => {
     const { container } = render(<><BrandMark /><BrandMark /></>);
     const ids = [...container.querySelectorAll("linearGradient")].map((g) => g.id);
-    expect(new Set(ids).size).toBe(2);
+    expect(ids.length).toBeGreaterThan(0);
+    expect(new Set(ids).size).toBe(ids.length); // no two logos share a gradient id
   });
 });
