@@ -11,3 +11,6 @@
 .title { font-size: 0.875rem; font-weight: 600; }
 .body { padding: 0.875rem; }
 .flush { padding: 0; }
+
+// Fill mode: header stays put, the body takes the remaining height and scrolls; children may use flex: 1 to centre.
+.fill { display: flex; flex-direction: column; min-height: 0; height: 100%; .body { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow-y: auto; } }

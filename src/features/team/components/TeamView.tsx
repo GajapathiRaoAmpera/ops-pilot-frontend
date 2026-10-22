@@ -43,6 +43,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
     (async () => {
       const cat = await callBackend<RoleCatalog>("GET", "meta/roles");
       if (!cancelled && cat.ok) setCatalog(cat.data);
+      else if (!cancelled) setError("The list of roles could not be loaded, so role choices are empty. Make sure the backend is running its latest version, then reload.");
       if (cancelled) return;
       if (orgAdmin) {
         const [m, w, i] = await Promise.all([

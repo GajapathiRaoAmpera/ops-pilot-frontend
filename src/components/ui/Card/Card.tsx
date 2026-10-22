@@ -8,13 +8,15 @@ interface Props {
   actions?: ReactNode;
   /** Remove body padding, e.g. for tables. */
   flush?: boolean;
+  /** Fill the height of the parent and scroll the body; empty states centre in the space. */
+  fill?: boolean;
   className?: string;
   children: ReactNode;
 }
 
-export function Card({ title, actions, flush, className, children }: Props) {
+export function Card({ title, actions, flush, fill, className, children }: Props) {
   return (
-    <section className={cx(styles.card, className)}>
+    <section className={cx(styles.card, fill && styles.fill, className)}>
       {(title || actions) && (
         <header className={styles.header}>
           {title && <h2 className={styles.title}>{title}</h2>}

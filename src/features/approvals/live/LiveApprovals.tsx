@@ -1,10 +1,11 @@
 "use client";
-import { LoaderRows } from "@/components/ui/Loader/Loader";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button/Button";
 import { Card } from "@/components/ui/Card/Card";
 import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
+import { LoaderRows } from "@/components/ui/Loader/Loader";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
 import { useSession } from "@/features/auth/components/SessionProvider";
@@ -66,7 +67,7 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
   return (
     <div className={inbox.layout}>
       <div className={inbox.queue}>
-        <Card title="Approval requests" flush>
+        <Card title="Approval requests" flush fill>
           <div role="group" aria-label="Queue filter" className={inbox.tabs}>
             {([["pending", `Pending (${pendingCount})`], ["history", "History"], ["all", "All"]] as const).map(([id, label]) => (
               <button key={id} type="button" aria-pressed={tab === id} className={cx(inbox.tab, tab === id && inbox.tabOn)} onClick={() => setTab(id)}>{label}</button>
@@ -74,8 +75,8 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
           </div>
           {rows === null && !error ? <LoaderRows />
             : shown.length === 0 ? (tab === "pending"
-              ? <EmptyState title="Nothing is waiting for approval">Requests appear here when someone asks to re-run a failed pipeline. Open Pipelines to request one.</EmptyState>
-              : <EmptyState title="No requests yet">Approved, rejected and executed requests are kept here as a record.</EmptyState>)
+              ? <EmptyState icon="task_alt" title="Nothing is waiting for approval" action={<Link href="/pipelines" className={inbox.link}>Open Pipelines</Link>}>Requests appear here when someone asks to re-run a failed pipeline.</EmptyState>
+              : <EmptyState icon="history" title="No requests yet">Approved, rejected and executed requests are kept here as a record.</EmptyState>)
             : (
               <ul className={inbox.list} aria-label="Approval requests">
                 {shown.map((r) => (
@@ -98,8 +99,8 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
 
       <div className={inbox.queue}>
         {error && <Notice variant="error">{error}</Notice>}
-        {!selected ? <Card><EmptyState title="Select a request">Pick one from the list to see who asked, who decided and what happened.</EmptyState></Card> : (
-          <Card flush>
+        {!selected ? <Card fill><EmptyState icon="ads_click" title="Select a request">Pick one from the list to see who asked, who decided and what happened.</EmptyState></Card> : (
+          <Card flush fill>
             <div className={styles.detail}>
               <div className={styles.head}>
                 <h2 className={styles.headTitle}>Re-run failed jobs</h2>

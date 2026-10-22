@@ -9,7 +9,7 @@ import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
 import { Table } from "@/components/ui/Table/Table";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
-import styles from "@/features/team/components/Admin.module.scss";
+import styles from "./Cloud.module.scss";
 import { callBackend, messageFor, referenceFor } from "@/lib/backend-client";
 
 interface Status { connected: boolean; projectId: string | null; serviceAccount: string | null; keySet: boolean }
@@ -114,18 +114,21 @@ export function CloudView({ workspaceId, workspaceName }: { workspaceId: string;
         {!status && !error ? <Loader /> : (
           <div className={styles.stack}>
             {error && <Notice variant="error">{error}</Notice>}
-            {status?.connected && <p className={styles.hint}>Project <strong>{status.projectId}</strong> · read as {status.serviceAccount}</p>}
+            {status?.connected && <p className={styles.meta}>Project <strong>{status.projectId}</strong> · read as {status.serviceAccount}</p>}
             <form onSubmit={save} className={styles.stack} noValidate>
-              <label className={styles.selectField}>
-                {status?.connected ? "Replace the service-account key (JSON file)" : "Service-account key (JSON file)"}
-                <input type="file" accept="application/json,.json" onChange={(e) => void pick(e.target.files?.[0])} />
+              <label className={styles.picker}>
+                {status?.connected ? "Replace the service-account key" : "Service-account key"}
+                <span className={styles.drop}>
+                  <span className={styles.dropButton}>Choose JSON file</span>
+                  <span className={styles.dropName}>{fileName || "No file chosen"}</span>
+                </span>
+                <input className={styles.file} type="file" accept="application/json,.json" onChange={(e) => void pick(e.target.files?.[0])} />
               </label>
-              {fileName && <p className={styles.hint}>Selected: {fileName}</p>}
               <p className={styles.hint}>
                 Create a service account in your project and grant it only the Viewer role, then create a JSON key for it.
                 The key is encrypted at rest, cannot be viewed again, and OpsPilot only reads.
               </p>
-              <div className={styles.inline}>
+              <div className={styles.actions}>
                 <Button type="submit" loading={busy === "save"} disabled={busy !== null || !key}>{status?.connected ? "Replace key" : "Connect"}</Button>
                 <Button type="button" variant="ghost" loading={busy === "test"} disabled={busy !== null || !status?.connected} onClick={() => void test()}>Test connection</Button>
                 <Button type="button" variant="ghost" disabled={busy !== null || !status?.connected} onClick={() => void remove()}>Disconnect</Button>
@@ -138,10 +141,10 @@ export function CloudView({ workspaceId, workspaceName }: { workspaceId: string;
       {status?.connected && (
         <Card title="Inventory" actions={<Button variant="ghost" loading={loadingInv} disabled={loadingInv} onClick={() => void loadInventory()}>Refresh</Button>} flush>
           {!inv ? <Loader label="Reading your Google Cloud project…" /> : (
-            <div className={styles.stack}>
-              {Object.entries(inv.errors).map(([api, reason]) => (
+            <div>
+              {Object.keys(inv.errors).length > 0 && <div className={styles.notices}>{Object.entries(inv.errors).map(([api, reason]) => (
                 <Notice key={api} variant="info">{API_NAMES[api] ?? api} could not be read ({reason}). The API may be disabled or the account lacks access.</Notice>
-              ))}
+              ))}</div>}
               <Section title="Virtual machines" empty="No virtual machines." skip={"compute" in inv.errors} rows={inv.compute.length}>
                 <Table caption="Compute Engine instances">
                   <thead><tr><th scope="col">Name</th><th scope="col">Zone</th><th scope="col">Type</th><th scope="col">Status</th></tr></thead>
@@ -160,16 +163,19 @@ export function CloudView({ workspaceId, workspaceName }: { workspaceId: string;
                   <tbody>{inv.gke.map((c) => <tr key={`${c.location}/${c.name}`}><td>{c.name}</td><td>{c.location}</td><td>{c.nodeCount ?? "-"}</td><td><StatusBadge tone={TONE(c.status)}>{c.status.toLowerCase()}</StatusBadge></td></tr>)}</tbody>
                 </Table>
               </Section>
-              <p className={styles.hint}>Read {new Date(inv.fetchedAt).toLocaleString()}</p>
+              <p className={styles.read}>Read {new Date(inv.fetchedAt).toLocaleString()}</p>
             </div>
           )}
         </Card>
       )}
 
       <Card title="Other clouds" flush>
-        <div className={styles.stack}>
-          {["Amazon Web Services", "Microsoft Azure"].map((n) => (
-            <div key={n} className={styles.inline}><span>{n}</span><StatusBadge tone="neutral">Coming soon</StatusBadge></div>
+        <div className={styles.providers}>
+          {[["Amazon Web Services", "AWS"], ["Microsoft Azure", "Azure"]].map(([n, short]) => (
+            <div key={n} className={styles.provider}>
+              <span className={styles.providerName}>{n}<small>{short} connection is not available yet</small></span>
+              <StatusBadge tone="neutral">Coming soon</StatusBadge>
+            </div>
           ))}
         </div>
       </Card>
@@ -180,8 +186,8 @@ export function CloudView({ workspaceId, workspaceName }: { workspaceId: string;
 function Section({ title, empty, rows, skip, children }: { title: string; empty: string; rows: number; skip: boolean; children: React.ReactNode }) {
   if (skip) return null;
   return (
-    <section aria-label={title}>
-      <h3 className={styles.hint} style={{ padding: "0.75rem 0.875rem 0" }}>{title} ({rows})</h3>
+    <section aria-label={title} className={styles.section}>
+      <h3>{title} ({rows})</h3>
       {rows === 0 ? <EmptyState title={empty}>Nothing was found in this project.</EmptyState> : children}
     </section>
   );
