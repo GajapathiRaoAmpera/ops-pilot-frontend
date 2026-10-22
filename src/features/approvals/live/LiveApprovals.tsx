@@ -1,4 +1,5 @@
 "use client";
+import { LoaderRows } from "@/components/ui/Loader/Loader";
 
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button/Button";
@@ -71,7 +72,7 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
               <button key={id} type="button" aria-pressed={tab === id} className={cx(inbox.tab, tab === id && inbox.tabOn)} onClick={() => setTab(id)}>{label}</button>
             ))}
           </div>
-          {rows === null && !error ? <p className={inbox.empty}>Loading…</p>
+          {rows === null && !error ? <LoaderRows />
             : shown.length === 0 ? (tab === "pending"
               ? <EmptyState title="Nothing is waiting for approval">Requests appear here when someone asks to re-run a failed pipeline. Open Pipelines to request one.</EmptyState>
               : <EmptyState title="No requests yet">Approved, rejected and executed requests are kept here as a record.</EmptyState>)

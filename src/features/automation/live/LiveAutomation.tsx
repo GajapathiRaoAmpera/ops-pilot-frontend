@@ -1,4 +1,5 @@
 "use client";
+import { LoaderRows } from "@/components/ui/Loader/Loader";
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card/Card";
@@ -63,7 +64,7 @@ export function LiveAutomation({ workspaceId }: { workspaceId: string }) {
           </label>
         }
       >
-        {rows === null && !error ? <p className={styles.pad}>Loading…</p>
+        {rows === null && !error ? <LoaderRows />
           : rows && rows.length === 0 ? (
             <EmptyState title="Nothing has run yet">When an approved request executes, it is listed here with who asked, who approved and what GitHub reported.</EmptyState>
           ) : rows && (

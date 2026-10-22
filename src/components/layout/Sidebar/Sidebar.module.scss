@@ -5,7 +5,7 @@
   border-bottom: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
   background: var(--color-surface-low);
   @include mixins.up(md) {
-    width: 15rem; min-height: 100vh; border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
+    width: 15rem; height: 100vh; overflow-y: auto; border-bottom: 0; border-right: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent);
     transition: width 0.15s ease;
     &[data-collapsed="true"] { width: 4.5rem; }
     @include mixins.reduced-motion { transition: none; }

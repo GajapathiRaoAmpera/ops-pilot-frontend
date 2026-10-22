@@ -1,4 +1,5 @@
 "use client";
+import { LoaderRows } from "@/components/ui/Loader/Loader";
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card/Card";
@@ -26,7 +27,7 @@ export function LiveRbac() {
   }, []);
 
   if (error) return <Notice variant="error">{error}</Notice>;
-  if (!data) return <p className={styles.pad}>Loading…</p>;
+  if (!data) return <LoaderRows rows={6} />;
   const perms = [...new Set(data.roles.flatMap((r) => r.permissions))].sort();
   return (
     <Card title="Role permission matrix" flush>

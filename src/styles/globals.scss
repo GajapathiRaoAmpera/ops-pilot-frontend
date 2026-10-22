@@ -42,3 +42,7 @@ code { font-family: var(--font-mono), ui-monospace, monospace; }
     transition-duration: 0.01ms !important;
   }
 }
+
+// Native dropdowns: dark popup, readable options, pointer cursor.
+select { color-scheme: dark; cursor: pointer; }
+select option { background: var(--color-surface-container); color: var(--color-on-surface); }

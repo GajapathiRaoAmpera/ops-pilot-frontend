@@ -1,0 +1,12 @@
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 50% { opacity: 0.45; } }
+
+.loader { display: flex; align-items: center; gap: 0.625rem; padding: 1.5rem 1.25rem; font-size: 0.8125rem; color: var(--color-on-surface-variant); }
+.spinner {
+  width: 1.125rem; height: 1.125rem; flex-shrink: 0; border-radius: 50%;
+  border: 2px solid var(--color-outline-variant); border-top-color: var(--color-primary);
+  animation: spin 0.8s linear infinite;
+}
+.rows { display: grid; gap: 0.5rem; padding: 1rem 1.25rem; }
+.row { height: 1.75rem; border-radius: 0.375rem; background: var(--color-surface-high); animation: pulse 1.4s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2.4s; } .row { animation: none; } }
