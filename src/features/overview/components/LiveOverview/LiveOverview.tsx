@@ -18,6 +18,7 @@ export function LiveOverview({ data }: { data: OverviewSummary }) {
     <div className={styles.stack}>
       <div className={styles.grid}>
         <Card title={`Needs a decision${visible.approvals ? ` (${approvals.pending})` : ""}`} flush
+          info="Requests waiting for approval. Someone other than the person who asked must decide before anything runs."
           actions={visible.approvals ? <Link href="/approvals" className={styles.link}>Open approvals</Link> : undefined}>
           {!visible.approvals ? (
             <EmptyState title="Approvals are not shown to your role">{approvals.pending} request{approvals.pending === 1 ? " is" : "s are"} waiting for someone with approval rights.</EmptyState>
@@ -36,7 +37,7 @@ export function LiveOverview({ data }: { data: OverviewSummary }) {
           )}
         </Card>
 
-        <Card title="Recent automation" flush actions={visible.executions ? <Link href="/automation" className={styles.link}>Open automation</Link> : undefined}>
+        <Card title="Recent automation" info="The latest approved actions OpsPilot ran, with the result GitHub reported." flush actions={visible.executions ? <Link href="/automation" className={styles.link}>Open automation</Link> : undefined}>
           {!visible.executions ? (
             <EmptyState title="Automation history is not shown to your role">Ask an administrator if you need access.</EmptyState>
           ) : recentExecutions.length === 0 ? (
@@ -58,7 +59,7 @@ export function LiveOverview({ data }: { data: OverviewSummary }) {
       <RunsPanel result={{ state: "ok", connected: pipelines.connected, lastSyncedAt: pipelines.lastSyncedAt, runs: pipelines.recent }} />
 
       {visible.activity && (
-        <Card title="Workspace activity" flush actions={<Link href="/audit" className={styles.link}>Open audit trail</Link>}>
+        <Card title="Workspace activity" info="Recent syncs, requests, approvals and executions in this workspace. The full history is in the audit trail." flush actions={<Link href="/audit" className={styles.link}>Open audit trail</Link>}>
           {activity.length === 0 ? (
             <EmptyState title="No activity recorded yet">Syncs, requests, approvals and executions in this workspace are listed here.</EmptyState>
           ) : (

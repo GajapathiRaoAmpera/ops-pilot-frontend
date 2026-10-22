@@ -69,7 +69,7 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
   return (
     <div className={inbox.layout}>
       <div className={inbox.queue}>
-        <Card title="Approval requests" flush fill>
+        <Card title="Approval requests" info="Pending requests need a decision. History shows ones already approved or rejected. You cannot decide your own request." flush fill>
           <div role="group" aria-label="Queue filter" className={inbox.tabs}>
             {([["pending", `Pending (${pendingCount})`], ["history", "History"], ["all", "All"]] as const).map(([id, label]) => (
               <button key={id} type="button" aria-pressed={tab === id} className={cx(inbox.tab, tab === id && inbox.tabOn)} onClick={() => setTab(id)}>{label}</button>

@@ -46,7 +46,7 @@ export function RunsPanel({ result, workspaceId, canExecute = false, repo }: { r
   const synced = result.state === "ok" && result.lastSyncedAt ? `Last synced ${new Date(result.lastSyncedAt).toLocaleString()}` : undefined;
   const repos = result.state === "ok" ? result.repositories ?? [] : [];
   return (
-    <Card title="GitHub Actions runs" flush actions={<>
+    <Card title="GitHub Actions runs" info="Workflow runs from the repositories connected to this workspace. Open a failed run to request a re-run or ask the AI Copilot about it." flush actions={<>
       {repos.length > 1 && <RepoFilter repositories={repos} value={repo ?? ""} />}
       {synced ? <span>{synced}</span> : null}
       {controls && workspaceId ? <SyncButton workspaceId={workspaceId} /> : null}

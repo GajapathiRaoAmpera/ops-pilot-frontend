@@ -14,7 +14,7 @@ export function LiveSummary({ result }: { result: SummaryResult }) {
   const failed = p.counts.failure ?? 0;
   const ok = p.counts.success ?? 0;
   return (
-    <Card title="Live workspace status">
+    <Card title="Live workspace status" info="Counts from the most recent synced pipeline runs in this workspace: how many there were, how many failed and how many succeeded.">
       <div className={styles.tiles}>
         <StatTile label="Recent runs" value={p.total} sub={p.lastSyncedAt ? `Synced ${new Date(p.lastSyncedAt).toLocaleString()}` : "Not synced yet"} />
         <StatTile label="Failed" value={failed} sub="Of the recent runs" />

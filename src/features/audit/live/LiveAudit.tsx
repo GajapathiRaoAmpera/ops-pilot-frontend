@@ -57,7 +57,7 @@ export function LiveAudit({ workspace }: { workspace?: { id: string; name: strin
 
   return (
     <div className={styles.stack}>
-      <Card title="Filters" flush>
+      <Card title="Filters" info="Narrow the list by an exact action name, such as approval.approve, or by outcome." flush>
         <form className={styles.form} role="search" onSubmit={(e) => { e.preventDefault(); setEvents(null); setApplied({ outcome, action: action.trim() }); }}>
           <label className={styles.selectField}>Action (exact, e.g. approval.approve)
             <input className={styles.select} value={action} maxLength={100} onChange={(e) => setAction(e.target.value)} />
@@ -72,7 +72,7 @@ export function LiveAudit({ workspace }: { workspace?: { id: string; name: strin
         </form>
       </Card>
       {error && <Notice variant="error">{error}</Notice>}
-      <Card title={`Audit events${events ? ` (${events.length}${next !== null ? "+" : ""})` : ""}`} flush>
+      <Card title={`Audit events${events ? ` (${events.length}${next !== null ? "+" : ""})` : ""}`} info="Who did what and when, newest first. Load older events at the bottom of the list." flush>
         {events === null && !error ? <LoaderRows />
           : events && events.length === 0 ? <EmptyState title="No events match">Clear the action or outcome filter to see everything recorded for your organization.</EmptyState>
           : events && (

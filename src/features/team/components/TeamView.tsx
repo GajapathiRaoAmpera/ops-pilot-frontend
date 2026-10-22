@@ -110,7 +110,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
       />
       {error && <Notice variant="error">{error}</Notice>}
 
-      <Card title="Invite someone" flush>
+      <Card title="Invite someone" info="Creates a single-use invitation link for this email and role. Share the link yourself; the person sets their own password." flush>
         <form className={styles.form} onSubmit={invite}>
           <TextField id="invite-email" label="Work email" type="email" value={email} required maxLength={320}
             onChange={(e) => setEmail(e.target.value)} autoComplete="off" />
@@ -143,7 +143,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
         </div>
       )}
 
-      <Card title={`Members${loading ? " (loading…)" : ` (${members.length})`}`} flush>
+      <Card title={`Members${loading ? " (loading…)" : ` (${members.length})`}`} info="Everyone with access and their role. An organization role covers every workspace; a workspace role covers one." flush>
         {members.length === 0 && !loading ? (
           <EmptyState title="No members yet">Create an invitation above. The person sets their own password from the link you send.</EmptyState>
         ) : (
@@ -190,7 +190,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
       </Card>
 
       {orgAdmin && pending.length > 0 && (
-        <Card title={`Pending invitations (${pending.length})`} flush>
+        <Card title={`Pending invitations (${pending.length})`} info="Invitation links that have not been used yet. They stop working when they expire." flush>
           <Table caption="Pending invitations">
             <thead><tr><th scope="col">Email</th><th scope="col">Expires</th><th scope="col">Actions</th></tr></thead>
             <tbody>

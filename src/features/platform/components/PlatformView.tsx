@@ -96,7 +96,7 @@ export function PlatformView() {
       <PageHeader eyebrow="Platform" title="Organizations"
         description="Create organizations, block or delete them, and manage the people in them. You never see an organization's pipelines, approvals or logs." />
       {error && <Notice variant="error">{error}</Notice>}
-      <Card title="Create organization" flush>
+      <Card title="Create organization" info="Creates a new organization and an invitation link for its first administrator. Share the link with them." flush>
         <form className={styles.form} onSubmit={create}>
           <TextField id="org-name" label="Organization name" value={name} required minLength={2} maxLength={200} onChange={(e) => setName(e.target.value)} />
           <TextField id="org-admin" label="First administrator email" type="email" value={adminEmail} required maxLength={320} onChange={(e) => setAdminEmail(e.target.value)} />
@@ -105,7 +105,7 @@ export function PlatformView() {
         </form>
       </Card>
       {link && <LinkBox link={link} onDone={() => setLink(null)} />}
-      <Card title={`Organizations${orgs ? ` (${orgs.length})` : ""}`} flush>
+      <Card title={`Organizations${orgs ? ` (${orgs.length})` : ""}`} info="Every organization on the platform. Block one to cut off access; delete keeps its data but hides it." flush>
         {orgs === null ? <LoaderRows /> : orgs.length === 0 ? (
           <EmptyState icon="domain" title="No organizations yet">Create the first one above.</EmptyState>
         ) : (
@@ -222,7 +222,7 @@ function OrgPeople({ org, onLink, onChanged }: { org: Org; onLink: (l: { label: 
   }
 
   return (
-    <Card title={`People in ${org.name}`} flush>
+    <Card title={`People in ${org.name}`} info="Invite people into this organization, change their role, block them, or send a password reset link." flush>
       {statusOf(org).key !== "active" && <div className={styles.pad}><Notice variant="info">This organization is {statusOf(org).label}: nobody in it has access, and new invitations are paused.</Notice></div>}
       <form className={styles.form} onSubmit={invite} noValidate>
         <TextField id="pa-invite-email" label="Invite by email" type="email" value={email} maxLength={320} onChange={(e) => setEmail(e.target.value)} />

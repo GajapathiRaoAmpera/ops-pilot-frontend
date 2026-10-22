@@ -8,7 +8,7 @@ export function RunsTrend({ result, now = new Date() }: { result: RunsResult; no
   if (result.state !== "ok" || !result.connected || result.runs.length === 0) return null;
   const days = groupRunsByDay(result.runs, now, 14);
   return (
-    <Card title="Runs per day (last 14 days)">
+    <Card title="Runs per day (last 14 days)" info="How many pipeline runs started each day over the last two weeks, from the runs synced into this workspace.">
       <RunsTrendChart days={days} />
     </Card>
   );

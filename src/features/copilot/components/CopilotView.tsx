@@ -117,10 +117,10 @@ export function CopilotView({ workspaceId, runs, connected, canInvestigate = tru
   return (
     <div className={styles.layout}>
       <div className={styles.column}>
-        <Card title="Pilot" flush className={styles.pilotCard}>
+        <Card title="Pilot" info="Your AI assistant. It reacts to what you are looking at." flush className={styles.pilotCard}>
           <Robot mood={pilot.mood} line={pilot.line} pokes={PILOT_POKES} className={styles.pilot} bubbleClassName={styles.pilotBubble} />
         </Card>
-        <Card title={`Failed runs (${runs.length})`} flush fill>
+        <Card title={`Failed runs (${runs.length})`} info="Failed pipeline runs from the last sync. Pick one and the AI reads its log to explain what went wrong." flush fill>
           {runs.length === 0 ? (
             <EmptyState icon="task_alt" title="No failed runs" action={<Link className={styles.link} href="/pipelines">Open Pipelines</Link>}>
               Nothing has failed in the synced runs. Sync Pipelines to check for new ones.

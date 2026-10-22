@@ -61,7 +61,7 @@ export function LiveAutomation({ workspaceId }: { workspaceId: string }) {
 
   return (
     <div className={styles.page}>
-      <Card title="Available actions">
+      <Card title="Available actions" info="The only actions OpsPilot can take. Each one needs approval from a second person before it runs.">
         <div className={styles.actions}>
           {ACTIONS.map((a) => (
             <div key={a.name} className={styles.action}>

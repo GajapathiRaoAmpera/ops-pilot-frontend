@@ -110,7 +110,7 @@ export function CloudView({ organizationName }: { organizationName: string }) {
 
   return (
     <div className={styles.stack}>
-      <Card title={`Google Cloud · ${organizationName}`}
+      <Card title={`Google Cloud · ${organizationName}`} info="A read-only connection to one Google Cloud project, using a service account with the Viewer role. OpsPilot cannot change anything there."
         actions={status && <StatusBadge tone={status.connected ? "success" : "warning"}>{status.connected ? "connected" : "not connected"}</StatusBadge>}>
         {!status && !error ? <Loader /> : (
           <div className={styles.stack}>
@@ -140,7 +140,7 @@ export function CloudView({ organizationName }: { organizationName: string }) {
       </Card>
 
       {status?.connected && (
-        <Card title="Inventory" actions={<Button variant="ghost" loading={loadingInv} disabled={loadingInv} onClick={() => void loadInventory()}>Refresh</Button>} flush>
+        <Card title="Inventory" info="What is running in the connected project, read live from Google Cloud. Refresh to read it again." actions={<Button variant="ghost" loading={loadingInv} disabled={loadingInv} onClick={() => void loadInventory()}>Refresh</Button>} flush>
           {!inv ? <Loader label="Reading your Google Cloud project…" /> : (
             <div>
               {Object.keys(inv.errors).length > 0 && <div className={styles.notices}>{Object.entries(inv.errors).map(([api, reason]) => (
@@ -170,7 +170,7 @@ export function CloudView({ organizationName }: { organizationName: string }) {
         </Card>
       )}
 
-      <Card title="Other clouds" flush>
+      <Card title="Other clouds" info="AWS and Azure connections are not available yet." flush>
         <div className={styles.providers}>
           {[["Amazon Web Services", "AWS"], ["Microsoft Azure", "Azure"]].map(([n, short]) => (
             <div key={n} className={styles.provider}>

@@ -1,0 +1,26 @@
+@use "mixins";
+@use "tokens";
+
+.trigger {
+  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: 1.5rem; height: 1.5rem; padding: 0; border: 0; border-radius: 999px;
+  background: transparent; color: var(--color-outline); cursor: help;
+  transition: background-color 0.15s, color 0.15s;
+  @include mixins.focus-ring;
+  &:hover { background: var(--color-surface-highest); color: var(--color-primary); }
+}
+.on { background: var(--color-surface-highest); color: var(--color-primary); }
+
+.card {
+  position: fixed; z-index: 1000; width: max-content; max-width: min(18rem, calc(100vw - 1rem));
+  padding: 0.625rem 0.75rem; pointer-events: none;
+  border: 1px solid var(--color-outline-variant); border-left: 3px solid var(--color-primary);
+  border-radius: tokens.$radius-md; background: var(--color-surface-highest);
+  box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 0.4);
+  animation: appear 0.12s ease-out;
+  @include mixins.reduced-motion { animation: none; }
+}
+.title { margin: 0 0 0.25rem; font-size: 0.8125rem; font-weight: 600; color: var(--color-on-surface); }
+.text { margin: 0; font-size: 0.8125rem; line-height: 1.45; color: var(--color-on-surface-variant); white-space: normal; }
+
+@keyframes appear { from { opacity: 0; transform: translateY(2px); } to { opacity: 1; transform: none; } }

@@ -133,7 +133,7 @@ export function GithubConnection({ workspaceId, workspaceName }: { workspaceId: 
     : <StatusBadge tone="success">{`${repos.length} ${repos.length === 1 ? "repository" : "repositories"}`}</StatusBadge>;
 
   return (
-    <Card title={`GitHub Actions · ${workspaceName}`} actions={badge} flush>
+    <Card title={`GitHub Actions · ${workspaceName}`} info="The GitHub token and repositories OpsPilot uses for this workspace. Tokens are stored encrypted and never shown again." actions={badge} flush>
       {loadError ? <div className={styles.pad}><Notice variant="error">{loadError}</Notice></div> : !status ? <Loader /> : (
         <div className={styles.sections}>
           <section className={styles.section} aria-labelledby="gh-shared">

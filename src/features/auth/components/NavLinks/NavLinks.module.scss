@@ -22,6 +22,16 @@
   &:hover { background: color-mix(in srgb, var(--color-primary-container) 25%, transparent); color: var(--color-primary); }
 }
 
+// The "i" sits over the row's right end; it shows on hover/focus of the row (always on touch screens).
+.item { position: relative; }
+.item .link { padding-right: 2rem; }
+.info {
+  position: absolute; top: 50%; right: 0.25rem; transform: translateY(-50%); opacity: 0;
+  transition: opacity 0.15s;
+  .item:hover &, .item:focus-within &, &[aria-expanded="true"] { opacity: 1; }
+  @media (hover: none) { opacity: 1; }
+}
+
 // One line, never wraps into the icon; the full name is the link's tooltip.
 .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -32,5 +42,7 @@
     .link { justify-content: center; padding-inline: 0.5rem; }
     .label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
     .nav { gap: 0.5rem; }
+    .item .link { padding-right: 0.5rem; }
+    .info { display: none; }
   }
 }

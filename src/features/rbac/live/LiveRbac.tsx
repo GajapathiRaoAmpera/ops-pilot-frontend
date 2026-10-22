@@ -30,7 +30,7 @@ export function LiveRbac() {
   if (!data) return <LoaderRows />;
   const perms = [...new Set(data.roles.flatMap((r) => r.permissions))].sort();
   return (
-    <Card title="Role permission matrix" flush>
+    <Card title="Role permission matrix" info="Each column is a role and each row a permission. A check mark means the role has it. Change who has which role under Team & access." flush>
       <Table caption="Permissions granted to each role">
         <thead>
           <tr><th scope="col">Permission</th>{data.roles.map((r) => <th key={r.key} scope="col">{r.label}</th>)}</tr>
