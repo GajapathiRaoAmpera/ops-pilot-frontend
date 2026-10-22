@@ -11,11 +11,7 @@ export function Loader({ label = "Loading…", className }: { label?: string; cl
   );
 }
 
-/** Placeholder rows for table-shaped sections while data loads. */
-export function LoaderRows({ rows = 4 }: { rows?: number }) {
-  return (
-    <div className={styles.rows} role="status" aria-label="Loading">
-      {Array.from({ length: rows }, (_, i) => <span key={i} className={styles.row} aria-hidden="true" />)}
-    </div>
-  );
+/** Centered loader for table-shaped sections while data loads. */
+export function LoaderRows({ label = "Loading…" }: { label?: string; rows?: number }) {
+  return <Loader label={label} />;
 }

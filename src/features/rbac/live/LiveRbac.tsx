@@ -27,7 +27,7 @@ export function LiveRbac() {
   }, []);
 
   if (error) return <Notice variant="error">{error}</Notice>;
-  if (!data) return <LoaderRows rows={6} />;
+  if (!data) return <LoaderRows />;
   const perms = [...new Set(data.roles.flatMap((r) => r.permissions))].sort();
   return (
     <Card title="Role permission matrix" flush>
