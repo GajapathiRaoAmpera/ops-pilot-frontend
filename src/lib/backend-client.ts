@@ -45,6 +45,12 @@ const MESSAGES: Record<string, string> = {
   invalid_key: "That is not a valid service-account key file. Download the JSON key from Google Cloud and select it again.",
   key_unreadable: "The stored key cannot be read (the server key changed). Upload the service-account key again.",
   too_many_repositories: "This workspace has reached its repository limit. Remove one, or use another workspace.",
+  ai_not_configured: "AI investigations are not set up. Ask the platform operator to set OPSPILOT_GROQ_API_KEY.",
+  ai_unauthorized: "The AI provider rejected the server's API key. Ask the platform operator to check it.",
+  ai_rate_limited: "Too many investigations in a short time. Wait a minute and try again.",
+  ai_model_unavailable: "The configured AI model is not available to this API key. Set OPSPILOT_GROQ_MODEL to a model the key can use.",
+  ai_unavailable: "The AI provider could not be reached. Try again shortly.",
+  ai_bad_output: "The AI returned an answer OpsPilot could not use. Try again.",
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
 

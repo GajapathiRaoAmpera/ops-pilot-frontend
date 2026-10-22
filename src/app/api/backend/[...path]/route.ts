@@ -19,6 +19,7 @@ const ALLOWED: RegExp[] = [
   /^auth\/change-password$/,
   /^workspaces\/[0-9a-f-]{36}\/integrations\/github(\/test|\/repositories(\/[0-9a-f-]{36})?)?$/,
   /^workspaces\/[0-9a-f-]{36}\/cloud\/gcp(\/test|\/inventory)?$/,
+  /^workspaces\/[0-9a-f-]{36}\/investigations(\/status)?$/,
   /^workspaces\/[0-9a-f-]{36}\/pipelines\/(sync|runs)$/,
   /^workspaces\/[0-9a-f-]{36}\/action-requests$/,
   /^workspaces\/[0-9a-f-]{36}\/approvals$/,
@@ -30,7 +31,7 @@ const ALLOWED: RegExp[] = [
   /^meta\/roles$/,
 ];
 /** Only these query keys are forwarded (filters/pagination); everything else is dropped. */
-const QUERY_KEYS = ["status", "limit", "action", "outcome", "before_id"];
+const QUERY_KEYS = ["status", "limit", "action", "outcome", "before_id", "runId"];
 const METHODS = new Set(["GET", "POST", "PUT", "PATCH", "DELETE"]);
 
 async function relay(req: Request, ctx: { params: Promise<{ path: string[] }> }) {
