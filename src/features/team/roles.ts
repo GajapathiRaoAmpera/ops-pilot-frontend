@@ -3,6 +3,8 @@ export interface MemberRow {
   userId: string;
   email: string;
   name: string;
+  /** Blocked in this organization: the membership grants nothing until unblocked. */
+  blocked?: boolean;
   role: string;
   roleLabel: string;
   workspaceId: string | null;

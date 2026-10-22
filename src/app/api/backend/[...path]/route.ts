@@ -11,8 +11,11 @@ import { isSameOrigin } from "@/features/auth/server/origin";
 const ALLOWED: RegExp[] = [
   /^org\/(members|invitations|workspaces)(\/[0-9a-f-]{36})?$/,
   /^org\/(memberships)\/[0-9a-f-]{36}$/,
-  /^org\/members\/[0-9a-f-]{36}\/reset-link$/,
-  /^platform\/organizations$/,
+  /^org\/members\/[0-9a-f-]{36}\/(reset-link|block|unblock)$/,
+  /^platform\/organizations(\/[0-9a-f-]{36}(\/(members|workspaces|invitations))?)?$/,
+  /^platform\/organizations\/[0-9a-f-]{36}\/memberships\/[0-9a-f-]{36}$/,
+  /^platform\/organizations\/[0-9a-f-]{36}\/members\/[0-9a-f-]{36}\/(block|reset-link)$/,
+  /^platform\/users\/[0-9a-f-]{36}\/block$/,
   /^invitations\/(accept|accept-existing|[A-Za-z0-9_-]{20,200})$/,
   /^workspaces\/[0-9a-f-]{36}\/(members|invitations)$/,
   /^workspaces\/[0-9a-f-]{36}\/memberships\/[0-9a-f-]{36}$/,

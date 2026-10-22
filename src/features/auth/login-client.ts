@@ -3,6 +3,7 @@ import type { LoginCredentials, LoginErrorBody, LoginErrorCode, LoginSuccessBody
 export const LOGIN_ERROR_MESSAGES: Record<LoginErrorCode, string> = {
   invalid_credentials: "The email or password is incorrect.",
   rate_limited: "Too many sign-in attempts. Please wait a moment and try again.",
+  access_blocked: "Your access has been blocked by an administrator. Contact your organization administrator.",
   unavailable: "Sign-in is temporarily unavailable. Please try again shortly.",
   forbidden_origin: "This request was blocked. Reload the page and try again.",
   unknown: "Something went wrong. Please try again.",

@@ -155,7 +155,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
                   <td>{m.name}<br /><span className={styles.hint}>{m.email}</span></td>
                   <td>{m.roleLabel}</td>
                   <td>{m.workspace ?? "Whole organization"}</td>
-                  <td><StatusBadge tone={m.disabled ? "error" : "success"}>{m.disabled ? "disabled" : "active"}</StatusBadge></td>
+                  <td><StatusBadge tone={m.disabled || m.blocked ? "error" : "success"}>{m.disabled ? "account disabled" : m.blocked ? "blocked" : "active"}</StatusBadge></td>
                   <td>
                     <div className={styles.rowActions}>
                       <select aria-label={`Change role for ${m.email}`} className={styles.select} value={m.role}
@@ -169,6 +169,13 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
                           <Button variant="ghost" className={styles.small}
                             onClick={() => void act(`Create a password-reset link for ${m.email}?`, () => callBackend("POST", `org/members/${m.userId}/reset-link`, {}),
                               (d) => setLink({ label: `Password reset for ${m.email} (valid 2 hours)`, url: inviteUrl(d.token) }))}>Reset password</Button>
+                          {m.blocked ? (
+                            <Button variant="ghost" className={styles.small}
+                              onClick={() => void act(`Unblock ${m.email}? They get their access in this organization back.`, () => callBackend("POST", `org/members/${m.userId}/unblock`, {}))}>Unblock</Button>
+                          ) : (
+                            <Button variant="ghost" className={styles.small}
+                              onClick={() => void act(`Block ${m.email}? They lose all access to this organization straight away, until you unblock them.`, () => callBackend("POST", `org/members/${m.userId}/block`, {}))}>Block</Button>
+                          )}
                           <Button variant="ghost" className={styles.small}
                             onClick={() => void act(`Remove ${m.email} from this organization? If it is their only organization, their account is also disabled and signed out.`, () => callBackend("DELETE", `org/members/${m.userId}`))}>Remove from organization</Button>
                         </>

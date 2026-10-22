@@ -50,6 +50,9 @@ export async function POST(req: Request) {
     return fail("invalid_credentials", 401);
   }
   if (upstream.status === 429) return fail("rate_limited", 429);
+  if (upstream.status === 403 && (await upstream.clone().json().catch(() => null))?.detail === "access_blocked") {
+    return fail("access_blocked", 403);
+  }
   if (!upstream.ok) return fail("unavailable", 503);
 
   const setCookies = upstream.headers.getSetCookie();

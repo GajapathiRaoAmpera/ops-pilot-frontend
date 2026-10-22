@@ -10,6 +10,7 @@ const NOTICES: Record<string, string> = {
   expired: "Your session has expired. Please sign in again.",
   unavailable: "We couldn't verify your session. Please sign in again.",
   signed_out: "You have been signed out.",
+  blocked: "Your access has been blocked by an administrator. Contact your organization administrator.",
 };
 
 export default async function LoginPage({

@@ -27,6 +27,7 @@ export interface Session {
 export type SessionResult =
   | { status: "authenticated"; session: Session }
   | { status: "unauthenticated" }
+  | { status: "blocked" }
   | { status: "error" };
 
 export interface LoginCredentials {
@@ -37,6 +38,7 @@ export interface LoginCredentials {
 export type LoginErrorCode =
   | "invalid_credentials"
   | "rate_limited"
+  | "access_blocked"
   | "unavailable"
   | "forbidden_origin"
   | "unknown";

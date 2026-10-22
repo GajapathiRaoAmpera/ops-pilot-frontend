@@ -55,6 +55,12 @@ const MESSAGES: Record<string, string> = {
   proposal_has_no_fix: "This proposal has no code change to open as a pull request.",
   run_commit_unknown: "The run's commit is unknown. Sync Pipelines and try again.",
   user_in_other_organizations: "This person also belongs to another organization, so only they can reset their own password.",
+  cannot_block_self: "You cannot block yourself.",
+  cannot_block_platform_admin: "Platform administrators are managed on the server, not here.",
+  use_change_password: "To change your own password, use Change password while signed in.",
+  organization_not_active: "This organization is blocked or archived. Reactivate it first.",
+  block_before_delete: "Block the organization first, then delete it.",
+  confirmation_mismatch: "The name you typed does not match the organization's name.",
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
 
