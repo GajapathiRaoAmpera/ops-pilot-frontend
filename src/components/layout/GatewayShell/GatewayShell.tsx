@@ -2,12 +2,13 @@ import type { ReactNode } from "react";
 import { cx } from "@/lib/cx";
 import { BrandMark, BrandWordmark } from "@/components/brand/BrandMark";
 import { AuthBackground } from "../AuthBackground/AuthBackground";
+import { Parallax } from "./Parallax";
 import styles from "./GatewayShell.module.scss";
 
 /** Stitch "Security Gate" frame for unauthenticated screens. */
 export function GatewayShell({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
   return (
-    <div className={styles.page}>
+    <Parallax className={styles.page}>
       <AuthBackground />
       <header className={styles.header}>
         <BrandMark size={32} />
@@ -17,6 +18,6 @@ export function GatewayShell({ children, wide = false }: { children: ReactNode; 
       <main className={styles.main}>
         <div className={cx(styles.content, wide && styles.wide)}>{children}</div>
       </main>
-    </div>
+    </Parallax>
   );
 }

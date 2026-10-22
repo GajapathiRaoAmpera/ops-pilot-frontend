@@ -28,3 +28,30 @@
 }
 
 @include mixins.reduced-motion { .orb { animation: none; } }
+
+// Twinkling sparkles: only transform and opacity animate (compositor-only, no layout work).
+.sparkle {
+  position: absolute; display: block; line-height: 0; opacity: 0.18; transform: scale(0.6) rotate(0deg);
+  animation: twinkle 4s ease-in-out infinite;
+  will-change: transform, opacity;
+  svg { filter: drop-shadow(0 0 6px currentColor); }
+}
+.toneA { color: var(--color-primary); }
+.toneB { color: var(--color-secondary); }
+.toneC { color: var(--color-on-surface); }
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.18; transform: scale(0.6) rotate(0deg); }
+  45% { opacity: 0.95; transform: scale(1.1) rotate(45deg); }
+  60% { opacity: 0.6; transform: scale(0.9) rotate(60deg); }
+}
+
+// Reduced motion: a still, faint starfield instead of twinkling.
+@include mixins.reduced-motion { .sparkle { animation: none; opacity: 0.35; transform: none; } }
+
+// Pointer parallax (variables set by GatewayShell/Parallax; 0 when it is off, so nothing moves).
+.layer { position: absolute; inset: -2rem; transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1); will-change: transform; }
+.far { transform: translate3d(calc(var(--px, 0) * -8px), calc(var(--py, 0) * -8px), 0); }
+.mid { transform: translate3d(calc(var(--px, 0) * -18px), calc(var(--py, 0) * -18px), 0); }
+.near { transform: translate3d(calc(var(--px, 0) * -32px), calc(var(--py, 0) * -32px), 0); }
+@include mixins.reduced-motion { .layer { transition: none; transform: none; } }
