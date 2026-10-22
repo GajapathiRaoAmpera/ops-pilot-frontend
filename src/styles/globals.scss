@@ -9,15 +9,6 @@
   color-scheme: dark;
 }
 
-// Alternative palettes, selected with <html data-palette="...">.
-@each $name, $theme in tokens.$themes {
-  :root[data-palette="#{$name}"] {
-    @each $token, $value in $theme {
-      --color-#{$token}: #{$value};
-    }
-  }
-}
-
 *,
 *::before,
 *::after {

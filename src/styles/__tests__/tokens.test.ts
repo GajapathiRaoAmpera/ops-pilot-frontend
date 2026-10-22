@@ -6,7 +6,7 @@ const source = readFileSync(join(process.cwd(), "src/styles/_tokens.scss"), "utf
 
 function themes(): Record<string, Record<string, string>> {
   const out: Record<string, Record<string, string>> = {};
-  const re = /"([a-z]+)": \(\n((?:\s+"[a-z-]+": #[0-9a-f]{6},\n)+)\s+\),/g;
+  const re = /\$(colors): \(\n((?:\s+"[a-z-]+": #[0-9a-f]{6},\n)+)\s*\);/g;
   for (const m of source.matchAll(re)) {
     out[m[1]] = Object.fromEntries([...m[2].matchAll(/"([a-z-]+)": (#[0-9a-f]{6})/g)].map((x) => [x[1], x[2]]));
   }
@@ -23,10 +23,9 @@ const ratio = (a: string, b: string) => (Math.max(lum(a), lum(b)) + 0.05) / (Mat
 const ALL = themes();
 
 describe("design tokens", () => {
-  it("defines the expected palettes with every token", () => {
-    expect(Object.keys(ALL).sort()).toEqual(["indigo", "ocean", "violet"]);
-    const keys = Object.keys(ALL.indigo).sort();
-    for (const t of Object.values(ALL)) expect(Object.keys(t).sort()).toEqual(keys);
+  it("defines the palette with every token", () => {
+    expect(Object.keys(ALL)).toEqual(["colors"]);
+    expect(Object.keys(ALL.colors)).toContain("primary-container");
   });
 
   it.each(Object.keys(ALL))("%s meets WCAG contrast on its own surfaces", (name) => {
@@ -41,12 +40,6 @@ describe("design tokens", () => {
     expect(ratio(t["on-primary-container"], t["primary-container"]), `${name}: button text`).toBeGreaterThanOrEqual(4.5);
     for (const surface of ["background", "surface-low"]) {
       expect(ratio(t["control-border"], t[surface]), `${name}: control border on ${surface}`).toBeGreaterThanOrEqual(3);
-    }
-  });
-
-  it("keeps status colours identical across palettes, so status always means the same thing", () => {
-    for (const k of ["success", "warning", "error"]) {
-      expect(new Set(Object.values(ALL).map((t) => t[k])).size).toBe(1);
     }
   });
 });

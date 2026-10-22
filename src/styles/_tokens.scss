@@ -1,87 +1,34 @@
 @use "sass:map";
 // OpsPilot design tokens. Redesign guided by the ui-ux-pro-max design system for a data-dense
-// operations console (dark slate base, status colours reserved for status, indigo for actions).
+// operations console (security blue base, status colours reserved for status).
 // Emitted as CSS custom properties (see globals.scss) so every *.module.scss consumes var(--color-*).
 // Contrast (WCAG): body text >= 10:1, muted text >= 5.2:1, controls' borders >= 3.6:1 on panels.
-// Palettes. All share the same status colours (success/warning/error); only the surfaces and the brand
-// (primary) change. Every theme must pass the contrast guard in src/styles/__tests__/tokens.test.ts.
-$themes: (
-  // Slate with indigo actions: the default.
-  "indigo": (
-    "background": #0f172a,
-    "surface-lowest": #0b1220,
-    "surface-low": #1b2336,
-    "surface-container": #222b40,
-    "surface-high": #272f42,
-    "surface-highest": #334155,
-    "on-surface": #f1f5f9,
-    "on-surface-variant": #cbd5e1,
-    "outline": #94a3b8,
-    "outline-variant": #475569,
-    "control-border": #6b7c93,
-    "primary": #a5b4fc,
-    "on-primary-container": #eef2ff,
-    "primary-container": #4f46e5,
-    "secondary": #93c5fd,
-    "error": #f87171,
-    "error-container": #7f1d1d,
-    "on-error-container": #fee2e2,
-    "warning": #fbbf24,
-    "success": #4ade80,
-    "tertiary": #c4b5fd,
-  ),
-  // Security blue: calm, trustworthy, the classic operations-console feel.
-  "ocean": (
-    "background": #0a1628,
-    "surface-lowest": #071120,
-    "surface-low": #101f36,
-    "surface-container": #162a47,
-    "surface-high": #1b3252,
-    "surface-highest": #274063,
-    "on-surface": #eef4fb,
-    "on-surface-variant": #c3d1e3,
-    "outline": #8fa4bd,
-    "outline-variant": #3b5273,
-    "control-border": #6a86a8,
-    "primary": #7dd3fc,
-    "on-primary-container": #f0f9ff,
-    "primary-container": #0369a1,
-    "secondary": #a5b4fc,
-    "error": #f87171,
-    "error-container": #7f1d1d,
-    "on-error-container": #fee2e2,
-    "warning": #fbbf24,
-    "success": #4ade80,
-    "tertiary": #93c5fd,
-  ),
-  // Deep violet: distinctive and modern, clearly separate from the green/amber/red status colours.
-  "violet": (
-    "background": #0f0e1f,
-    "surface-lowest": #0a0916,
-    "surface-low": #181633,
-    "surface-container": #201e40,
-    "surface-high": #28264d,
-    "surface-highest": #353265,
-    "on-surface": #f3f1ff,
-    "on-surface-variant": #cdc9ec,
-    "outline": #9a96c4,
-    "outline-variant": #4a4778,
-    "control-border": #7773a8,
-    "primary": #c4b5fd,
-    "on-primary-container": #f5f3ff,
-    "primary-container": #6d28d9,
-    "secondary": #93c5fd,
-    "error": #f87171,
-    "error-container": #7f1d1d,
-    "on-error-container": #fee2e2,
-    "warning": #fbbf24,
-    "success": #4ade80,
-    "tertiary": #f0abfc,
-  ),
+// Palette: security blue. Status colours (success/warning/error) are reserved for status.
+// The contrast guard in src/styles/__tests__/tokens.test.ts must keep passing.
+// Security blue: calm, trustworthy, the classic operations-console feel.
+$colors: (
+  "background": #0a1628,
+  "surface-lowest": #071120,
+  "surface-low": #101f36,
+  "surface-container": #162a47,
+  "surface-high": #1b3252,
+  "surface-highest": #274063,
+  "on-surface": #eef4fb,
+  "on-surface-variant": #c3d1e3,
+  "outline": #8fa4bd,
+  "outline-variant": #3b5273,
+  "control-border": #6a86a8,
+  "primary": #7dd3fc,
+  "on-primary-container": #f0f9ff,
+  "primary-container": #0369a1,
+  "secondary": #a5b4fc,
+  "error": #f87171,
+  "error-container": #7f1d1d,
+  "on-error-container": #fee2e2,
+  "warning": #fbbf24,
+  "success": #4ade80,
+  "tertiary": #93c5fd,
 );
-
-$default-theme: "indigo";
-$colors: map.get($themes, $default-theme);
 
 $breakpoints: (
   "sm": 40rem,

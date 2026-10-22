@@ -21,7 +21,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/team", label: "Team & access", icon: "group_add", permission: PERMISSIONS.membersManage, alsoAllow: [PERMISSIONS.wsMembersManage], section: "Governance" },
   { href: "/rbac", label: "Roles & permissions", icon: "admin_panel_settings", permission: PERMISSIONS.rbacRead, section: "Governance" },
   { href: "/audit", label: "Audit trail", icon: "fact_check", permission: PERMISSIONS.auditRead, section: "Governance" },
-  { href: "/settings", label: "Settings", icon: "settings", permission: PERMISSIONS.settingsRead, section: "Settings" },
+  { href: "/settings", label: "Settings", icon: "settings", permission: PERMISSIONS.integrationsManage, section: "Settings" },
 ];
 
 export function visibleNavItems(granted: readonly string[]): NavItem[] {
