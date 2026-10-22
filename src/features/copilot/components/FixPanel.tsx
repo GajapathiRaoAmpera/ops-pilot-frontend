@@ -10,10 +10,13 @@ import { StatusBadge } from "@/components/ui/StatusBadge/StatusBadge";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { callBackend, messageFor, referenceFor } from "@/lib/backend-client";
 import type { FixProposal } from "../types";
+import type { Pilot } from "./CopilotView";
 import styles from "./CopilotView.module.scss";
 
 /** The fix agent proposes; opening the pull request is a separate action that a different person must approve. */
-export function FixPanel({ workspaceId, runId, disabled }: { workspaceId: string; runId: string; disabled: boolean }) {
+export function FixPanel({ workspaceId, runId, disabled, onPilot }: {
+  workspaceId: string; runId: string; disabled: boolean; onPilot?: (p: Pilot) => void;
+}) {
   const base = `workspaces/${workspaceId}/fix-proposals`;
   const { notify } = useToast();
   const [proposals, setProposals] = useState<FixProposal[] | null>(null);
@@ -32,13 +35,18 @@ export function FixPanel({ workspaceId, runId, disabled }: { workspaceId: string
 
   async function propose() {
     setBusy("propose"); setError(null);
+    onPilot?.({ mood: "thinking", line: "Reading the code for a small, safe fix…" });
     const r = await callBackend<FixProposal>("POST", base, { runId });
     setBusy(null);
     if (!r.ok) {
       setError(messageFor(r.detail));
+      onPilot?.({ mood: "error", line: messageFor(r.detail) });
       return notify({ tone: "error", title: "The fix agent did not finish", message: messageFor(r.detail), reference: referenceFor(r) });
     }
     setProposals((p) => [r.data, ...(p ?? [])]);
+    onPilot?.(r.data.status === "proposed"
+      ? { mood: "success", line: "I have a fix. Review the diff before sending it for approval." }
+      : { mood: "worried", line: "No safe code fix this time. My reason is below." });
     notify(r.data.status === "proposed"
       ? { tone: "success", title: "Fix proposed", message: "Review the change, then request approval to open a pull request." }
       : { tone: "info", title: "No safe fix found", message: "The agent explains why below." });
@@ -49,8 +57,9 @@ export function FixPanel({ workspaceId, runId, disabled }: { workspaceId: string
     const r = await callBackend("POST", `workspaces/${workspaceId}/action-requests`,
       { runId, type: "open_fix_pr", proposalId: p.id, reason: `AI fix: ${p.title}` });
     setBusy(null);
-    if (!r.ok) return setError(messageFor(r.detail));
+    if (!r.ok) { setError(messageFor(r.detail)); onPilot?.({ mood: "error", line: messageFor(r.detail) }); return; }
     setRequested(p.id);
+    onPilot?.({ mood: "success", line: "Sent. Someone else approves it, then I'll open the pull request." });
     notify({ tone: "success", title: "Sent for approval", message: "No pull request is opened until someone other than you approves it in Approvals." });
   }
 

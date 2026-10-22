@@ -46,3 +46,8 @@
 .proposalBody { display: grid; gap: 0.75rem; p { font-size: 0.875rem; line-height: 1.6; white-space: pre-wrap; } }
 .proposalTitle { font-weight: 600; }
 .noFix { display: grid; gap: 0.5rem; justify-items: start; p { font-size: 0.875rem; line-height: 1.6; color: var(--color-on-surface-variant); } }
+
+.column > .pilotCard { flex: none; }
+.pilot { height: 11rem; margin: 0; @include mixins.up(lg) { height: 12rem; } }
+.pilotBubble { top: 0.5rem; right: 0.75rem; max-width: 60%; }
+.notConnected { display: grid; gap: 1rem; @include mixins.up(lg) { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); } }

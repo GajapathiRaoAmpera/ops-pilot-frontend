@@ -11,11 +11,29 @@ import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { FixPanel } from "./FixPanel";
+import { Robot, type RobotMood } from "@/features/auth/components/RobotAgent/Robot";
 import { RequestRerun } from "@/features/pipelines/components/RunsPanel/RunControls";
 import { callBackend, messageFor, referenceFor } from "@/lib/backend-client";
 import { cx } from "@/lib/cx";
 import type { FailedRun, Investigation } from "../types";
 import styles from "./CopilotView.module.scss";
+
+const PILOT_POKES = [
+  "I read the log, quote the lines that matter, and check every quote is really there.",
+  "I can suggest a re-run or a small code fix. A different person always approves it.",
+  "Low confidence means I'm guessing. Check the evidence before acting.",
+] as const;
+
+export type Pilot = { mood: RobotMood; line: string | null };
+
+/** Pilot's reaction to a finished investigation: driven only by what the backend returned. */
+export function reactTo(inv: Investigation): Pilot {
+  if (inv.confidence === "high" && inv.evidenceVerified && inv.evidence.length > 0) return { mood: "success", line: "Found it, and the log backs it up." };
+  if (inv.confidence === "low" || !inv.evidenceVerified || inv.evidence.length === 0) {
+    return { mood: "worried", line: "I'm not sure about this one. Treat it as a guess and check the log." };
+  }
+  return { mood: "curious", line: "Likely cause found. Check the quoted lines." };
+}
 
 const CONFIDENCE: Record<Investigation["confidence"], Tone> = { high: "success", medium: "warning", low: "neutral" };
 const when = (iso: string | null) => (iso ? new Date(iso).toLocaleString() : "-");
@@ -32,6 +50,7 @@ export function CopilotView({ workspaceId, runs, connected, canRequest }: Props)
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const selected = runs.find((r) => r.id === selectedId) ?? null;
+  const [pilot, setPilot] = useState<Pilot>({ mood: "idle", line: runs.length ? "Pick a failed run and I'll read its log." : null });
 
   useEffect(() => {
     let cancelled = false;
@@ -57,29 +76,44 @@ export function CopilotView({ workspaceId, runs, connected, canRequest }: Props)
   function pick(id: string) {
     if (id === selectedId) return;
     setHistory(null); setError(null); setSelectedId(id);
+    const run = runs.find((r) => r.id === id);
+    setPilot({ mood: "curious", line: run ? `Let's look at ${run.workflow}.` : null });
   }
 
   async function investigate() {
     if (!selected || busy) return;
     setBusy(true); setError(null);
+    setPilot({ mood: "thinking", line: "Reading the log…" });
     const r = await callBackend<Investigation>("POST", base, { runId: selected.id });
     setBusy(false);
     if (!r.ok) {
       setError(messageFor(r.detail));
+      setPilot({ mood: "error", line: messageFor(r.detail) });
       return notify({ tone: "error", title: "Investigation failed", message: messageFor(r.detail), reference: referenceFor(r) });
     }
     setHistory((h) => [r.data, ...(h ?? [])]);
+    setPilot(reactTo(r.data));
     notify({ tone: "success", title: "Investigation ready", message: `Confidence: ${r.data.confidence}. Check the quoted log lines before acting.` });
   }
 
   if (!connected) {
-    return <Card><EmptyState icon="link_off" title="GitHub is not connected" action={<Link className={styles.link} href="/settings">Open Settings</Link>}>Connect a repository so the Copilot has runs to investigate.</EmptyState></Card>;
+    return (
+      <div className={styles.notConnected}>
+        <Card title="Pilot" flush>
+          <Robot mood="worried" line="Connect GitHub in Settings so I have runs to read." pokes={PILOT_POKES} className={styles.pilot} bubbleClassName={styles.pilotBubble} />
+        </Card>
+        <Card><EmptyState icon="link_off" title="GitHub is not connected" action={<Link className={styles.link} href="/settings">Open Settings</Link>}>Connect a repository so the Copilot has runs to investigate.</EmptyState></Card>
+      </div>
+    );
   }
 
   const latest = history?.[0];
   return (
     <div className={styles.layout}>
       <div className={styles.column}>
+        <Card title="Pilot" flush className={styles.pilotCard}>
+          <Robot mood={pilot.mood} line={pilot.line} pokes={PILOT_POKES} className={styles.pilot} bubbleClassName={styles.pilotBubble} />
+        </Card>
         <Card title={`Failed runs (${runs.length})`} flush fill>
           {runs.length === 0 ? (
             <EmptyState icon="task_alt" title="No failed runs" action={<Link className={styles.link} href="/pipelines">Open Pipelines</Link>}>
@@ -129,7 +163,7 @@ export function CopilotView({ workspaceId, runs, connected, canRequest }: Props)
                   </EmptyState>
                 ) : <Result inv={latest} workspaceId={workspaceId} runId={selected.id} canRequest={canRequest} />}
 
-              {canRequest && !busy && history !== null && <FixPanel key={selected.id} workspaceId={workspaceId} runId={selected.id} disabled={ai?.configured === false} />}
+              {canRequest && !busy && history !== null && <FixPanel key={selected.id} workspaceId={workspaceId} runId={selected.id} disabled={ai?.configured === false} onPilot={setPilot} />}
 
               {history && history.length > 1 && (
                 <details className={styles.older}>

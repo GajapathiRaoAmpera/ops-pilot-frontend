@@ -1,7 +1,7 @@
 import { ToastProvider } from "@/components/ui/Toast/ToastProvider";
 import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { CopilotView } from "../components/CopilotView";
+import { CopilotView, reactTo } from "../components/CopilotView";
 
 vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn(), push: vi.fn() }) }));
 
@@ -61,5 +61,16 @@ describe("CopilotView", () => {
     ui();
     expect(await screen.findByText(/OPSPILOT_GROQ_API_KEY/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Investigate with AI/ })).toBeDisabled();
+  });
+});
+
+describe("Pilot's reaction", () => {
+  const base = { ...inv, evidence: [{ quote: "x", why: "y" }] } as Parameters<typeof reactTo>[0];
+  it("celebrates only a verified, high-confidence result", () => {
+    expect(reactTo({ ...base, confidence: "high", evidenceVerified: true }).mood).toBe("success");
+    expect(reactTo({ ...base, confidence: "high", evidenceVerified: false }).mood).toBe("worried");
+    expect(reactTo({ ...base, confidence: "medium", evidenceVerified: true }).mood).toBe("curious");
+    expect(reactTo({ ...base, confidence: "low", evidenceVerified: true }).mood).toBe("worried");
+    expect(reactTo({ ...base, confidence: "high", evidenceVerified: true, evidence: [] }).mood).toBe("worried");
   });
 });

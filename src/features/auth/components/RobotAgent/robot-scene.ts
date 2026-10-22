@@ -6,8 +6,11 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { LoginMood } from "../../login-mood";
 
+/** Sign-in moods plus two used by the AI Copilot. */
+export type RobotMood = LoginMood | "curious" | "worried";
+
 export interface RobotScene {
-  setMood(mood: LoginMood, look?: number): void;
+  setMood(mood: RobotMood, look?: number): void;
   wave(): void;
   dispose(): void;
 }
@@ -26,6 +29,7 @@ const COLORS = {
   eye: 0x7dd3fc,
   eyeError: 0xf87171,
   eyeHappy: 0x4ade80,
+  eyeWorried: 0xfbbf24,
 };
 
 const damp = (from: number, to: number, rate: number, dt: number) => from + (to - from) * (1 - Math.exp(-rate * dt));
@@ -149,7 +153,7 @@ export function createRobotScene(canvas: HTMLCanvasElement, opts: Options): Robo
   scene.add(shadow);
 
   // ---------------------------------------------------------------- behaviour
-  let mood: LoginMood = "idle";
+  let mood: RobotMood = "idle";
   let look = 0.5;
   let moodSince = 0;
   let waveUntil = 0;
@@ -232,19 +236,25 @@ export function createRobotScene(canvas: HTMLCanvasElement, opts: Options): Robo
     if (mood === "password") { yaw = -0.15; pitch = 0.25; }
     if (mood === "peek") { yaw = 0.35; pitch = 0.2; }
     if (mood === "thinking") { yaw = Math.sin(t * 2) * 0.25; pitch = -0.15; }
+    let roll = 0;
+    if (mood === "curious") { roll = 0.22; pitch = Math.min(pitch, 0.05); }
+    if (mood === "worried") { yaw *= 0.3; pitch = 0.3; roll = -0.08; }
     if (mood === "error" && !opts.reducedMotion) yaw = Math.sin(since * 22) * 0.35 * Math.max(0, 1 - since / 1.2);
     head.rotation.y = damp(head.rotation.y, yaw, rate, dt);
     head.rotation.x = damp(head.rotation.x, pitch, rate, dt);
+    head.rotation.z = damp(head.rotation.z, roll, rate, dt);
     eyes.position.x = damp(eyes.position.x, yaw * 0.12, rate, dt);
     eyes.position.y = damp(eyes.position.y, -pitch * 0.1, rate, dt);
     robot.rotation.y = damp(robot.rotation.y, yaw * 0.25, rate * 0.6, dt);
 
     // Arms. Rotation z swings the arm sideways/up (left arm: + is inward), x brings the hand forward.
     // Rest: hands slightly out. Password: both hands over the visor. Peek: one hand. Wave: right arm up and out.
-    const waving = t < waveUntil || mood === "success";
+    const waving = t < waveUntil || (mood === "success" && since < 2.5); // celebrate, then settle
     let lz = -0.12, rz = 0.12, lx = 0, rx = 0, le = 1, re = 1;
     if (mood === "password") { lz = 2.75; rz = -2.75; lx = 0.7; rx = 0.7; le = 1.7; re = 1.7; }
     if (mood === "peek") { rz = -2.75; rx = 0.7; re = 1.7; }
+    if (mood === "worried") { lz = 0.35; rz = -0.35; lx = 0.5; rx = 0.5; } // hands together in front
+    if (mood === "curious") { rz = -2.3; rx = 0.9; re = 1.35; } // hand to the chin
     if (waving) { rz = 2.6 + (opts.reducedMotion ? 0 : Math.sin(t * 12) * 0.35); rx = 0; re = 1; }
     for (const [a, z, x, e] of [[armL, lz, lx, le], [armR, rz, rx, re]] as const) {
       a.shoulder.rotation.z = damp(a.shoulder.rotation.z, z, rate, dt);
@@ -261,7 +271,8 @@ export function createRobotScene(canvas: HTMLCanvasElement, opts: Options): Robo
     shadow.scale.setScalar(1 - (robot.position.y + 0.06) * 0.6);
 
     // Eyes: colour by mood, blink, happy squint
-    target.setHex(mood === "error" ? COLORS.eyeError : mood === "success" || hovering ? COLORS.eyeHappy : COLORS.eye);
+    target.setHex(mood === "error" ? COLORS.eyeError : mood === "worried" ? COLORS.eyeWorried
+      : mood === "success" || hovering ? COLORS.eyeHappy : COLORS.eye);
     eyeColor.lerp(target, 1 - Math.exp(-rate * dt));
     eyeMat.color.copy(eyeColor);
     eyeMat.emissive.copy(eyeColor);
