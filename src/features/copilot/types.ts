@@ -14,4 +14,9 @@ export interface Investigation {
   createdBy: string | null;
 }
 
+export interface FixProposal {
+  id: string; runId: string; status: "proposed" | "no_fix"; title: string; explanation: string; files: string[]; diff: string;
+  baseBranch: string; baseSha: string; model: string; trace: { step: string; detail: string }[]; createdAt: string; createdBy: string | null;
+}
+
 export interface FailedRun { id: string; repo: string; workflow: string; branch: string; commit: string; conclusion: string | null; url: string; startedAt: string | null }

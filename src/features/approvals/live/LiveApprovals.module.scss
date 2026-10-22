@@ -21,3 +21,8 @@
 .bar[data-status="pending"] { border-left-color: var(--color-warning); }
 .bar[data-status="succeeded"] { border-left-color: var(--color-success); }
 .bar[data-status="failed"] { border-left-color: var(--color-error); }
+
+.proposal { display: grid; gap: 0.625rem; padding: 1rem; border-radius: 0.5rem; background: var(--color-surface-container); border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent); }
+.proposalTitle { font-weight: 600; }
+.proposalText { font-size: 0.875rem; line-height: 1.6; color: var(--color-on-surface-variant); white-space: pre-wrap; }
+.proposalNote { font-size: 0.75rem; color: var(--color-outline); }

@@ -141,7 +141,7 @@ export function GithubConnection({ workspaceId, workspaceName }: { workspaceId: 
               <h3 id="gh-shared">Workspace token</h3>
               <StatusBadge tone={status.tokenSet ? "success" : "neutral"} icon={status.tokenSet ? undefined : ""}>{status.tokenSet ? "set" : "not set"}</StatusBadge>
             </div>
-            <p className={styles.hint}>Used by every repository that has no token of its own. A fine-grained token needs Actions read, plus Actions write if you want approved re-runs.</p>
+            <p className={styles.hint}>Used by every repository that has no token of its own. A fine-grained token needs Actions: Read (runs and logs). Add Actions: Read and write for approved re-runs, and Contents plus Pull requests: Read and write for AI fix pull requests.</p>
             <form onSubmit={saveShared} className={styles.row} noValidate>
               <TextField id="gh-shared-token" label={status.tokenSet ? "Replace workspace token" : "Workspace token"} type="password"
                 value={sharedToken} onChange={(e) => setSharedToken(e.target.value)} autoComplete="off" maxLength={512} />

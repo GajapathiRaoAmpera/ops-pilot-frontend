@@ -4,10 +4,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button/Button";
 import { Card } from "@/components/ui/Card/Card";
+import { DiffView } from "@/components/ui/DiffView/DiffView";
 import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import { LoaderRows } from "@/components/ui/Loader/Loader";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
+import { actionLabel } from "@/features/approvals/actions";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { cx } from "@/lib/cx";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
@@ -83,7 +85,7 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
                   <li key={r.id}>
                     <button type="button" aria-pressed={r.id === selected?.id} className={cx(inbox.item, styles.bar, r.id === selected?.id && inbox.active)} data-status={r.status} onClick={() => setSelectedId(r.id)}>
                       <span className={inbox.row}>
-                        <span className={inbox.id}>Re-run failed jobs</span>
+                        <span className={inbox.id}>{actionLabel(r.type)}</span>
                         <StatusBadge tone={RISK_TONE[r.risk] ?? "neutral"}>{`${r.risk} risk`}</StatusBadge>
                       </span>
                       <span className={inbox.itemTitle}>{r.run ? `${r.run.workflow} · ${r.run.repo}` : "Unknown run"}</span>
@@ -103,7 +105,7 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
           <Card flush fill>
             <div className={styles.detail}>
               <div className={styles.head}>
-                <h2 className={styles.headTitle}>Re-run failed jobs</h2>
+                <h2 className={styles.headTitle}>{actionLabel(selected.type)}</h2>
                 {selected.run && (
                   <p className={styles.facts}>
                     <span>{selected.run.repo}</span>
@@ -117,6 +119,14 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
                   <StatusBadge tone={RISK_TONE[selected.risk] ?? "neutral"}>{`${selected.risk} risk`}</StatusBadge>
                 </div>
               </div>
+              {selected.proposal && (
+                <section className={styles.proposal} aria-label="Code change to approve">
+                  <p className={styles.proposalTitle}>{selected.proposal.title}</p>
+                  <p className={styles.proposalText}>{selected.proposal.explanation}</p>
+                  <DiffView diff={selected.proposal.diff} label="Code change to approve" />
+                  <p className={styles.proposalNote}>Written by AI ({selected.proposal.model}). Approving opens a pull request with exactly this change; a person still reviews and merges it in GitHub.</p>
+                </section>
+              )}
               <DecisionTrail
                 request={selected}
                 decision={

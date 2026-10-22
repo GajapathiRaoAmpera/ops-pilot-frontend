@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Card } from "@/components/ui/Card/Card";
 import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
+import { actionLabel } from "@/features/approvals/actions";
 import { RunsPanel } from "@/features/pipelines/components/RunsPanel/RunsPanel";
 import type { OverviewSummary } from "../../server/summary";
 import styles from "./LiveOverview.module.scss";
@@ -26,7 +27,7 @@ export function LiveOverview({ data }: { data: OverviewSummary }) {
             <ul className={styles.list} aria-label="Requests waiting for a decision">
               {approvals.items.map((i) => (
                 <li key={i.id} className={styles.item}>
-                  <span className={styles.title}>Re-run failed jobs · {i.workflow}</span>
+                  <span className={styles.title}>{i.type ? actionLabel(i.type) : "Request"} · {i.workflow}</span>
                   <span className={styles.meta}>{i.repo} · {i.branch} · asked by {i.requester ?? "unknown"} · {when(i.createdAt)}</span>
                   <StatusBadge tone={RISK_TONE[i.risk] ?? "neutral"}>{`${i.risk} risk`}</StatusBadge>
                 </li>
@@ -44,7 +45,7 @@ export function LiveOverview({ data }: { data: OverviewSummary }) {
             <ul className={styles.list} aria-label="Recent automation">
               {recentExecutions.map((e) => (
                 <li key={e.id} className={styles.item}>
-                  <span className={styles.title}>Re-run failed jobs · {e.workflow}</span>
+                  <span className={styles.title}>{actionLabel(e.type)} · {e.workflow}</span>
                   <span className={styles.meta}>{e.repo} · {when(e.createdAt)}</span>
                   <StatusBadge tone={EXEC_TONE[e.status] ?? "neutral"}>{e.status}</StatusBadge>
                 </li>

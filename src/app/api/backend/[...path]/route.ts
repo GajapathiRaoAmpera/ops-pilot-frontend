@@ -20,6 +20,7 @@ const ALLOWED: RegExp[] = [
   /^workspaces\/[0-9a-f-]{36}\/integrations\/github(\/test|\/repositories(\/[0-9a-f-]{36})?)?$/,
   /^workspaces\/[0-9a-f-]{36}\/cloud\/gcp(\/test|\/inventory)?$/,
   /^workspaces\/[0-9a-f-]{36}\/investigations(\/status)?$/,
+  /^workspaces\/[0-9a-f-]{36}\/fix-proposals$/,
   /^workspaces\/[0-9a-f-]{36}\/pipelines\/(sync|runs)$/,
   /^workspaces\/[0-9a-f-]{36}\/action-requests$/,
   /^workspaces\/[0-9a-f-]{36}\/approvals$/,

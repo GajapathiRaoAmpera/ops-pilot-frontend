@@ -13,16 +13,26 @@ const inv = {
   suggestedAction: "rerun_failed_jobs", suggestionReason: "Looks transient.", model: "llama-3.3-70b-versatile",
   createdAt: "2026-10-22T10:00:00Z", createdBy: "Sri Ram",
 };
+/** Answers by URL, so the order of the screen's requests does not matter. */
+function backend(routes: Record<string, () => unknown>) {
+  return vi.spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+    const url = String(input);
+    const key = Object.keys(routes).find((k) => { const [m, part] = k.split(" "); return (init?.method ?? "GET") === m && url.includes(part); });
+    return json(key ? routes[key]() : {});
+  });
+}
 const ui = (canRequest = true) => render(<ToastProvider><CopilotView workspaceId="ws1" runs={[run]} connected canRequest={canRequest} /></ToastProvider>);
 
 describe("CopilotView", () => {
   afterEach(() => vi.restoreAllMocks());
 
   it("investigates a failed run and shows the checked diagnosis with a request-for-approval button", async () => {
-    const spy = vi.spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(json({ configured: true, provider: "groq", model: "llama-3.3-70b-versatile" }))
-      .mockResolvedValueOnce(json({ investigations: [] }))
-      .mockResolvedValueOnce(json(inv));
+    const spy = backend({
+      "GET investigations/status": () => ({ configured: true, provider: "groq", model: "openai/gpt-oss-120b" }),
+      "GET investigations?": () => ({ investigations: [] }),
+      "POST investigations": () => inv,
+      "GET fix-proposals": () => ({ proposals: [] }),
+    });
     ui();
     expect(await screen.findByText("Not investigated yet")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: /Investigate with AI/ }));
@@ -31,23 +41,23 @@ describe("CopilotView", () => {
     expect(within(result).getByText("medium confidence")).toBeInTheDocument();
     expect(within(result).getByText("quotes verified in log")).toBeInTheDocument();
     expect(within(result).getByRole("button", { name: "Request re-run" })).toBeInTheDocument();
-    expect(JSON.parse(spy.mock.calls[2][1]!.body as string)).toEqual({ runId: "r1" });
+    const post = spy.mock.calls.find(([u, i]) => String(u).includes("investigations") && i?.method === "POST")!;
+    expect(JSON.parse(post[1]!.body as string)).toEqual({ runId: "r1" });
+    expect(screen.getByRole("button", { name: /Propose a fix/ })).toBeInTheDocument();
   });
 
   it("never offers the request button to someone without permission", async () => {
-    vi.spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(json({ configured: true, provider: "groq", model: "m" }))
-      .mockResolvedValueOnce(json({ investigations: [inv] }));
+    backend({ "GET investigations/status": () => ({ configured: true, provider: "groq", model: "m" }), "GET investigations?": () => ({ investigations: [inv] }) });
     ui(false);
     await screen.findByRole("article", { name: "AI investigation" });
     expect(screen.queryByRole("button", { name: "Request re-run" })).not.toBeInTheDocument();
     expect(screen.getByText(/can't request re-runs/)).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Propose a fix/ })).not.toBeInTheDocument();
   });
 
   it("explains when the AI is not configured and disables the button", async () => {
-    vi.spyOn(globalThis, "fetch")
-      .mockResolvedValueOnce(json({ configured: false, provider: "groq", model: "m" }))
-      .mockResolvedValueOnce(json({ investigations: [] }));
+    backend({ "GET investigations/status": () => ({ configured: false, provider: "groq", model: "m" }),
+      "GET investigations?": () => ({ investigations: [] }), "GET fix-proposals": () => ({ proposals: [] }) });
     ui();
     expect(await screen.findByText(/OPSPILOT_GROQ_API_KEY/)).toBeInTheDocument();
     expect(screen.getByRole("button", { name: /Investigate with AI/ })).toBeDisabled();

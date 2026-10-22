@@ -10,6 +10,7 @@ import { Loader } from "@/components/ui/Loader/Loader";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { FixPanel } from "./FixPanel";
 import { RequestRerun } from "@/features/pipelines/components/RunsPanel/RunControls";
 import { callBackend, messageFor, referenceFor } from "@/lib/backend-client";
 import { cx } from "@/lib/cx";
@@ -127,6 +128,8 @@ export function CopilotView({ workspaceId, runs, connected, canRequest }: Props)
                     The run&apos;s log is redacted, trimmed to the error lines and sent to the AI{ai ? ` (${ai.model})` : ""}. Nothing is changed in GitHub.
                   </EmptyState>
                 ) : <Result inv={latest} workspaceId={workspaceId} runId={selected.id} canRequest={canRequest} />}
+
+              {canRequest && !busy && history !== null && <FixPanel key={selected.id} workspaceId={workspaceId} runId={selected.id} disabled={ai?.configured === false} />}
 
               {history && history.length > 1 && (
                 <details className={styles.older}>

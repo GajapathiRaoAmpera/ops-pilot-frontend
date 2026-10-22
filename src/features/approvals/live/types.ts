@@ -11,4 +11,6 @@ export interface LiveRequest {
   run: { repo: string; workflow: string; branch: string; commit: string; status: string; conclusion: string | null; url: string } | null;
   decision: { decision: string; decidedBy: string; decidedByName?: string | null; reason: string; decidedAt: string } | null;
   execution: { id: string; status: string; error: string; result: Record<string, unknown>; endedAt: string | null } | null;
+  proposalId?: string | null;
+  proposal?: { title: string; explanation: string; diff: string; files: string[]; model: string } | null;
 }

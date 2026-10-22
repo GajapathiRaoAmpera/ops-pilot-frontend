@@ -27,6 +27,13 @@ const ACTIONS = [
     name: "Re-run failed jobs",
     what: "Restarts only the failed jobs of a failed GitHub Actions run. Nothing in the code changes.",
     rule: "Needs approval from someone other than the requester. Runs only after approval, and the result is recorded.",
+    icon: "replay",
+  },
+  {
+    name: "Open fix pull request",
+    what: "Opens a pull request with a small code change proposed by the AI fix agent from AI Copilot. Never merges.",
+    rule: "High risk. Needs approval from someone else, who sees the exact diff. A person still reviews and merges it in GitHub.",
+    icon: "merge",
   },
 ] as const;
 
@@ -58,7 +65,7 @@ export function LiveAutomation({ workspaceId }: { workspaceId: string }) {
         <div className={styles.actions}>
           {ACTIONS.map((a) => (
             <div key={a.name} className={styles.action}>
-              <span className={styles.actionHead}><span className={styles.actionIcon}><Icon name="replay" size={20} /></span>{a.name}</span>
+              <span className={styles.actionHead}><span className={styles.actionIcon}><Icon name={a.icon} size={20} /></span>{a.name}</span>
               <p className={styles.what}>{a.what}</p>
               <p className={styles.rule}><Icon name="verified_user" size={14} />{a.rule}</p>
             </div>
@@ -96,7 +103,9 @@ export function LiveAutomation({ workspaceId }: { workspaceId: string }) {
                       <td>{r.decision?.decidedByName ?? "-"}</td>
                       <td><StatusBadge tone={TONE[r.execution?.status ?? ""] ?? "neutral"}>{r.execution?.status ?? r.status}</StatusBadge></td>
                       <td className={styles.detail}>
-                        {r.execution?.error
+                        {typeof r.execution?.result?.prUrl === "string" && r.execution.result.prUrl.startsWith("https://github.com/")
+                          ? <a className={styles.link} href={r.execution.result.prUrl} target="_blank" rel="noreferrer noopener">Pull request #{String(r.execution.result.prNumber ?? "")}</a>
+                          : r.execution?.error
                           ? <>GitHub did not accept it ({r.execution.error})</>
                           : typeof r.execution?.result?.observedStatus === "string" ? <>GitHub reports the run as {r.execution.result.observedStatus as string}</> : "-"}
                       </td>

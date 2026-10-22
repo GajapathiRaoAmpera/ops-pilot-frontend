@@ -51,6 +51,9 @@ const MESSAGES: Record<string, string> = {
   ai_model_unavailable: "The configured AI model is not available to this API key. Set OPSPILOT_GROQ_MODEL to a model the key can use.",
   ai_unavailable: "The AI provider could not be reached. Try again shortly.",
   ai_bad_output: "The AI returned an answer OpsPilot could not use. Try again.",
+  proposal_not_found: "That fix proposal no longer exists. Propose a fix again.",
+  proposal_has_no_fix: "This proposal has no code change to open as a pull request.",
+  run_commit_unknown: "The run's commit is unknown. Sync Pipelines and try again.",
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
 

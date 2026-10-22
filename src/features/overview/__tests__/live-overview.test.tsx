@@ -5,7 +5,7 @@ import type { OverviewSummary } from "../server/summary";
 const base: OverviewSummary = {
   pipelines: { connected: true, counts: { failure: 1 }, total: 1, lastSyncedAt: null,
     recent: [{ id: "r1", repo: "o/r", workflow: "build", branch: "main", commit: "abc1234", status: "completed", conclusion: "failure", url: "", startedAt: null }] },
-  approvals: { pending: 2, items: [{ id: "a1", risk: "medium", createdAt: "2026-01-01T00:00:00Z", requester: "Sam", workflow: "CodeQL", repo: "o/r", branch: "main" }] },
+  approvals: { pending: 2, items: [{ id: "a1", type: "rerun_failed_jobs", risk: "medium", createdAt: "2026-01-01T00:00:00Z", requester: "Sam", workflow: "CodeQL", repo: "o/r", branch: "main" }] },
   lastExecution: null,
   recentExecutions: [{ id: "e1", status: "succeeded", type: "rerun_failed_jobs", workflow: "build", repo: "o/r", createdAt: "2026-01-01T00:00:00Z" }],
   activity: [{ id: 1, ts: "2026-01-01T00:00:00Z", actor: "Boss", action: "approval.approve", resource: "request:1", outcome: "success" }],

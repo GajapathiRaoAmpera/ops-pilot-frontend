@@ -16,3 +16,4 @@
 @keyframes spin { to { transform: rotate(360deg); } }
 .hint { font-size: 0.75rem; color: var(--color-outline); }
 .detail { white-space: normal; min-width: 14rem; }
+.link { color: var(--color-primary); text-decoration: underline; text-underline-offset: 2px; }
