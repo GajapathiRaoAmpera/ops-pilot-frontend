@@ -42,6 +42,8 @@ const MESSAGES: Record<string, string> = {
   request_already_open: "A request for this run is already open.",
   separation_of_duties: "You cannot approve a request you made yourself.",
   not_pending: "This request was already decided.",
+  invalid_key: "That is not a valid service-account key file. Download the JSON key from Google Cloud and select it again.",
+  key_unreadable: "The stored key cannot be read (the server key changed). Upload the service-account key again.",
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
 

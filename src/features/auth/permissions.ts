@@ -17,6 +17,7 @@ export const PERMISSIONS = {
   membersManage: "sys:members:manage",
   wsMembersManage: "ws:members:manage",
   integrationsManage: "ws:integrations:manage",
+  cloudManage: "cloud:connections:manage",
   platformOrgs: "platform:orgs:manage",
 } as const;
 

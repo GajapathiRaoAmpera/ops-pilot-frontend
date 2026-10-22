@@ -16,6 +16,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
   { href: "/overview", label: "Overview", icon: "terminal", permission: PERMISSIONS.overviewRead, section: "Operations" },
   { href: "/pipelines", label: "Pipelines", icon: "alt_route", permission: PERMISSIONS.pipelinesRead, section: "Operations" },
   { href: "/automation", label: "Automation", icon: "smart_toy", permission: PERMISSIONS.automationRead, section: "Operations" },
+  { href: "/cloud", label: "Cloud", icon: "cloud", permission: PERMISSIONS.cloudManage, section: "Operations" },
   { href: "/copilot", label: "AI Copilot", icon: "auto_awesome", permission: PERMISSIONS.copilotUse, section: "AI" },
   { href: "/approvals", label: "Approvals", icon: "inbox", permission: PERMISSIONS.approvalsRead, section: "Governance" },
   { href: "/team", label: "Team & access", icon: "group_add", permission: PERMISSIONS.membersManage, alsoAllow: [PERMISSIONS.wsMembersManage], section: "Governance" },
