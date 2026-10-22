@@ -11,7 +11,7 @@ vi.mock("next/navigation", () => ({ usePathname: () => "/pipelines", useRouter: 
 
 const session: Session = {
   user: { id: "u", email: "a@b.co", name: "Ann" }, role: "Org Admin", organization: { id: "o", name: "A Very Long Organization Name Incorporated" },
-  permissions: Object.values(PERMISSIONS).filter((p) => p !== PERMISSIONS.platformOrgs), workspaces: [], mustChangePassword: false,
+  permissions: Object.values(PERMISSIONS).filter((p) => p !== PERMISSIONS.platformOrgs), workspaces: [], organizations: [], activeWorkspaceId: null, mustChangePassword: false,
 };
 
 const shell = () => render(

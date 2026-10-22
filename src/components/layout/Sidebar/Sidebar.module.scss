@@ -47,7 +47,7 @@
   .sidebar[data-collapsed="true"] {
     .top { flex-direction: column; padding-inline: 0.5rem; }
     .brandRow { padding-inline: 0; }
-    .hideWhenCollapsed, .org, .userName, .userRole, .account label { display: none; }
+    .hideWhenCollapsed, .org, .orgSlot, .userName, .userRole, .account label { display: none; }
     .panel { padding-inline: 0.5rem; }
     .account [data-label] { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
   }

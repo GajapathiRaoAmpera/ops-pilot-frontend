@@ -18,9 +18,9 @@ describe("navigation by permission", () => {
     expect(hrefs).toEqual(["/overview", "/audit"]);
   });
   it("shows Cloud and Settings only with their own management permission", () => {
-    const all = [PERMISSIONS.overviewRead, PERMISSIONS.settingsRead];
-    expect(visibleNavItems(all).map((i) => i.href)).toEqual(["/overview"]);
-    expect(visibleNavItems([...all, PERMISSIONS.cloudManage]).map((i) => i.href)).toEqual(["/overview", "/cloud"]);
+    const all = [PERMISSIONS.overviewRead, PERMISSIONS.rbacRead];
+    expect(visibleNavItems(all).map((i) => i.href)).toEqual(["/overview", "/rbac"]);
+    expect(visibleNavItems([...all, PERMISSIONS.cloudManage]).map((i) => i.href)).toEqual(["/overview", "/cloud", "/rbac"]);
     expect(visibleNavItems([PERMISSIONS.integrationsManage]).map((i) => i.href)).toEqual(["/settings"]);
   });
   it("shows nothing and no landing page without permissions", () => {

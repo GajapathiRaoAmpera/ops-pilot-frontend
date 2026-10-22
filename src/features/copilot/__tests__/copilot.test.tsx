@@ -74,3 +74,23 @@ describe("Pilot's reaction", () => {
     expect(reactTo({ ...base, confidence: "high", evidenceVerified: true, evidence: [] }).mood).toBe("worried");
   });
 });
+
+describe("read-only reviewer (Security Auditor)", () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it("reads past investigations and fix proposals but can start nothing", async () => {
+    backend({
+      "GET investigations/status": () => ({ configured: true, provider: "groq", model: "m" }),
+      "GET investigations?": () => ({ investigations: [inv] }),
+      "GET fix-proposals": () => ({ proposals: [{ id: "p1", runId: "r1", status: "proposed", title: "Fix add()", explanation: "x",
+        files: ["a.py"], diff: "--- a/a.py\n+++ b/a.py\n-1\n+2\n", baseBranch: "main", baseSha: "aaaaaaa", model: "m", trace: [], createdAt: "2026-10-22T10:00:00Z", createdBy: "S" }] }),
+    });
+    render(<ToastProvider><CopilotView workspaceId="ws1" runs={[run]} connected canInvestigate={false} canRequest={false} /></ToastProvider>);
+    await screen.findByRole("article", { name: "AI investigation" });
+    expect(await screen.findByText("Fix add()")).toBeInTheDocument();
+    expect(screen.getByText("read-only")).toBeInTheDocument();
+    for (const name of [/Investigate/, /Propose/, /Request approval/, "Request re-run"]) {
+      expect(screen.queryByRole("button", { name })).not.toBeInTheDocument();
+    }
+  });
+});

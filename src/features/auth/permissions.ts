@@ -13,10 +13,11 @@ export const PERMISSIONS = {
   approvalsDecide: "approvals:requests:approve",
   rbacRead: "sys:rbac:read",
   auditRead: "sec:telemetry:audit",
-  settingsRead: "sys:settings:read",
   membersManage: "sys:members:manage",
   wsMembersManage: "ws:members:manage",
   integrationsManage: "ws:integrations:manage",
+  aiRead: "ai:investigations:read",
+  wsAuditRead: "ws:audit:read",
   cloudManage: "cloud:connections:manage",
   platformOrgs: "platform:orgs:manage",
 } as const;

@@ -54,6 +54,7 @@ const MESSAGES: Record<string, string> = {
   proposal_not_found: "That fix proposal no longer exists. Propose a fix again.",
   proposal_has_no_fix: "This proposal has no code change to open as a pull request.",
   run_commit_unknown: "The run's commit is unknown. Sync Pipelines and try again.",
+  user_in_other_organizations: "This person also belongs to another organization, so only they can reset their own password.",
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
 

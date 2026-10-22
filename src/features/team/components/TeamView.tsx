@@ -170,7 +170,7 @@ export function TeamView({ orgAdmin, workspaces }: { orgAdmin: boolean; workspac
                             onClick={() => void act(`Create a password-reset link for ${m.email}?`, () => callBackend("POST", `org/members/${m.userId}/reset-link`, {}),
                               (d) => setLink({ label: `Password reset for ${m.email} (valid 2 hours)`, url: inviteUrl(d.token) }))}>Reset password</Button>
                           <Button variant="ghost" className={styles.small}
-                            onClick={() => void act(`Disable ${m.email} everywhere and sign them out?`, () => callBackend("DELETE", `org/members/${m.userId}`))}>Disable</Button>
+                            onClick={() => void act(`Remove ${m.email} from this organization? If it is their only organization, their account is also disabled and signed out.`, () => callBackend("DELETE", `org/members/${m.userId}`))}>Remove from organization</Button>
                         </>
                       )}
                     </div>

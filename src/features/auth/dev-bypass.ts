@@ -16,6 +16,8 @@ export const PREVIEW_SESSION: Session = {
   organization: { id: "preview", name: "Preview Organization" },
   // The platform operator role is exclusive of tenant roles, so the preview omits it.
   permissions: Object.values(PERMISSIONS).filter((p) => p !== PERMISSIONS.platformOrgs),
+  organizations: [],
   workspaces: [],
+  activeWorkspaceId: null,
   mustChangePassword: false,
 };

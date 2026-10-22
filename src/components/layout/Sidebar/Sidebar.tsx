@@ -19,6 +19,8 @@ function read(): boolean {
 
 interface Props {
   organizationName: string;
+  /** Optional replacement for the organization box (e.g. a switcher). */
+  organization?: ReactNode;
   userName: string;
   userRole: string;
   nav: ReactNode;
@@ -29,7 +31,7 @@ interface Props {
  * Desktop: a toggle between the full sidebar and an icon-only strip, remembered per browser.
  * Phones: the sidebar becomes a top bar whose menu button opens the navigation.
  */
-export function Sidebar({ organizationName, userName, userRole, nav, accountActions }: Props) {
+export function Sidebar({ organizationName, organization, userName, userRole, nav, accountActions }: Props) {
   const collapsed = useSyncExternalStore(subscribe, read, () => false);
   const [open, setOpen] = useState(false);
 
@@ -61,10 +63,12 @@ export function Sidebar({ organizationName, userName, userRole, nav, accountActi
         </button>
       </div>
       <div id="app-sidebar-panel" className={styles.panel}>
-        <div className={styles.org}>
-          <p className={styles.orgLabel}>Organization</p>
-          <p className={styles.orgName} title={organizationName}>{organizationName}</p>
-        </div>
+        {organization ? <div className={styles.orgSlot}>{organization}</div> : (
+          <div className={styles.org}>
+            <p className={styles.orgLabel}>Organization</p>
+            <p className={styles.orgName} title={organizationName}>{organizationName}</p>
+          </div>
+        )}
         <div className={styles.nav} onClick={() => setOpen(false)}>{nav}</div>
         <div className={styles.account}>
           <p className={styles.userName} title={userName}>{userName}</p>

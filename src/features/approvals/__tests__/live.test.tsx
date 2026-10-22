@@ -8,7 +8,7 @@ import type { LiveRequest } from "../live/types";
 
 const session = (email: string): Session => ({
   user: { id: "u", email, name: "Me" }, role: "Org Admin", organization: { id: "o", name: "Acme" },
-  permissions: [], workspaces: [], mustChangePassword: false,
+  permissions: [], workspaces: [], organizations: [], activeWorkspaceId: null, mustChangePassword: false,
 });
 const req = (over: Partial<LiveRequest> = {}): LiveRequest => ({
   id: "r1", runId: "run1", type: "rerun_failed_jobs", risk: "medium", status: "pending", reason: "flaky", requestedBy: "u2",

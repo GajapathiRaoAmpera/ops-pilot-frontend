@@ -38,10 +38,16 @@ export function reactTo(inv: Investigation): Pilot {
 const CONFIDENCE: Record<Investigation["confidence"], Tone> = { high: "success", medium: "warning", low: "neutral" };
 const when = (iso: string | null) => (iso ? new Date(iso).toLocaleString() : "-");
 
-interface Props { workspaceId: string; runs: FailedRun[]; connected: boolean; canRequest: boolean }
+interface Props {
+  workspaceId: string; runs: FailedRun[]; connected: boolean;
+  /** Can run investigations (false: read-only reviewer such as a Security Auditor). */
+  canInvestigate?: boolean;
+  /** Can propose fixes and request actions. */
+  canRequest: boolean;
+}
 
 /** Every word on this screen comes from the backend: the run list from GitHub, the diagnosis from the AI, checked. */
-export function CopilotView({ workspaceId, runs, connected, canRequest }: Props) {
+export function CopilotView({ workspaceId, runs, connected, canInvestigate = true, canRequest }: Props) {
   const base = `workspaces/${workspaceId}/investigations`;
   const { notify } = useToast();
   const [selectedId, setSelectedId] = useState<string | null>(runs[0]?.id ?? null);
@@ -147,23 +153,27 @@ export function CopilotView({ workspaceId, runs, connected, canRequest }: Props)
                   <p className={styles.meta}>{selected.repo} · branch {selected.branch} · commit <span className={styles.mono}>{selected.commit}</span>
                     {selected.url && <> · <a className={styles.ext} href={selected.url} target="_blank" rel="noreferrer noopener">Open on GitHub</a></>}</p>
                 </div>
-                <Button loading={busy} disabled={busy || ai?.configured === false} onClick={() => void investigate()}>
-                  <Icon name="auto_awesome" size={18} />{latest ? "Investigate again" : "Investigate with AI"}
-                </Button>
+                {canInvestigate ? (
+                  <Button loading={busy} disabled={busy || ai?.configured === false} onClick={() => void investigate()}>
+                    <Icon name="auto_awesome" size={18} />{latest ? "Investigate again" : "Investigate with AI"}
+                  </Button>
+                ) : <StatusBadge tone="neutral" icon="visibility">read-only</StatusBadge>}
               </header>
 
-              {ai?.configured === false && <Notice variant="info">AI investigations are not set up on the server yet (OPSPILOT_GROQ_API_KEY).</Notice>}
+              {canInvestigate && ai?.configured === false && <Notice variant="info">AI investigations are not set up on the server yet (OPSPILOT_GROQ_API_KEY).</Notice>}
               {error && <Notice variant="error">{error}</Notice>}
 
               {busy ? <Loader label="Reading the log and asking the AI… this can take up to a minute." />
                 : history === null ? <Loader />
                 : !latest ? (
                   <EmptyState icon="auto_awesome" title="Not investigated yet">
-                    The run&apos;s log is redacted, trimmed to the error lines and sent to the AI{ai ? ` (${ai.model})` : ""}. Nothing is changed in GitHub.
+                    {canInvestigate
+                      ? <>The run&apos;s log is redacted, trimmed to the error lines and sent to the AI{ai ? ` (${ai.model})` : ""}. Nothing is changed in GitHub.</>
+                      : "Nobody has asked the AI about this run yet. Investigations appear here when someone runs one."}
                   </EmptyState>
                 ) : <Result inv={latest} workspaceId={workspaceId} runId={selected.id} canRequest={canRequest} />}
 
-              {canRequest && !busy && history !== null && <FixPanel key={selected.id} workspaceId={workspaceId} runId={selected.id} disabled={ai?.configured === false} onPilot={setPilot} />}
+              {!busy && history !== null && <FixPanel key={selected.id} workspaceId={workspaceId} runId={selected.id} disabled={ai?.configured === false} readOnly={!canRequest} onPilot={setPilot} />}
 
               {history && history.length > 1 && (
                 <details className={styles.older}>

@@ -14,8 +14,12 @@ export interface Session {
   role: string;
   organization: { id: string; name: string };
   permissions: readonly string[];
-  /** Workspaces the user can access (backend-provided). */
+  /** Every organization the user belongs to, with their role there. Switching changes `organization`. */
+  organizations: readonly { id: string; name: string; role: string }[];
+  /** Workspaces the user can access in the active organization (backend-provided). */
   workspaces: readonly { id: string; name: string; role: string }[];
+  /** The backend's validated choice of active workspace; `permissions` and `role` apply to it. */
+  activeWorkspaceId: string | null;
   /** True after an operator bootstrap: the backend blocks everything until the password is changed. */
   mustChangePassword: boolean;
 }

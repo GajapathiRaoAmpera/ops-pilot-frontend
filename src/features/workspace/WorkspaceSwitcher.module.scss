@@ -9,3 +9,7 @@
   background: var(--color-surface-lowest); color: var(--color-on-surface); border: 1px solid var(--color-outline-variant);
   &:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 1px; }
 }
+
+.orgBox { margin-bottom: 0; padding: 0.5rem 0.75rem; border-radius: 0.5rem; background: var(--color-surface-container); min-width: 0; }
+.orgLabel { font-size: 0.75rem; color: var(--color-outline); }
+.orgName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.75rem; font-weight: 500; color: var(--color-on-surface); }

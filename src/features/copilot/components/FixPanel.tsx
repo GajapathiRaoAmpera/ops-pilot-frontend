@@ -14,8 +14,11 @@ import type { Pilot } from "./CopilotView";
 import styles from "./CopilotView.module.scss";
 
 /** The fix agent proposes; opening the pull request is a separate action that a different person must approve. */
-export function FixPanel({ workspaceId, runId, disabled, onPilot }: {
-  workspaceId: string; runId: string; disabled: boolean; onPilot?: (p: Pilot) => void;
+export function FixPanel({ workspaceId, runId, disabled, readOnly = false, onPilot }: {
+  workspaceId: string; runId: string; disabled: boolean;
+  /** Show proposals others made, without proposing or requesting anything. */
+  readOnly?: boolean;
+  onPilot?: (p: Pilot) => void;
 }) {
   const base = `workspaces/${workspaceId}/fix-proposals`;
   const { notify } = useToast();
@@ -64,6 +67,7 @@ export function FixPanel({ workspaceId, runId, disabled, onPilot }: {
   }
 
   const latest = proposals?.[0];
+  if (readOnly && !latest) return null; // nothing to review, and nothing this person may start
   return (
     <section className={styles.fix} aria-label="Fix proposal">
       <div className={styles.fixHead}>
@@ -71,9 +75,11 @@ export function FixPanel({ workspaceId, runId, disabled, onPilot }: {
           <h3>Fix with a pull request</h3>
           <p className={styles.muted}>The agent reads the failing files and proposes a small change. Workflows, lockfiles and secrets are off limits.</p>
         </div>
-        <Button variant="ghost" loading={busy === "propose"} disabled={busy !== null || disabled} onClick={() => void propose()}>
-          <Icon name="build" size={18} />{latest ? "Propose again" : "Propose a fix"}
-        </Button>
+        {!readOnly && (
+          <Button variant="ghost" loading={busy === "propose"} disabled={busy !== null || disabled} onClick={() => void propose()}>
+            <Icon name="build" size={18} />{latest ? "Propose again" : "Propose a fix"}
+          </Button>
+        )}
       </div>
       {error && <Notice variant="error">{error}</Notice>}
       {busy === "propose" ? <Loader label="The agent is reading the code… this can take up to two minutes." />
@@ -91,7 +97,8 @@ export function FixPanel({ workspaceId, runId, disabled, onPilot }: {
               <ol className={styles.steps}>{latest.trace.map((t, i) => <li key={i}><strong>{t.step.replaceAll("_", " ")}</strong>: {t.detail}</li>)}</ol>
             </details>
             <div className={styles.actionRow}>
-              {requested === latest.id ? <StatusBadge tone="info" icon="schedule">awaiting approval</StatusBadge>
+              {readOnly ? null
+                : requested === latest.id ? <StatusBadge tone="info" icon="schedule">awaiting approval</StatusBadge>
                 : <Button loading={busy === "request"} disabled={busy !== null} onClick={() => void requestPr(latest)}>Request approval to open PR</Button>}
               <span className={styles.muted}>Base: {latest.baseBranch} @ {latest.baseSha} · {latest.model}</span>
             </div>

@@ -2,13 +2,16 @@ import { act, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { emitActivity } from "@/lib/activity";
 import { PilotDock } from "../PilotDock";
-import { helpFor } from "../page-help";
+import { helpFor, tipsFor } from "../page-help";
 
 let path = "/approvals";
 vi.mock("next/navigation", () => ({ usePathname: () => path }));
+let permissions: string[] = [];
+vi.mock("@/features/auth/components/SessionProvider", () => ({ useSession: () => ({ permissions }) }));
 
 beforeEach(() => {
   path = "/approvals";
+  permissions = ["approvals:requests:read", "approvals:requests:approve"];
   localStorage.clear();
   window.matchMedia = ((q: string) => ({ matches: q.includes("reduce") })) as unknown as typeof window.matchMedia; // still: no WebGL in tests
 });
@@ -56,6 +59,16 @@ describe("PilotDock", () => {
     path = "/copilot";
     const { container } = render(<PilotDock />);
     expect(container).toBeEmptyDOMElement();
+  });
+
+  it("only promises what the person's role can do", () => {
+    const pipelines = helpFor("/pipelines");
+    const viewer = tipsFor(pipelines, ["cicd:pipelines:read"]).join(" ");
+    const devops = tipsFor(pipelines, ["cicd:pipelines:read", "cicd:pipelines:execute"]).join(" ");
+    expect(viewer).not.toMatch(/Sync now pulls/);
+    expect(viewer).toMatch(/Syncing and re-runs are for/);
+    expect(devops).toMatch(/Sync now pulls/);
+    expect(devops).not.toMatch(/Syncing and re-runs are for/);
   });
 
   it("has help for nested paths and a fallback", () => {

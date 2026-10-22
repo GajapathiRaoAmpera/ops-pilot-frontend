@@ -1,14 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { useToast } from "@/components/ui/Toast/ToastProvider";
+import { destinationAfterSwitch } from "./after-switch";
 import styles from "./WorkspaceSwitcher.module.scss";
 
 export function WorkspaceSwitcher({ activeId }: { activeId: string | undefined }) {
   const session = useSession();
   const router = useRouter();
+  const pathname = usePathname();
   const { notify } = useToast();
   const [busy, setBusy] = useState(false);
   const list = session?.workspaces ?? [];
@@ -19,7 +21,9 @@ export function WorkspaceSwitcher({ activeId }: { activeId: string | undefined }
     try {
       const res = await fetch("/api/workspace", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id }) });
       if (!res.ok) throw new Error("switch_failed");
-      router.refresh();
+      const body = (await res.json()) as { permissions?: string[] };
+      const to = destinationAfterSwitch(pathname, body.permissions); // leave a page the new role can't open
+      if (to) router.push(to); else router.refresh();
     } catch {
       notify({ tone: "error", title: "Could not switch workspace", message: "Try again." });
     } finally {
@@ -31,7 +35,7 @@ export function WorkspaceSwitcher({ activeId }: { activeId: string | undefined }
     <label className={styles.label}>
       <span className={styles.caption}>Workspace{busy && <span className={styles.spin} aria-hidden="true" />}</span>
       <select aria-busy={busy} className={styles.select} value={activeId ?? list[0].id} disabled={busy || list.length === 1} onChange={(e) => void change(e.target.value)}>
-        {list.map((w) => <option key={w.id} value={w.id}>{w.name}</option>)}
+        {list.map((w) => <option key={w.id} value={w.id}>{w.name} · {w.role}</option>)}
       </select>
     </label>
   );

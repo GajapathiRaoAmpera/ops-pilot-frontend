@@ -30,8 +30,9 @@ const TEST_REASONS: Record<string, string> = {
 const API_NAMES: Record<string, string> = { compute: "Compute Engine", cloudRun: "Cloud Run", gke: "Kubernetes Engine" };
 const TONE = (s: string) => (["RUNNING", "ready", "RUNNING_OK"].includes(s) ? "success" : ["STOPPED", "TERMINATED", "ERROR", "not_ready"].includes(s) ? "error" : "neutral") as "success" | "error" | "neutral";
 
-export function CloudView({ workspaceId, workspaceName }: { workspaceId: string; workspaceName: string }) {
-  const base = `workspaces/${workspaceId}/cloud/gcp`;
+/** The organization's Google Cloud connection: one per organization, the same in every workspace. */
+export function CloudView({ organizationName }: { organizationName: string }) {
+  const base = "org/cloud/gcp";
   const { notify } = useToast();
   const [status, setStatus] = useState<Status | null>(null);
   const [inv, setInv] = useState<Inventory | null>(null);
@@ -109,7 +110,7 @@ export function CloudView({ workspaceId, workspaceName }: { workspaceId: string;
 
   return (
     <div className={styles.stack}>
-      <Card title={`Google Cloud · ${workspaceName}`}
+      <Card title={`Google Cloud · ${organizationName}`}
         actions={status && <StatusBadge tone={status.connected ? "success" : "warning"}>{status.connected ? "connected" : "not connected"}</StatusBadge>}>
         {!status && !error ? <Loader /> : (
           <div className={styles.stack}>

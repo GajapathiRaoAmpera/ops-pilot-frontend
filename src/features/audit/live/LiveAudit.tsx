@@ -18,7 +18,9 @@ export interface LiveEvent {
 interface Page { events: LiveEvent[]; nextBefore: number | null }
 
 /** Server-side filters and cursor paging. Event text is rendered as plain text (React-escaped). */
-export function LiveAudit() {
+/** `workspace` given: that workspace only (workspace administrators). Otherwise the whole active organization. */
+export function LiveAudit({ workspace }: { workspace?: { id: string; name: string } } = {}) {
+  const endpoint = workspace ? `workspaces/${workspace.id}/audit-events` : "audit-events";
   const [events, setEvents] = useState<LiveEvent[] | null>(null);
   const [next, setNext] = useState<number | null>(null);
   const [outcome, setOutcome] = useState("");
@@ -33,12 +35,12 @@ export function LiveAudit() {
       const q = new URLSearchParams({ limit: "50" });
       if (applied.outcome) q.set("outcome", applied.outcome);
       if (applied.action) q.set("action", applied.action);
-      const r = await callBackend<Page>("GET", `audit-events?${q}`);
+      const r = await callBackend<Page>("GET", `${endpoint}?${q}`);
       if (cancelled) return;
       if (r.ok) { setEvents(r.data.events); setNext(r.data.nextBefore); setError(null); } else setError(messageFor(r.detail));
     })();
     return () => { cancelled = true; };
-  }, [applied]);
+  }, [applied, endpoint]);
 
   async function loadMore() {
     if (next === null) return;
@@ -46,7 +48,7 @@ export function LiveAudit() {
     const q = new URLSearchParams({ limit: "50", before_id: String(next) });
     if (applied.outcome) q.set("outcome", applied.outcome);
     if (applied.action) q.set("action", applied.action);
-    const r = await callBackend<Page>("GET", `audit-events?${q}`);
+    const r = await callBackend<Page>("GET", `${endpoint}?${q}`);
     setMore(false);
     if (!r.ok) return setError(messageFor(r.detail));
     setEvents((cur) => [...(cur ?? []), ...r.data.events]);

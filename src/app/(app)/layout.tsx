@@ -7,6 +7,7 @@ import { isGuardBypassed } from "@/features/auth/dev-bypass";
 import { requireSession } from "@/features/auth/server/session";
 import { getActiveWorkspace } from "@/features/auth/server/workspace";
 import { PilotDock } from "@/features/pilot/PilotDock";
+import { OrganizationSwitcher } from "@/features/workspace/OrganizationSwitcher";
 import { WorkspaceSwitcher } from "@/features/workspace/WorkspaceSwitcher";
 
 export const dynamic = "force-dynamic";
@@ -19,8 +20,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
     <SessionProvider session={session}>
       <AppShell
         organizationName={session.organization.name}
+        organization={<OrganizationSwitcher />}
         userName={session.user.name}
-        userRole={session.role}
+        userRole={active ? `${session.role} · ${active.name}` : session.role}
         nav={<NavLinks />}
         accountActions={<><WorkspaceSwitcher activeId={active?.id} /><LogoutButton /></>}
         banner={isGuardBypassed() ? <PreviewBanner /> : undefined}

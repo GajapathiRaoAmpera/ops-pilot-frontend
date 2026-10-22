@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/features/auth/server/session";
 import { isSameOrigin } from "@/features/auth/server/origin";
+import { switchScope } from "@/features/auth/server/switch";
 import { WORKSPACE_COOKIE } from "@/features/auth/server/workspace";
 
 /** Remembers the focused workspace. Accepts only an id that belongs to the signed-in user. */
@@ -12,7 +13,5 @@ export async function POST(req: Request) {
   if (typeof id !== "string" || !result.session.workspaces.some((w) => w.id === id)) {
     return NextResponse.json({ error: "unknown_workspace" }, { status: 404 });
   }
-  const res = NextResponse.json({ ok: true });
-  res.cookies.set(WORKSPACE_COOKIE, id, { httpOnly: true, sameSite: "lax", path: "/", secure: process.env.NODE_ENV === "production" });
-  return res;
+  return switchScope({ [WORKSPACE_COOKIE]: id });
 }

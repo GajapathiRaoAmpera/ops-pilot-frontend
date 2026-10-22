@@ -5,7 +5,8 @@ import { useEffect, useId, useRef, useState } from "react";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { Robot, type RobotMood } from "@/features/auth/components/RobotAgent/Robot";
 import { onActivity, type ActivityEvent } from "@/lib/activity";
-import { helpFor } from "./page-help";
+import { useSession } from "@/features/auth/components/SessionProvider";
+import { helpFor, tipsFor } from "./page-help";
 import { PilotFace } from "./PilotFace";
 import styles from "./PilotDock.module.scss";
 
@@ -16,6 +17,7 @@ const writeHidden = (v: boolean) => { try { localStorage.setItem(HIDDEN_KEY, v ?
 /** Pilot in the corner of every signed-in page: quiet until opened, help for the current page, real activity only. */
 export function PilotDock() {
   const pathname = usePathname();
+  const session = useSession();
   const panelId = useId();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -86,7 +88,7 @@ export function PilotDock() {
             </div>
           </header>
           {!still && <Robot mood={mood} line={null} className={styles.robot} />}
-          <ul className={styles.tips}>{help.tips.map((t) => <li key={t}>{t}</li>)}</ul>
+          <ul className={styles.tips}>{tipsFor(help, session?.permissions ?? []).map((t) => <li key={t}>{t}</li>)}</ul>
           <section aria-label="Recent activity" className={styles.recent}>
             <p className={styles.recentTitle}>Recent</p>
             {recent.length === 0 ? <p className={styles.muted}>Nothing yet this visit. Results of syncs, approvals and AI runs show up here.</p> : (
