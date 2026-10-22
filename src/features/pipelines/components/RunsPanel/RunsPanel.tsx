@@ -3,6 +3,7 @@ import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
 import { Table } from "@/components/ui/Table/Table";
 import type { PipelineRun, RunsResult } from "../../server/runs";
+import { RepoFilter } from "./RepoFilter";
 import { RequestRerun, SyncButton } from "./RunControls";
 
 function outcome(r: PipelineRun): { tone: Tone; label: string } {
@@ -13,14 +14,14 @@ function outcome(r: PipelineRun): { tone: Tone; label: string } {
 }
 
 /** Real GitHub Actions data. Every value is rendered as plain text (React-escaped). */
-export function RunsPanel({ result, workspaceId, canExecute = false }: { result: RunsResult; workspaceId?: string; canExecute?: boolean }) {
+export function RunsPanel({ result, workspaceId, canExecute = false, repo }: { result: RunsResult; workspaceId?: string; canExecute?: boolean; repo?: string }) {
   const controls = Boolean(workspaceId && canExecute);
   let body;
   if (result.state === "no-workspace") body = <Notice variant="info">No workspace is assigned to your account.</Notice>;
   else if (result.state === "forbidden") body = <Notice variant="error">You do not have access to this workspace&apos;s pipelines.</Notice>;
   else if (result.state === "error") body = <Notice variant="error">Pipeline data is temporarily unavailable.</Notice>;
   else if (!result.connected) body = <Notice variant="info">GitHub Actions is not connected for this workspace.</Notice>;
-  else if (result.runs.length === 0) body = <Notice variant="info">No runs have been synced yet.</Notice>;
+  else if (result.runs.length === 0) body = <Notice variant="info">{repo ? `No runs synced for ${repo} yet.` : "No runs have been synced yet."}</Notice>;
   else {
     body = (
       <Table caption="GitHub Actions runs">
@@ -42,9 +43,14 @@ export function RunsPanel({ result, workspaceId, canExecute = false }: { result:
       </Table>
     );
   }
-  const synced = result.state === "ok" && result.lastSyncedAt ? `Last synced ${result.lastSyncedAt}` : undefined;
+  const synced = result.state === "ok" && result.lastSyncedAt ? `Last synced ${new Date(result.lastSyncedAt).toLocaleString()}` : undefined;
+  const repos = result.state === "ok" ? result.repositories ?? [] : [];
   return (
-    <Card title="GitHub Actions runs (live)" flush actions={<>{synced ? <span>{synced}</span> : null}{controls && workspaceId ? <SyncButton workspaceId={workspaceId} /> : null}</>}>
+    <Card title="GitHub Actions runs" flush actions={<>
+      {repos.length > 1 && <RepoFilter repositories={repos} value={repo ?? ""} />}
+      {synced ? <span>{synced}</span> : null}
+      {controls && workspaceId ? <SyncButton workspaceId={workspaceId} /> : null}
+    </>}>
       {body}
     </Card>
   );

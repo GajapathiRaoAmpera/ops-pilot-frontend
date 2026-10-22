@@ -4,3 +4,6 @@
   background: var(--color-surface-lowest); color: var(--color-on-surface); border: 1px solid var(--color-control-border); }
 .ok { font-size: 0.8125rem; color: var(--color-on-surface-variant); }
 .err { font-size: 0.8125rem; color: var(--color-error); }
+.filter { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--color-outline);
+  select { max-width: 16rem; padding: 0.3125rem 0.5rem; font: inherit; font-size: 0.8125rem; color: var(--color-on-surface); background: var(--color-surface-lowest); border: 1px solid var(--color-control-border); }
+  select:focus-visible { outline: 2px solid var(--color-secondary); outline-offset: 2px; } }

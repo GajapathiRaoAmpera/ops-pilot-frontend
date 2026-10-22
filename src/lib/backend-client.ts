@@ -44,6 +44,7 @@ const MESSAGES: Record<string, string> = {
   not_pending: "This request was already decided.",
   invalid_key: "That is not a valid service-account key file. Download the JSON key from Google Cloud and select it again.",
   key_unreadable: "The stored key cannot be read (the server key changed). Upload the service-account key again.",
+  too_many_repositories: "This workspace has reached its repository limit. Remove one, or use another workspace.",
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
 

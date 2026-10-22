@@ -14,10 +14,19 @@ export function SyncButton({ workspaceId }: { workspaceId: string }) {
 
   async function sync() {
     setBusy(true);
-    const r = await callBackend<{ synced: number }>("POST", `workspaces/${workspaceId}/pipelines/sync`, {});
+    const r = await callBackend<{ synced: number; repositories?: number; failed?: { repo: string; reason: string }[] }>(
+      "POST", `workspaces/${workspaceId}/pipelines/sync`, {});
     setBusy(false);
     if (!r.ok) return notify({ tone: "error", title: "Sync failed", message: messageFor(r.detail), reference: referenceFor(r) });
-    notify({ tone: "success", title: "Pipelines synced", message: `${r.data.synced} runs updated from GitHub.` });
+    const failed = r.data.failed ?? [];
+    const total = r.data.repositories ?? 1;
+    if (failed.length > 0) {
+      notify({ tone: "error", title: `Synced ${total - failed.length} of ${total} repositories`,
+        message: `Could not read ${failed.map((f) => f.repo).join(", ")}. Check the token for ${failed.length === 1 ? "it" : "them"} in Settings.`,
+        reference: failed.map((f) => `${f.repo}: ${f.reason}`).join("; ") });
+    } else {
+      notify({ tone: "success", title: "Pipelines synced", message: `${r.data.synced} runs updated from ${total} ${total === 1 ? "repository" : "repositories"}.` });
+    }
     router.refresh();
   }
 

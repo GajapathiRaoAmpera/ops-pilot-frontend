@@ -10,17 +10,19 @@ import { fetchRuns } from "@/features/pipelines/server/runs";
 
 export const metadata = { title: "Pipelines · OpsPilot" };
 
-export default async function Page() {
+export default async function Page({ searchParams }: { searchParams: Promise<{ repo?: string | string[] }> }) {
   const session = await requireSession(PERMISSIONS.pipelinesRead);
   const ws = await getActiveWorkspace(session);
-  const runs = await fetchRuns(ws?.id);
+  const raw = (await searchParams).repo;
+  const repo = typeof raw === "string" && /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(raw) ? raw : undefined;
+  const runs = await fetchRuns(ws?.id, repo);
   const canExecute = hasPermission(session.permissions, PERMISSIONS.pipelinesExecute);
   return (
     <>
-      <PageHeader title="Pipelines" description="Real runs from your connected repository. Sync to refresh, and request a re-run of a failed one." />
+      <PageHeader title="Pipelines" description="Runs from every repository connected to this workspace. Sync to refresh, filter by repository, and request a re-run of a failed one." />
       <div className={styles.stack}>
         <RunsTrend result={runs} />
-        <RunsPanel result={runs} workspaceId={ws?.id} canExecute={canExecute} />
+        <RunsPanel result={runs} workspaceId={ws?.id} canExecute={canExecute} repo={repo} />
         <MoreIntegrations />
       </div>
     </>

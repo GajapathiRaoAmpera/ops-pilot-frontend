@@ -47,7 +47,8 @@ describe("run controls", () => {
   it("reports sync results as toasts, with the technical reference for failures", async () => {
     vi.spyOn(globalThis, "fetch")
       .mockResolvedValueOnce(json({ detail: "upstream_error" }, 502))
-      .mockResolvedValueOnce(json({ synced: 7 }));
+      .mockResolvedValueOnce(json({ synced: 7, repositories: 2, failed: [] }))
+      .mockResolvedValueOnce(json({ synced: 3, repositories: 2, failed: [{ repo: "acme/web", reason: "upstream_error" }] }));
     render(<ToastProvider><SyncButton workspaceId="ws1" /></ToastProvider>);
     await userEvent.click(screen.getByRole("button", { name: "Sync now" }));
     const err = await screen.findByRole("alert");
@@ -55,6 +56,9 @@ describe("run controls", () => {
     expect(err).toHaveTextContent(/GitHub did not accept the request/);
     expect(err).toHaveTextContent(/Reference: 502 upstream_error/);
     await userEvent.click(screen.getByRole("button", { name: "Sync now" }));
-    expect(await screen.findByText(/7 runs updated from GitHub/)).toBeInTheDocument();
+    expect(await screen.findByText(/7 runs updated from 2 repositories/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("button", { name: "Sync now" }));
+    expect(await screen.findByText("Synced 1 of 2 repositories")).toBeInTheDocument();
+    expect(screen.getByText(/Could not read acme\/web/)).toBeInTheDocument();
   });
 });
