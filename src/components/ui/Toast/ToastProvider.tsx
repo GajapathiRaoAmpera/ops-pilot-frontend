@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useMemo, useRef, useState, type ReactNode } from "react";
 import { Icon } from "../Icon/Icon";
+import { emitActivity } from "@/lib/activity";
 import styles from "./Toast.module.scss";
 
 export type ToastTone = "success" | "error" | "info";
@@ -46,6 +47,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
   }, [dismiss]);
 
   const notify = useCallback((t: ToastInput) => {
+    emitActivity({ tone: t.tone, title: t.title }); // listeners (Pilot) see real results only, same as the toast
     const id = next.current++;
     setItems((cur) => [...cur.slice(-(MAX - 1)), { ...t, id }]);
     arm(id, t.tone);

@@ -8,4 +8,9 @@
   &:focus-visible { top: 0.75rem; outline: 2px solid var(--color-secondary); outline-offset: 2px; }
 }
 
-.content { min-width: 0; flex: 1; @include mixins.up(md) { overflow-y: auto; } padding: 1rem; @include mixins.up(sm) { padding: 1.5rem; } @include mixins.up(lg) { padding: 1.5rem 2rem; } }
+.content {
+  min-width: 0; flex: 1; padding: 1rem;
+  @include mixins.up(sm) { padding: 1.5rem; }
+  @include mixins.up(md) { overflow-y: auto; padding-bottom: 5.5rem; } // room for Pilot's corner button
+  @include mixins.up(lg) { padding: 1.5rem 2rem 5.5rem; }
+}
