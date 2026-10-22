@@ -22,8 +22,8 @@ describe("permission-aware UI", () => {
         <NavLinks />
       </SessionProvider>,
     );
-    expect(screen.getByRole("link", { name: /Overview Command Center/ })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Audit Trail/ })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Overview" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Audit trail" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /RBAC/ })).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Approvals/ })).not.toBeInTheDocument();
   });

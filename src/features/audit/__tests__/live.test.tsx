@@ -45,7 +45,8 @@ describe("LiveRbac", () => {
 });
 
 describe("LiveSummary", () => {
-  const ok = { pipelines: { connected: true, counts: { failure: 2, success: 5 }, total: 7, lastSyncedAt: null }, approvals: { pending: 3 }, lastExecution: null, notConnected: ["incidents"] };
+  const ok = { pipelines: { connected: true, counts: { failure: 2, success: 5 }, total: 7, lastSyncedAt: null, recent: [] }, approvals: { pending: 3, items: [] }, lastExecution: null,
+    recentExecutions: [], activity: [], visible: { approvals: true, executions: true, activity: true }, notConnected: ["incidents"] };
   it("shows real figures and names what is not connected", () => {
     render(<LiveSummary result={{ state: "ok", data: ok }} />);
     expect(screen.getByText("Pending approvals").nextSibling).toHaveTextContent("3");

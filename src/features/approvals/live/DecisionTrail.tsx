@@ -14,6 +14,8 @@ export function buildSteps(r: LiveRequest, decision: ReactNode): Step[] {
   const rejected = r.status === "rejected";
   const ex = r.execution;
   const observed = typeof ex?.result?.observedStatus === "string" ? (ex.result.observedStatus as string) : null;
+  const prUrl = typeof ex?.result?.prUrl === "string" && ex.result.prUrl.startsWith("https://github.com/") ? ex.result.prUrl : null;
+  if (r.type === "open_fix_pr") return fixSteps(r, decision, prUrl);
   return [
     {
       key: "requested", title: "Requested", state: "done",
@@ -39,6 +41,31 @@ export function buildSteps(r: LiveRequest, decision: ReactNode): Step[] {
       body: rejected || ex?.status === "failed" ? "Nothing to verify."
         : observed ? <>GitHub reports the run as <StatusBadge tone="info">{observed}</StatusBadge></> : "Checked after the action runs.",
     },
+  ];
+}
+
+function fixSteps(r: LiveRequest, decision: ReactNode, prUrl: string | null): Step[] {
+  const rejected = r.status === "rejected";
+  const ex = r.execution;
+  const pr = prUrl ? <a href={prUrl} target="_blank" rel="noreferrer noopener">pull request #{String(ex?.result?.prNumber ?? "")}</a> : null;
+  return [
+    { key: "requested", title: "Requested", state: "done",
+      body: <>{r.requester?.name ?? "Someone"} asked to open a pull request with the AI-proposed fix on {when(r.createdAt)}. Reason: {r.reason || "none given"}.</> },
+    r.decision
+      ? { key: "decision", title: rejected ? "Rejected" : "Approved", state: rejected ? "skipped" : "done",
+          body: <>{r.decision.decidedByName ?? "Unknown"} on {when(r.decision.decidedAt)}. Reason: {r.decision.reason || "none given"}.</> }
+      : { key: "decision", title: "Decision", state: "current", body: decision },
+    { key: "execution", title: "Pull request opened",
+      state: rejected ? "skipped" : ex ? (ex.status === "failed" ? "failed" : ex.status === "succeeded" ? "done" : "current") : "todo",
+      body: rejected ? "Not opened: the request was rejected."
+        : ex ? (ex.status === "failed" ? <>GitHub did not accept it ({ex.error || "unknown error"}). No pull request was opened; an empty branch may remain.</>
+          : ex.status === "succeeded" ? <>GitHub opened {pr ?? "the pull request"} on {when(ex.endedAt)}.</> : "Opening now.")
+        : "Opens right after approval." },
+    { key: "review", title: "Reviewed and merged in GitHub",
+      state: rejected || ex?.status === "failed" ? "skipped" : ex?.status === "succeeded" ? "current" : "todo",
+      body: rejected || ex?.status === "failed" ? "Nothing to review."
+        : ex?.status === "succeeded" ? <>Waiting for a person to review and merge {pr ?? "it"} in GitHub. OpsPilot never merges.</>
+        : "A person reviews the pull request in GitHub; CI runs on it." },
   ];
 }
 

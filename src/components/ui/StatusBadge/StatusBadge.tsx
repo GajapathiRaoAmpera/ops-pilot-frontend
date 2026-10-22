@@ -4,11 +4,16 @@ import styles from "./StatusBadge.module.scss";
 
 export type Tone = "success" | "warning" | "error" | "info" | "accent" | "neutral";
 
-/** Status is always conveyed by text (and optional icon), never by color alone. */
+/** Each tone has a default icon, so status is never carried by colour alone. Pass icon="" to omit it. */
+const DEFAULT_ICON: Partial<Record<Tone, string>> = {
+  success: "check_circle", warning: "warning", error: "error", info: "info", accent: "autorenew",
+};
+
 export function StatusBadge({ tone = "neutral", icon, children }: { tone?: Tone; icon?: string; children: string }) {
+  const name = icon ?? DEFAULT_ICON[tone];
   return (
     <span className={cx(styles.badge, styles[tone])}>
-      {icon && <Icon name={icon} size={12} />}
+      {name && <Icon name={name} size={14} />}
       {children}
     </span>
   );

@@ -23,7 +23,7 @@ export function LogoutButton() {
   return (
     <Button variant="ghost" fullWidth onClick={logout} disabled={busy}>
       <Icon name="logout" />
-      {busy ? "Signing out…" : "Sign out"}
+      <span data-label>{busy ? "Signing out…" : "Sign out"}</span>
     </Button>
   );
 }

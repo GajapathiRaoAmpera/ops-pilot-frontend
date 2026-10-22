@@ -6,4 +6,14 @@
   line-height: 1;
   display: inline-block;
   font-variation-settings: "FILL" 0, "wght" 400;
+  // A fixed square box. The icon is a text ligature: if the font is slow or blocked, the raw name
+  // (e.g. "admin_panel_settings") must never wrap, widen the row, or push the label.
+  width: 1em;
+  height: 1em;
+  overflow: hidden;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: normal;
+  font-feature-settings: "liga";
 }
+

@@ -4,14 +4,14 @@
 .head { display: grid; gap: 0.375rem; padding-bottom: 1.25rem; border-bottom: 1px solid color-mix(in srgb, var(--color-outline-variant) 50%, transparent); }
 .headTitle { font-size: 1.25rem; font-weight: 600; letter-spacing: -0.01em; }
 .facts { display: flex; flex-wrap: wrap; gap: 0.25rem 1.25rem; font-size: 0.8125rem; color: var(--color-on-surface-variant); }
-.mono { font-family: var(--font-jetbrains), ui-monospace, monospace; font-size: 0.8125rem; }
+.mono { font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.8125rem; }
 .badges { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem; }
 
 .decide { display: grid; gap: 0.75rem; max-width: 34rem; }
 .label { font-size: 0.8125rem; color: var(--color-on-surface-variant); }
 .input {
   width: 100%; padding: 0.5rem 0.75rem; border-radius: 0.5rem; font: inherit; font-size: 0.875rem;
-  background: var(--color-surface-lowest); color: var(--color-on-surface); border: 1px solid var(--color-outline-variant);
+  background: var(--color-surface-lowest); color: var(--color-on-surface); border: 1px solid var(--color-control-border);
   @include mixins.focus-ring;
 }
 .actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
@@ -21,3 +21,8 @@
 .bar[data-status="pending"] { border-left-color: var(--color-warning); }
 .bar[data-status="succeeded"] { border-left-color: var(--color-success); }
 .bar[data-status="failed"] { border-left-color: var(--color-error); }
+
+.proposal { display: grid; gap: 0.625rem; padding: 1rem; border-radius: 0.5rem; background: var(--color-surface-container); border: 1px solid color-mix(in srgb, var(--color-outline-variant) 60%, transparent); }
+.proposalTitle { font-weight: 600; }
+.proposalText { font-size: 0.875rem; line-height: 1.6; color: var(--color-on-surface-variant); white-space: pre-wrap; }
+.proposalNote { font-size: 0.75rem; color: var(--color-outline); }

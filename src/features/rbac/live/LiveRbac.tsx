@@ -1,4 +1,5 @@
 "use client";
+import { LoaderRows } from "@/components/ui/Loader/Loader";
 
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/Card/Card";
@@ -6,7 +7,6 @@ import { Icon } from "@/components/ui/Icon/Icon";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { Table } from "@/components/ui/Table/Table";
 import styles from "@/features/team/components/Admin.module.scss";
-import matrix from "../components/PermissionMatrix/PermissionMatrix.module.scss";
 import { callBackend, messageFor } from "@/lib/backend-client";
 
 interface Matrix { roles: { key: string; label: string; permissions: string[] }[] }
@@ -27,7 +27,7 @@ export function LiveRbac() {
   }, []);
 
   if (error) return <Notice variant="error">{error}</Notice>;
-  if (!data) return <p className={styles.pad}>Loading…</p>;
+  if (!data) return <LoaderRows />;
   const perms = [...new Set(data.roles.flatMap((r) => r.permissions))].sort();
   return (
     <Card title="Role permission matrix" flush>
@@ -41,7 +41,7 @@ export function LiveRbac() {
               <th scope="row">{p}</th>
               {data.roles.map((r) => {
                 const yes = r.permissions.includes(p);
-                return <td key={r.key}><Icon name={yes ? "check" : "block"} size={16} /><span className={matrix.sr}>{yes ? "allowed" : "denied"}</span></td>;
+                return <td key={r.key}><Icon name={yes ? "check" : "block"} size={16} /><span className={styles.sr}>{yes ? "allowed" : "denied"}</span></td>;
               })}
             </tr>
           ))}

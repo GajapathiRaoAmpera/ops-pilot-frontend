@@ -1,0 +1,27 @@
+@use "mixins";
+
+.region {
+  position: fixed; z-index: 50; display: flex; flex-direction: column; gap: 0.5rem;
+  left: 0.75rem; right: 0.75rem; bottom: 0.75rem; pointer-events: none;
+  @include mixins.up(sm) { left: auto; right: 1.25rem; bottom: 1.25rem; width: 24rem; }
+}
+.toast {
+  pointer-events: auto; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0.625rem; align-items: start;
+  padding: 0.75rem 0.75rem 0.75rem 0.875rem; border-radius: 0.5rem; border: 1px solid var(--color-outline-variant);
+  border-left-width: 4px; background: var(--color-surface-highest); box-shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+  animation: in 0.15s ease-out;
+  @include mixins.reduced-motion { animation: none; }
+}
+.toast[data-tone="success"] { border-left-color: var(--color-success); .icon { color: var(--color-success); } }
+.toast[data-tone="error"] { border-left-color: var(--color-error); .icon { color: var(--color-error); } }
+.toast[data-tone="info"] { border-left-color: var(--color-secondary); .icon { color: var(--color-secondary); } }
+.icon { display: flex; padding-top: 0.0625rem; }
+.title { font-size: 0.875rem; font-weight: 600; }
+.message { margin-top: 0.125rem; font-size: 0.8125rem; line-height: 1.5; color: var(--color-on-surface-variant); }
+.reference { margin-top: 0.375rem; font-family: var(--font-mono), ui-monospace, monospace; font-size: 0.6875rem; color: var(--color-outline); user-select: all; overflow-wrap: anywhere; }
+.close {
+  display: flex; padding: 0.25rem; border: 0; border-radius: 0.375rem; background: transparent; color: var(--color-on-surface-variant); cursor: pointer;
+  &:hover { background: var(--color-surface-container); color: var(--color-on-surface); }
+  @include mixins.focus-ring;
+}
+@keyframes in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }

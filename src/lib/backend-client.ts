@@ -42,8 +42,25 @@ const MESSAGES: Record<string, string> = {
   request_already_open: "A request for this run is already open.",
   separation_of_duties: "You cannot approve a request you made yourself.",
   not_pending: "This request was already decided.",
+  invalid_key: "That is not a valid service-account key file. Download the JSON key from Google Cloud and select it again.",
+  key_unreadable: "The stored key cannot be read (the server key changed). Upload the service-account key again.",
+  too_many_repositories: "This workspace has reached its repository limit. Remove one, or use another workspace.",
+  ai_not_configured: "AI investigations are not set up. Ask the platform operator to set OPSPILOT_GROQ_API_KEY.",
+  ai_unauthorized: "The AI provider rejected the server's API key. Ask the platform operator to check it.",
+  ai_rate_limited: "Too many investigations in a short time. Wait a minute and try again.",
+  ai_model_unavailable: "The configured AI model is not available to this API key. Set OPSPILOT_GROQ_MODEL to a model the key can use.",
+  ai_unavailable: "The AI provider could not be reached. Try again shortly.",
+  ai_bad_output: "The AI returned an answer OpsPilot could not use. Try again.",
+  proposal_not_found: "That fix proposal no longer exists. Propose a fix again.",
+  proposal_has_no_fix: "This proposal has no code change to open as a pull request.",
+  run_commit_unknown: "The run's commit is unknown. Sync Pipelines and try again.",
   unavailable: "The service is temporarily unavailable. Please try again.",
 };
+
+/** Technical reference for toasts and support: HTTP status plus the backend's error code. */
+export function referenceFor(r: { status: number; detail: string }): string {
+  return `${r.status || "no response"} ${r.detail}`;
+}
 
 export function messageFor(detail: string): string {
   return MESSAGES[detail] ?? "That did not work. Please check the details and try again.";

@@ -1,15 +1,20 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/Button/Button";
 import { Card } from "@/components/ui/Card/Card";
+import { DiffView } from "@/components/ui/DiffView/DiffView";
 import { EmptyState } from "@/components/ui/EmptyState/EmptyState";
+import { LoaderRows } from "@/components/ui/Loader/Loader";
 import { Notice } from "@/components/ui/Notice/Notice";
 import { StatusBadge, type Tone } from "@/components/ui/StatusBadge/StatusBadge";
+import { actionLabel } from "@/features/approvals/actions";
 import { useSession } from "@/features/auth/components/SessionProvider";
 import { cx } from "@/lib/cx";
+import { useToast } from "@/components/ui/Toast/ToastProvider";
 import { callBackend, messageFor } from "@/lib/backend-client";
-import inbox from "../components/ApprovalsInbox/ApprovalsInbox.module.scss";
+import inbox from "./Inbox.module.scss";
 import { DecisionTrail } from "./DecisionTrail";
 import styles from "./LiveApprovals.module.scss";
 import type { LiveRequest } from "./types";
@@ -23,7 +28,7 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
   const me = useSession()?.user.email.toLowerCase();
   const [rows, setRows] = useState<LiveRequest[] | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
+  const { notify } = useToast();
   const [tab, setTab] = useState<Tab>("pending");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [reason, setReason] = useState("");
@@ -47,12 +52,15 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
   async function decide(decision: "approve" | "reject") {
     if (!selected || busy) return;
     if (!window.confirm(decision === "approve" ? "Approve and run this action now?" : "Reject this request?")) return;
-    setBusy(true); setError(null); setNotice(null);
+    setBusy(true); setError(null);
     const r = await callBackend<LiveRequest>("POST", `workspaces/${workspaceId}/approvals/${selected.id}/decision`, { decision, reason });
     setBusy(false);
     if (!r.ok) return setError(messageFor(r.detail));
     setReason("");
-    setNotice(decision === "reject" ? "Request rejected." : r.data.status === "succeeded" ? "Approved. GitHub accepted the re-run request." : r.data.status === "failed" ? `Approved, but the action failed: ${r.data.execution?.error || "unknown error"}.` : `Approved. Status: ${r.data.status}.`);
+    if (decision === "reject") notify({ tone: "info", title: "Request rejected", message: "Nothing was run." });
+    else if (r.data.status === "succeeded") notify({ tone: "success", title: "Approved and executed", message: "GitHub accepted the re-run request." });
+    else if (r.data.status === "failed") notify({ tone: "error", title: "Approved, but the action failed", message: "GitHub did not accept the re-run. Nothing was re-run.", reference: r.data.execution?.error || "unknown" });
+    else notify({ tone: "info", title: "Approved", message: `Status: ${r.data.status}.` });
     setTick((t) => t + 1);
   }
 
@@ -61,23 +69,23 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
   return (
     <div className={inbox.layout}>
       <div className={inbox.queue}>
-        <Card title="Approval requests" flush>
+        <Card title="Approval requests" flush fill>
           <div role="group" aria-label="Queue filter" className={inbox.tabs}>
             {([["pending", `Pending (${pendingCount})`], ["history", "History"], ["all", "All"]] as const).map(([id, label]) => (
               <button key={id} type="button" aria-pressed={tab === id} className={cx(inbox.tab, tab === id && inbox.tabOn)} onClick={() => setTab(id)}>{label}</button>
             ))}
           </div>
-          {rows === null && !error ? <p className={inbox.empty}>Loading…</p>
+          {rows === null && !error ? <LoaderRows />
             : shown.length === 0 ? (tab === "pending"
-              ? <EmptyState title="Nothing is waiting for approval">Requests appear here when someone asks to re-run a failed pipeline. Open Pipelines to request one.</EmptyState>
-              : <EmptyState title="No requests yet">Approved, rejected and executed requests are kept here as a record.</EmptyState>)
+              ? <EmptyState icon="task_alt" title="Nothing is waiting for approval" action={<Link href="/pipelines" className={inbox.link}>Open Pipelines</Link>}>Requests appear here when someone asks to re-run a failed pipeline.</EmptyState>
+              : <EmptyState icon="history" title="No requests yet">Approved, rejected and executed requests are kept here as a record.</EmptyState>)
             : (
               <ul className={inbox.list} aria-label="Approval requests">
                 {shown.map((r) => (
                   <li key={r.id}>
                     <button type="button" aria-pressed={r.id === selected?.id} className={cx(inbox.item, styles.bar, r.id === selected?.id && inbox.active)} data-status={r.status} onClick={() => setSelectedId(r.id)}>
                       <span className={inbox.row}>
-                        <span className={inbox.id}>Re-run failed jobs</span>
+                        <span className={inbox.id}>{actionLabel(r.type)}</span>
                         <StatusBadge tone={RISK_TONE[r.risk] ?? "neutral"}>{`${r.risk} risk`}</StatusBadge>
                       </span>
                       <span className={inbox.itemTitle}>{r.run ? `${r.run.workflow} · ${r.run.repo}` : "Unknown run"}</span>
@@ -93,12 +101,11 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
 
       <div className={inbox.queue}>
         {error && <Notice variant="error">{error}</Notice>}
-        {notice && <Notice variant="info">{notice}</Notice>}
-        {!selected ? <Card><EmptyState title="Select a request">Pick one from the list to see who asked, who decided and what happened.</EmptyState></Card> : (
-          <Card flush>
+        {!selected ? <Card fill><EmptyState icon="ads_click" title="Select a request">Pick one from the list to see who asked, who decided and what happened.</EmptyState></Card> : (
+          <Card flush fill>
             <div className={styles.detail}>
               <div className={styles.head}>
-                <h2 className={styles.headTitle}>Re-run failed jobs</h2>
+                <h2 className={styles.headTitle}>{actionLabel(selected.type)}</h2>
                 {selected.run && (
                   <p className={styles.facts}>
                     <span>{selected.run.repo}</span>
@@ -112,6 +119,14 @@ export function LiveApprovals({ workspaceId, canDecide }: { workspaceId: string;
                   <StatusBadge tone={RISK_TONE[selected.risk] ?? "neutral"}>{`${selected.risk} risk`}</StatusBadge>
                 </div>
               </div>
+              {selected.proposal && (
+                <section className={styles.proposal} aria-label="Code change to approve">
+                  <p className={styles.proposalTitle}>{selected.proposal.title}</p>
+                  <p className={styles.proposalText}>{selected.proposal.explanation}</p>
+                  <DiffView diff={selected.proposal.diff} label="Code change to approve" />
+                  <p className={styles.proposalNote}>Written by AI ({selected.proposal.model}). Approving opens a pull request with exactly this change; a person still reviews and merges it in GitHub.</p>
+                </section>
+              )}
               <DecisionTrail
                 request={selected}
                 decision={

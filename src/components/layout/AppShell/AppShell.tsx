@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Sidebar } from "../Sidebar/Sidebar";
 import styles from "./AppShell.module.scss";
 
 interface Props {
@@ -15,24 +16,10 @@ interface Props {
 export function AppShell({ organizationName, userName, userRole, nav, accountActions, banner, children }: Props) {
   return (
     <>
+      <a href="#main" className={styles.skip}>Skip to main content</a>
       {banner}
       <div className={styles.shell}>
-        <aside className={styles.sidebar}>
-          <div className={styles.brandRow}>
-            <span className={styles.logo} aria-hidden="true">O</span>
-            OpsPilot
-          </div>
-          <div className={styles.org}>
-            <p className={styles.orgLabel}>Organization</p>
-            <p className={styles.orgName}>{organizationName}</p>
-          </div>
-          <div className={styles.nav}>{nav}</div>
-          <div className={styles.account}>
-            <p className={styles.userName}>{userName}</p>
-            <p className={styles.userRole}>{userRole}</p>
-            {accountActions}
-          </div>
-        </aside>
+        <Sidebar organizationName={organizationName} userName={userName} userRole={userRole} nav={nav} accountActions={accountActions} />
         <main id="main" className={styles.content}>{children}</main>
       </div>
     </>

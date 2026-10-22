@@ -1,0 +1,32 @@
+.stack { display: grid; gap: 1.25rem; }
+.hint { font-size: 0.8125rem; line-height: 1.6; color: var(--color-on-surface-variant); max-width: 62ch; }
+.meta { font-size: 0.8125rem; color: var(--color-on-surface-variant); strong { color: var(--color-on-surface); font-weight: 600; } }
+
+// Styled file picker: the native input stays in the DOM (keyboard and screen reader friendly) but is visually replaced.
+.picker { display: grid; gap: 0.5rem; font-size: 0.875rem; font-weight: 500; }
+.drop {
+  display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; padding: 0.875rem 1rem; cursor: pointer;
+  border: 1px dashed var(--color-control-border); border-radius: 0.5rem; background: var(--color-surface-lowest);
+  transition: border-color 0.15s, background-color 0.15s;
+  &:hover { border-color: var(--color-primary); background: var(--color-surface-container); }
+}
+.dropButton {
+  padding: 0.375rem 0.75rem; border-radius: 0.375rem; font-size: 0.8125rem; font-weight: 600;
+  background: var(--color-surface-highest); color: var(--color-on-surface);
+}
+.dropName { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 0.8125rem; color: var(--color-on-surface-variant); }
+.file { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.picker:has(.file:focus-visible) .drop { outline: 2px solid var(--color-secondary); outline-offset: 2px; }
+
+.actions { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; padding-top: 0.25rem; }
+
+.providers { display: grid; }
+.provider {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.875rem 1rem; font-size: 0.875rem;
+  &:not(:last-child) { border-bottom: 1px solid color-mix(in srgb, var(--color-outline-variant) 50%, transparent); }
+}
+.providerName { display: grid; gap: 0.125rem; font-weight: 500; small { font-weight: 400; font-size: 0.75rem; color: var(--color-outline); } }
+
+.section h3 { padding: 0.875rem 1rem 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--color-on-surface-variant); }
+.notices { display: grid; gap: 0.5rem; padding: 0.875rem 1rem 0; }
+.read { padding: 0 1rem 1rem; font-size: 0.75rem; color: var(--color-outline); }

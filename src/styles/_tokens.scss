@@ -1,26 +1,33 @@
-// Design tokens from Stitch opspilot_core/DESIGN.md. Emitted as CSS custom properties
-// (see globals.scss) so every *.module.scss consumes var(--color-*).
+@use "sass:map";
+// OpsPilot design tokens. Redesign guided by the ui-ux-pro-max design system for a data-dense
+// operations console (security blue base, status colours reserved for status).
+// Emitted as CSS custom properties (see globals.scss) so every *.module.scss consumes var(--color-*).
+// Contrast (WCAG): body text >= 10:1, muted text >= 5.2:1, controls' borders >= 3.6:1 on panels.
+// Palette: security blue. Status colours (success/warning/error) are reserved for status.
+// The contrast guard in src/styles/__tests__/tokens.test.ts must keep passing.
+// Security blue: calm, trustworthy, the classic operations-console feel.
 $colors: (
-  "background": #0b1326,
-  "surface-lowest": #060e20,
-  "surface-low": #131b2e,
-  "surface-container": #171f33,
-  "surface-high": #222a3d,
-  "on-surface": #dae2fd,
-  "on-surface-variant": #c7c4d8,
-  "outline": #918fa1,
-  "outline-variant": #464555,
-  "primary": #c3c0ff,
-  "on-primary-container": #dad7ff,
-  "primary-container": #4f46e5,
-  "secondary": #b4c5ff,
-  "error": #ffb4ab,
-  "error-container": #93000a,
-  "on-error-container": #ffdad6,
-  "warning": #f59e0b,
+  "background": #0a1628,
+  "surface-lowest": #071120,
+  "surface-low": #101f36,
+  "surface-container": #162a47,
+  "surface-high": #1b3252,
+  "surface-highest": #274063,
+  "on-surface": #eef4fb,
+  "on-surface-variant": #c3d1e3,
+  "outline": #8fa4bd,
+  "outline-variant": #3b5273,
+  "control-border": #6a86a8,
+  "primary": #7dd3fc,
+  "on-primary-container": #f0f9ff,
+  "primary-container": #0369a1,
+  "secondary": #a5b4fc,
+  "error": #f87171,
+  "error-container": #7f1d1d,
+  "on-error-container": #fee2e2,
+  "warning": #fbbf24,
   "success": #4ade80,
-  "tertiary": #c4c1fb,
-  "surface-highest": #2d3449,
+  "tertiary": #93c5fd,
 );
 
 $breakpoints: (
@@ -29,6 +36,6 @@ $breakpoints: (
   "lg": 64rem,
 );
 
-$radius-sm: 0.5rem;
-$radius-md: 0.75rem;
-$radius-lg: 1rem;
+$radius-sm: 0.375rem;
+$radius-md: 0.5rem;
+$radius-lg: 0.75rem;

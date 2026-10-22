@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cx } from "@/lib/cx";
+import { BrandMark, BrandWordmark } from "@/components/brand/BrandMark";
 import { AuthBackground } from "../AuthBackground/AuthBackground";
 import styles from "./GatewayShell.module.scss";
 
@@ -9,8 +10,8 @@ export function GatewayShell({ children, wide = false }: { children: ReactNode; 
     <div className={styles.page}>
       <AuthBackground />
       <header className={styles.header}>
-        <span className={styles.logo} aria-hidden="true">O</span>
-        <span className={styles.brand}>OpsPilot</span>
+        <BrandMark size={32} />
+        <BrandWordmark />
         <span className={styles.badge}>SECURITY GATE</span>
       </header>
       <main className={styles.main}>

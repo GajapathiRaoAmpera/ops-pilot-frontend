@@ -1,4 +1,5 @@
 "use client";
+import { LoaderRows } from "@/components/ui/Loader/Loader";
 
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/Button/Button";
@@ -70,7 +71,7 @@ export function LiveAudit() {
       </Card>
       {error && <Notice variant="error">{error}</Notice>}
       <Card title={`Audit events${events ? ` (${events.length}${next !== null ? "+" : ""})` : ""}`} flush>
-        {events === null && !error ? <p className={styles.pad}>Loading…</p>
+        {events === null && !error ? <LoaderRows />
           : events && events.length === 0 ? <EmptyState title="No events match">Clear the action or outcome filter to see everything recorded for your organization.</EmptyState>
           : events && (
             <Table caption="Audit events">
