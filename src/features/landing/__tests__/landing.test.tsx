@@ -6,7 +6,7 @@ import { STORY, stepAt } from "../story";
 describe("landing page", () => {
   it("leads with the product promise and a way to sign in", () => {
     render(<Landing />);
-    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Every failed run explained.");
+    expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Red build? Pilot already knows why.");
     const signIns = screen.getAllByRole("link", { name: "Sign in" });
     expect(signIns.length).toBeGreaterThan(0);
     signIns.forEach((a) => expect(a).toHaveAttribute("href", "/login"));
