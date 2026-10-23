@@ -39,6 +39,7 @@ const C = {
   spark: 0xfb923c,
   waiting: 0xfbbf24,
   fog: 0x0a1628,
+  grid: 0x1e3252,
 };
 
 const STAGE_X = [-6, -3, 0, 3, 6];
@@ -145,6 +146,14 @@ export function createPipelineScene(canvas: HTMLCanvasElement, opts: Options): P
       },
     };
   };
+
+  // A dark floor grid for depth, faint enough to sit under the starfield; fog fades it out at the far edge.
+  const grid = new THREE.GridHelper(40, 40, C.grid, C.grid);
+  grid.position.y = -0.7;
+  (grid.material as THREE.Material).transparent = true;
+  (grid.material as THREE.Material).opacity = 0.3;
+  scene.add(grid);
+  track(grid.geometry); track(grid.material as THREE.Material);
 
   // Main track through the five stages, with a gentle wave so it reads as a path, not a ruler. A soft outer sheath
   // makes it read as a conduit; the energy itself is the particle stream below.

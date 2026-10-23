@@ -10,6 +10,8 @@ const STAR_COLORS = ["#c7d2fe", "#a78bfa", "#67e8f9", "#f8fafc"];
 const STARS = 150;
 const LINK = 120; // px: how close two stars must be to link up near the pointer
 const REACH = 190; // px: how far from the pointer the network wakes up
+// The ambient sky (stars, streaks, comets) stays quiet; the network around the pointer draws at full strength.
+const AMBIENT = 0.45;
 
 interface Star { x: number; y: number; z: number; color: string; phase: number }
 
@@ -84,7 +86,7 @@ export function SpaceBackdrop() {
       stars.forEach((s, i) => {
         const p = pts[i];
         const twinkle = still ? 0.7 : 0.55 + 0.45 * Math.sin(clock * (0.8 + s.z) + s.phase);
-        ctx.globalAlpha = (0.25 + 0.55 * s.z) * twinkle;
+        ctx.globalAlpha = (0.25 + 0.55 * s.z) * twinkle * AMBIENT;
         ctx.strokeStyle = ctx.fillStyle = s.color;
         const streak = warp * s.z * 0.9;
         if (streak > 2) {
@@ -138,7 +140,7 @@ export function SpaceBackdrop() {
           const g = ctx.createLinearGradient(x, y, x - comet.dx * 0.12, y - comet.dy * 0.12);
           g.addColorStop(0, "rgba(224,242,254,0.9)");
           g.addColorStop(1, "rgba(103,232,249,0)");
-          ctx.globalAlpha = Math.sin(k * Math.PI);
+          ctx.globalAlpha = Math.sin(k * Math.PI) * AMBIENT;
           ctx.strokeStyle = g; ctx.lineWidth = 1.4;
           ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - comet.dx * 0.12, y - comet.dy * 0.12); ctx.stroke();
         }

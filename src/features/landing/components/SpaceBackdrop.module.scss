@@ -2,10 +2,10 @@
 
 // Fixed behind the whole landing page (the page isolates a stacking context, so z-index -1 stays above its background).
 .sky { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
-// Kept quiet so it never competes with the content: the sign-in sparkles and orbs, the star canvas and the nebula
-// each run well below full strength here.
+// Kept quiet so it never competes with the content: the sign-in sparkles and orbs and the nebula run well below full
+// strength (the canvas dims its own ambient stars, but not the network around the pointer).
 .sparkles { position: absolute; inset: 0; opacity: 0.35; }
-.canvas { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0.45; }
+.canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 
 // Nebula: three soft clouds; the section being read (data-sky) decides which one glows.
 .nebula {
