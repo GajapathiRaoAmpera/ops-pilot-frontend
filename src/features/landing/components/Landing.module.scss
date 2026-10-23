@@ -2,7 +2,8 @@
 @use "tokens";
 
 // One column of content, 72rem wide, with a 16px gutter on phones.
-.page { --gutter: 1rem; min-height: 100vh; overflow-x: clip; @include mixins.up(md) { --gutter: 2rem; } }
+// isolate: the fixed SpaceBackdrop (z-index -1) paints above this background and below everything else.
+.page { --gutter: 1rem; position: relative; isolation: isolate; min-height: 100vh; overflow-x: clip; background: var(--color-background); @include mixins.up(md) { --gutter: 2rem; } }
 .header, .intro, .split, .roles, .closing, .footer { width: min(72rem, 100% - 2 * var(--gutter)); margin-inline: auto; }
 
 .skip {

@@ -1,10 +1,12 @@
 import type { CSSProperties } from "react";
 import Link from "next/link";
 import { BrandMark } from "@/components/brand/BrandMark";
+import { Parallax } from "@/components/layout/GatewayShell/Parallax";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { STORY } from "../story";
 import { HeroWithPilot } from "./HeroWithPilot";
 import { LogCard, RevealOnScroll, TypedCause, Words } from "./LandingMotion";
+import { SpaceBackdrop } from "./SpaceBackdrop";
 import styles from "./Landing.module.scss";
 
 const GUARDRAILS = [
@@ -59,7 +61,8 @@ function sayFor(label: string, cells: Access[]): string {
 
 export function Landing() {
   return (
-    <div className={styles.page}>
+    <Parallax className={styles.page}>
+      <SpaceBackdrop />
       <RevealOnScroll />
       <a className={styles.skip} href="#main">Skip to content</a>
       <header className={styles.header}>
@@ -184,6 +187,6 @@ export function Landing() {
         <span className={styles.brand}><BrandMark size={22} /><span>OpsPilot</span></span>
         <span className={styles.muted}>DevOps automation with a human in the loop.</span>
       </footer>
-    </div>
+    </Parallax>
   );
 }

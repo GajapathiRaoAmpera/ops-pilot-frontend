@@ -1,9 +1,14 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it } from "vitest";
 import { Landing } from "../components/Landing";
 import { STORY, stepAt } from "../story";
 
 describe("landing page", () => {
+  // jsdom has no matchMedia; the page asks about pointer type and reduced motion (both "no" here).
+  beforeEach(() => {
+    window.matchMedia = (() => ({ matches: false, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia;
+  });
+
   it("leads with the product promise and a way to sign in", () => {
     render(<Landing />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent("Red build? Pilot already knows why.");
@@ -30,6 +35,13 @@ describe("landing page", () => {
     expect(screen.getByText(/Cause found/)).toBeInTheDocument();
     fireEvent.click(steps[2]);
     expect(screen.queryByText(/Cause found/)).not.toBeInTheDocument();
+  });
+
+  it("draws the space backdrop as decoration only", () => {
+    const { container } = render(<Landing />);
+    const sky = container.querySelector("[data-sky]");
+    expect(sky).toHaveAttribute("aria-hidden", "true");
+    expect(sky?.querySelector("canvas")).not.toBeNull();
   });
 
   it("shows the role matrix as a real table", () => {

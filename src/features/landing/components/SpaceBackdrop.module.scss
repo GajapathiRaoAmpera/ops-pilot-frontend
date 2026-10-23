@@ -1,0 +1,22 @@
+@use "mixins";
+
+// Fixed behind the whole landing page (the page isolates a stacking context, so z-index -1 stays above its background).
+.sky { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+// Nebula: three soft clouds; the section being read (data-sky) decides which one glows.
+.nebula {
+  position: absolute; inset: 0;
+  i {
+    position: absolute; border-radius: 50%; filter: blur(90px); opacity: 0;
+    transition: opacity 1.6s ease, transform 2.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  i:nth-child(1) { left: 45%; top: 10%; width: 48rem; height: 30rem; background: color-mix(in srgb, #6366f1 22%, transparent); }
+  i:nth-child(2) { left: -10%; top: 30%; width: 42rem; height: 34rem; background: color-mix(in srgb, #a78bfa 16%, transparent); }
+  i:nth-child(3) { right: -12%; top: 35%; width: 44rem; height: 32rem; background: color-mix(in srgb, #22d3ee 12%, transparent); }
+}
+.sky[data-sky="0"] .nebula i:nth-child(1),
+.sky[data-sky="1"] .nebula i:nth-child(2),
+.sky[data-sky="2"] .nebula i:nth-child(3) { opacity: 1; transform: scale(1.08); }
+
+@include mixins.reduced-motion { .nebula i { transition: none; } }
