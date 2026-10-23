@@ -114,7 +114,7 @@ export function Landing() {
             {STORY.map((s, i) => (
               <li key={s.title} className={styles.entry} data-reveal="" style={{ "--i": i, "--len": s.audit.length } as CSSProperties}
                 data-pilot-say={`"${s.title}" is recorded as ${s.audit}.`}>
-                <span className={styles.entryNum}><span aria-hidden="true">{s.mark}</span><span className={styles.sr}>Step </span>{i + 1}</span>
+                <span className={styles.entryNum}><span className={styles.entryIcon} data-step={i}><Icon name={s.icon} size={18} /></span><span className={styles.sr}>Step </span>{i + 1}</span>
                 <div>
                   <h3 className={styles.h3}>{s.title}</h3>
                   <p className={styles.muted}>{s.detail}</p>

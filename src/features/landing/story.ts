@@ -1,8 +1,8 @@
 /** The landing page's one story, told by the 3D pipeline and the step list. Every line describes real behavior. */
 export interface StoryStep {
   title: string;
-  /** A one-glyph badge shown beside the title (decorative). */
-  mark: string;
+  /** Material Symbol shown beside the title (decorative). */
+  icon: string;
   /** What Pilot says and how it looks while this step plays. */
   pilot: { line: string; mood: "worried" | "thinking" | "curious" | "idle" | "success" };
   detail: string;
@@ -15,7 +15,7 @@ export interface StoryStep {
 export const STORY: readonly StoryStep[] = [
   {
     title: "Test goes red",
-    mark: "💥",
+    icon: "error",
     pilot: { line: "Uh-oh. Test just went red.", mood: "worried" },
     detail: "Every GitHub Actions run from every connected repository lands in one place. A red build can't hide in a tab you forgot to open.",
     audit: "pipelines.sync",
@@ -23,7 +23,7 @@ export const STORY: readonly StoryStep[] = [
   },
   {
     title: "Pilot reads the log",
-    mark: "🔍",
+    icon: "manage_search",
     pilot: { line: "Reading every line so you don't have to.", mood: "thinking" },
     detail: "Open the run in AI Copilot. Pilot reads the whole job log and tells you, in plain words, what broke and where.",
     audit: "ai.investigation",
@@ -31,7 +31,7 @@ export const STORY: readonly StoryStep[] = [
   },
   {
     title: "A fix, ready to review",
-    mark: "🩹",
+    icon: "healing",
     pilot: { line: "Found it. Here's a small fix.", mood: "curious" },
     detail: "Pilot drafts the change. The diff you read is exactly the pull request that gets opened. No surprises.",
     audit: "ai.fix_proposal",
@@ -39,7 +39,7 @@ export const STORY: readonly StoryStep[] = [
   },
   {
     title: "A teammate says yes",
-    mark: "✋",
+    icon: "how_to_reg",
     pilot: { line: "Your turn, teammate. I wait for a yes.", mood: "idle" },
     detail: "The request waits in the approvals inbox for a second person. Nobody, not even an admin, approves their own request.",
     audit: "approval.approve",
@@ -47,7 +47,7 @@ export const STORY: readonly StoryStep[] = [
   },
   {
     title: "Green, on the record",
-    mark: "✅",
+    icon: "check_circle",
     pilot: { line: "Green again. And it's all on the record.", mood: "success" },
     detail: "OpsPilot re-runs the failed jobs or opens the pull request. It never merges, and it records success only when GitHub confirms it.",
     audit: "execution.started",

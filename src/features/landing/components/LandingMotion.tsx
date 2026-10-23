@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type CSSProperties } from "react";
+import { Icon } from "@/components/ui/Icon/Icon";
 import { cx } from "@/lib/cx";
 import styles from "./Landing.module.scss";
 
@@ -79,7 +80,7 @@ export function TypedCause() {
   }, []);
   return (
     <p className={styles.terminal} aria-hidden="true">
-      <span className={styles.fail}>✗ test</span>
+      <span className={styles.fail}><Icon name="cancel" size={14} />test</span>
       <span className={styles.prompt}>pilot: caused by</span>
       <span className={styles.typed}>{text}</span><span className={styles.caret} />
     </p>
@@ -132,7 +133,7 @@ export function LogCard() {
           </p>
         </div>
       </div>
-      {!open && <p className={styles.logHint} aria-hidden="true">↑ Point at (or tap) the red line</p>}
+      {!open && <p className={styles.logHint} aria-hidden="true"><Icon name="arrow_upward" size={14} />Point at (or tap) the red line</p>}
     </figure>
   );
 }
