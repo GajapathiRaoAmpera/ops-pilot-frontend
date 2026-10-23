@@ -1,8 +1,9 @@
 /**
  * The landing hero: a pipeline in 3D. Energy flows along the track as a run travels checkout → deploy; the test pod
- * fails with a jolt and a burst of sparks, Pilot's beam reads it, a glowing fix branch grows to a pull request, waits
- * at a locked approval gate, unlocks, and a green wave carries the run to deploy. Plain Three.js from primitives,
- * loaded on demand. Every frame is a pure function of the story time, so seeking and reduced motion are `render(t)`.
+ * fails with a jolt and a burst of sparks, Pilot scans it (PipelineHero draws the beam from the robot, using onFrame),
+ * a glowing fix branch grows to a pull request, waits at a locked approval gate, unlocks, and a green wave carries the
+ * run to deploy. Plain Three.js from primitives, loaded on demand. Every frame is a pure function of the story
+ * time, so seeking and reduced motion are just `render(t)`.
  */
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
@@ -22,6 +23,8 @@ interface Options {
   /** Stage labels (checkout, install, build, test, deploy), then the pull request and the approval gate. */
   labels: readonly HTMLElement[];
   onStep(step: number): void;
+  /** Every frame: story time and where the test pod is on the canvas (px), so the page can aim Pilot's scan at it. */
+  onFrame?(t: number, pod: { x: number; y: number; r: number }): void;
   reducedMotion: boolean;
 }
 
@@ -243,19 +246,11 @@ export function createPipelineScene(canvas: HTMLCanvasElement, opts: Options): P
     return new THREE.Vector3(Math.cos(a) * speed, up * speed, Math.sin(a) * speed * 0.6);
   });
 
-  // Pilot reads the log: a beam of light over the failed pod, a ring sweeping it, and log lines rising into the beam.
-  const beamMat = track(new THREE.MeshBasicMaterial({ color: C.run, ...additive, opacity: 0, side: THREE.DoubleSide }));
-  const beam = new THREE.Mesh(track(new THREE.ConeGeometry(0.75, 3, 40, 1, true)), beamMat);
-  beam.position.copy(stagePos[TEST]).add(new THREE.Vector3(0, 1.45, 0));
-  scene.add(beam);
+  // Pilot reads the log: a ring sweeps the failed pod while Pilot's beam (drawn over the canvas) is on it.
   const scanMat = track(new THREE.MeshBasicMaterial({ color: C.run, transparent: true, opacity: 0 }));
   const scan = new THREE.Mesh(track(new THREE.TorusGeometry(0.52, 0.018, 8, 48)), scanMat);
   scan.rotation.y = Math.PI / 2;
   scene.add(scan);
-  const READS = 24;
-  const reads = cloud(READS, 0.45);
-  const r2 = rng(11);
-  const readSeed = Array.from({ length: READS }, () => ({ phase: r2(), x: (r2() - 0.5) * 0.7, z: (r2() - 0.5) * 0.4 }));
 
   // The fix branch: leaves test, rises to the pull request, passes the approval gate, and comes back into test.
   const t0 = stagePos[TEST];
@@ -330,6 +325,7 @@ export function createPipelineScene(canvas: HTMLCanvasElement, opts: Options): P
   const tmp = new THREE.Vector3();
   const color = new THREE.Color();
   const passedColor = new THREE.Color(C.passed);
+  const podEdge = new THREE.Vector3(0.55, 0, 0);
   const GRAVITY = -3.2;
   let width = 1, height = 1;
   let baseDistance = 15;
@@ -422,22 +418,12 @@ export function createPipelineScene(canvas: HTMLCanvasElement, opts: Options): P
     podLight.color.setHex(t >= T_FIXED ? C.passed : C.failed);
     podLight.intensity = (failing ? 2.2 * (0.7 + 0.3 * Math.sin(t * 6)) : 3 * blip(T_FIXED, 14, t)) * fade;
 
-    // Pilot reads the log: beam, sweeping ring, and log lines lifting into the beam.
+    // Pilot reads the log: a ring sweeps the pod under the beam.
     const scanOn = smooth(4, 4.4, t) * (1 - smooth(6.6, 7, t));
-    beamMat.opacity = 0.13 * scanOn * (0.8 + 0.2 * Math.sin(t * 9));
-    beam.visible = scanOn > 0.01;
-    beam.rotation.y = t * 0.6;
     scan.position.copy(stagePos[TEST]);
     scan.position.x += Math.sin(((t - 4) / 3) * Math.PI * 3) * 0.55;
     scanMat.opacity = 0.85 * scanOn;
     scan.visible = scanOn > 0.01;
-    for (let k = 0; k < READS; k++) {
-      const s = readSeed[k];
-      const rise = frac(s.phase + t * 0.7);
-      tmp.copy(stagePos[TEST]).add(new THREE.Vector3(s.x * (1 - rise * 0.6), 0.25 + rise * 2.4, s.z));
-      reads.set(k, tmp, C.run, scanOn * (1 - rise) * 1.1);
-    }
-    reads.commit();
 
     // The branch grows to the pull request, waits at the gate, then returns once approved.
     let drawn: number;
@@ -547,6 +533,12 @@ export function createPipelineScene(canvas: HTMLCanvasElement, opts: Options): P
     placeLabels();
     const s = stepAt(time);
     if (s !== step) { step = s; opts.onStep(s); }
+    if (opts.onFrame) {
+      tmp.copy(stagePos[TEST]).project(camera);
+      const x = ((tmp.x + 1) / 2) * width, y = ((1 - tmp.y) / 2) * height;
+      tmp.copy(stagePos[TEST]).add(podEdge).project(camera);
+      opts.onFrame(time, { x, y, r: Math.abs(((tmp.x + 1) / 2) * width - x) });
+    }
   }
 
   function loop(now: number) {

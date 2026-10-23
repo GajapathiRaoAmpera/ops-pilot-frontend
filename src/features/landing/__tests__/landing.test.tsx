@@ -22,6 +22,16 @@ describe("landing page", () => {
     expect(screen.getAllByText(STORY[3].detail).length).toBeGreaterThan(0);
   });
 
+  it("shows Pilot's scan readout only while it reads the failed log", () => {
+    render(<Landing />);
+    const steps = within(screen.getByRole("list", { name: "How a failed run gets fixed" })).getAllByRole("button");
+    expect(screen.queryByText(/Cause found/)).not.toBeInTheDocument();
+    fireEvent.click(steps[1]);
+    expect(screen.getByText(/Cause found/)).toBeInTheDocument();
+    fireEvent.click(steps[2]);
+    expect(screen.queryByText(/Cause found/)).not.toBeInTheDocument();
+  });
+
   it("shows the role matrix as a real table", () => {
     render(<Landing />);
     const table = screen.getByRole("table");

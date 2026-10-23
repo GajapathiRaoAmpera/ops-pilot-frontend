@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type RefObject } from "react";
 import { Icon } from "@/components/ui/Icon/Icon";
 import { Robot, type RobotMood } from "@/features/auth/components/RobotAgent/Robot";
 import { cx } from "@/lib/cx";
@@ -37,7 +37,12 @@ function reading(vh: number) {
  * the hero scrolls away (or on narrower screens) it docks in the corner and follows along. Sections tell it what to
  * say with `data-pilot-line` / `data-pilot-mood`; anything with `data-pilot-say` makes it comment on hover or focus.
  */
-export function LandingPilot({ hero, heroId }: { hero: PilotVoice; heroId: string }) {
+export function LandingPilot({ hero, heroId, anchorRef }: {
+  hero: PilotVoice;
+  heroId: string;
+  /** Receives Pilot's box, so the hero can aim the scan beam from the robot's visor. */
+  anchorRef?: RefObject<HTMLDivElement | null>;
+}) {
   const wide = useSyncExternalStore(subscribeWide, isWide, () => true);
   const [inHero, setInHero] = useState(true);
   const [section, setSection] = useState<PilotVoice | null>(null);
@@ -147,7 +152,8 @@ export function LandingPilot({ hero, heroId }: { hero: PilotVoice; heroId: strin
 
   return (
     <>
-      <div ref={boxRef} className={cx(styles.pilot, docked ? styles.docked : styles.inHero)} data-hidden={docked && hidden}
+      <div ref={(el) => { boxRef.current = el; if (anchorRef) anchorRef.current = el; }}
+        className={cx(styles.pilot, docked ? styles.docked : styles.inHero)} data-hidden={docked && hidden} data-docked={docked}
         data-side={side}>
         <Robot mood={voice.mood} line={voice.line} pokes={POKES} className={styles.robot} bubbleClassName={styles.bubble} />
         {docked && (

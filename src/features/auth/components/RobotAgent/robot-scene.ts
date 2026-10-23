@@ -6,8 +6,8 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 import type { LoginMood } from "../../login-mood";
 
-/** Sign-in moods plus two used by the AI Copilot. */
-export type RobotMood = LoginMood | "curious" | "worried";
+/** Sign-in moods, two used by the AI Copilot, and "scanning" (the landing hero: Pilot scans a failed step on its left). */
+export type RobotMood = LoginMood | "curious" | "worried" | "scanning";
 
 export interface RobotScene {
   setMood(mood: RobotMood, look?: number): void;
@@ -30,6 +30,7 @@ const COLORS = {
   eyeError: 0xf87171,
   eyeHappy: 0x4ade80,
   eyeWorried: 0xfbbf24,
+  eyeScan: 0x22d3ee,
 };
 
 const damp = (from: number, to: number, rate: number, dt: number) => from + (to - from) * (1 - Math.exp(-rate * dt));
@@ -239,6 +240,7 @@ export function createRobotScene(canvas: HTMLCanvasElement, opts: Options): Robo
     let roll = 0;
     if (mood === "curious") { roll = 0.22; pitch = Math.min(pitch, 0.05); }
     if (mood === "worried") { yaw *= 0.3; pitch = 0.3; roll = -0.08; }
+    if (mood === "scanning") { yaw = -0.38 + (opts.reducedMotion ? 0 : Math.sin(t * 5) * 0.04); pitch = 0.14; roll = 0.05; }
     if (mood === "error" && !opts.reducedMotion) yaw = Math.sin(since * 22) * 0.35 * Math.max(0, 1 - since / 1.2);
     head.rotation.y = damp(head.rotation.y, yaw, rate, dt);
     head.rotation.x = damp(head.rotation.x, pitch, rate, dt);
@@ -255,6 +257,7 @@ export function createRobotScene(canvas: HTMLCanvasElement, opts: Options): Robo
     if (mood === "peek") { rz = -2.75; rx = 0.7; re = 1.7; }
     if (mood === "worried") { lz = 0.35; rz = -0.35; lx = 0.5; rx = 0.5; } // hands together in front
     if (mood === "curious") { rz = -2.3; rx = 0.9; re = 1.35; } // hand to the chin
+    if (mood === "scanning") { lz = -1.35; lx = 0.35; le = 1.3; } // arm raised toward what it is scanning
     if (waving) { rz = 2.6 + (opts.reducedMotion ? 0 : Math.sin(t * 12) * 0.35); rx = 0; re = 1; }
     for (const [a, z, x, e] of [[armL, lz, lx, le], [armR, rz, rx, re]] as const) {
       a.shoulder.rotation.z = damp(a.shoulder.rotation.z, z, rate, dt);
@@ -271,13 +274,13 @@ export function createRobotScene(canvas: HTMLCanvasElement, opts: Options): Robo
     shadow.scale.setScalar(1 - (robot.position.y + 0.06) * 0.6);
 
     // Eyes: colour by mood, blink, happy squint
-    target.setHex(mood === "error" ? COLORS.eyeError : mood === "worried" ? COLORS.eyeWorried
+    target.setHex(mood === "error" ? COLORS.eyeError : mood === "worried" ? COLORS.eyeWorried : mood === "scanning" ? COLORS.eyeScan
       : mood === "success" || hovering ? COLORS.eyeHappy : COLORS.eye);
     eyeColor.lerp(target, 1 - Math.exp(-rate * dt));
     eyeMat.color.copy(eyeColor);
     eyeMat.emissive.copy(eyeColor);
     if (!opts.reducedMotion && t > nextBlink) { blinkUntil = t + 0.12; nextBlink = t + 2.5 + Math.random() * 3; }
-    const squint = mood === "success" || hovering ? 0.45 : mood === "thinking" ? 0.7 : 1;
+    const squint = mood === "success" || hovering ? 0.45 : mood === "thinking" ? 0.7 : mood === "scanning" ? 0.55 : 1;
     const eyeY = t < blinkUntil ? 0.1 : squint;
     eyeL.scale.y = eyeR.scale.y = damp(eyeL.scale.y, eyeY, 30, dt);
     glowMat.emissiveIntensity = opts.reducedMotion ? 1.6 : 1.2 + Math.sin(t * 3) * 0.6;

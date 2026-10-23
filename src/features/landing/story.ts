@@ -4,7 +4,7 @@ export interface StoryStep {
   /** Material Symbol shown beside the title (decorative). */
   icon: string;
   /** What Pilot says and how it looks while this step plays. */
-  pilot: { line: string; mood: "worried" | "thinking" | "curious" | "idle" | "success" };
+  pilot: { line: string; mood: "worried" | "scanning" | "curious" | "idle" | "success" };
   detail: string;
   /** The audit event OpsPilot writes at this step (see the backend's audit.record calls). */
   audit: string;
@@ -24,7 +24,7 @@ export const STORY: readonly StoryStep[] = [
   {
     title: "Pilot reads the log",
     icon: "manage_search",
-    pilot: { line: "Reading every line so you don't have to.", mood: "thinking" },
+    pilot: { line: "Scanning the log. Every line, so you don't have to.", mood: "scanning" },
     detail: "Open the run in AI Copilot. Pilot reads the whole job log and tells you, in plain words, what broke and where.",
     audit: "ai.investigation",
     at: 4,
