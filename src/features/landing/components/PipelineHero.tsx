@@ -121,8 +121,9 @@ export function PipelineHero({ onPilot, pilotRef }: {
       if (stageRef.current) io.observe(stageRef.current);
       setReady(true);
     };
+    // Wait for idle time, but not forever: a busy animated page may never be idle.
     const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 200));
-    const handle = idle(() => void start());
+    const handle = idle(() => void start(), { timeout: 1500 });
     return () => {
       cancelled = true;
       (window.cancelIdleCallback ?? window.clearTimeout)(handle as number);

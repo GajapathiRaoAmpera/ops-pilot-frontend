@@ -57,8 +57,9 @@ export function Robot({ mood, look, line, pokes = [], className, bubbleClassName
       setReady(true);
     };
     // Never compete with the page for the first paint.
+    // Wait for idle time, but not forever: a busy animated page may never be idle.
     const idle = window.requestIdleCallback ?? ((cb: () => void) => window.setTimeout(cb, 300));
-    const handle = idle(() => void start());
+    const handle = idle(() => void start(), { timeout: 1500 });
     return () => {
       cancelled = true;
       (window.cancelIdleCallback ?? window.clearTimeout)(handle as number);
