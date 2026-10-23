@@ -188,7 +188,7 @@ export function SpaceBackdrop() {
   return (
     <div ref={rootRef} className={styles.sky} data-sky="0" aria-hidden="true">
       <div className={styles.nebula}><i /><i /><i /></div>
-      <AuthBackground grid={false} />
+      <div className={styles.sparkles}><AuthBackground grid={false} /></div>
       <canvas ref={canvasRef} className={styles.canvas} />
     </div>
   );
